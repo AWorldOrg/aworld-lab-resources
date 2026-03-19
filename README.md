@@ -44,8 +44,13 @@ bunx @redocly/cli build-docs schemas/app.openapi.json
 
 **Raw schema URLs:**
 
+Dashboard (Admin API):
 ```
 https://raw.githubusercontent.com/AWorldOrg/aworld-lab-resources/main/schemas/dashboard.openapi.json
+```
+
+App (Consumer API):
+```
 https://raw.githubusercontent.com/AWorldOrg/aworld-lab-resources/main/schemas/app.openapi.json
 ```
 
