@@ -25,10 +25,10 @@ The JSON files under `schemas/` are valid OpenAPI documents. Use them with any O
 
 ```bash
 # Dashboard (Admin API)
-bunx openapi-typescript https://raw.githubusercontent.com/aworld-lab/aworld-lab-resources/main/schemas/dashboard.openapi.json -o dashboard-schema.d.ts
+bunx openapi-typescript https://raw.githubusercontent.com/AWorldOrg/aworld-lab-resources/main/schemas/dashboard.openapi.json -o dashboard-schema.d.ts
 
 # App (Consumer API)
-bunx openapi-typescript https://raw.githubusercontent.com/aworld-lab/aworld-lab-resources/main/schemas/app.openapi.json -o app-schema.d.ts
+bunx openapi-typescript https://raw.githubusercontent.com/AWorldOrg/aworld-lab-resources/main/schemas/app.openapi.json -o app-schema.d.ts
 ```
 
 **Interactive API documentation (always up to date):**
@@ -45,8 +45,8 @@ bunx @redocly/cli build-docs schemas/app.openapi.json
 **Raw schema URLs:**
 
 ```
-https://raw.githubusercontent.com/aworld-lab/aworld-lab-resources/main/schemas/dashboard.openapi.json
-https://raw.githubusercontent.com/aworld-lab/aworld-lab-resources/main/schemas/app.openapi.json
+https://raw.githubusercontent.com/AWorldOrg/aworld-lab-resources/main/schemas/dashboard.openapi.json
+https://raw.githubusercontent.com/AWorldOrg/aworld-lab-resources/main/schemas/app.openapi.json
 ```
 
 ---
