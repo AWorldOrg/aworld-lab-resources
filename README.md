@@ -31,10 +31,15 @@ bunx openapi-typescript https://raw.githubusercontent.com/aworld-lab/aworld-lab-
 bunx openapi-typescript https://raw.githubusercontent.com/aworld-lab/aworld-lab-resources/main/schemas/app.openapi.json -o app-schema.d.ts
 ```
 
-**Preview with Redoc:**
+**Interactive API documentation (always up to date):**
+
+https://api.aworld.org/
+
+**Preview locally with Redoc:**
 
 ```bash
-bunx @redocly/cli preview-docs schemas/dashboard.openapi.json
+bunx @redocly/cli build-docs schemas/dashboard.openapi.json
+bunx @redocly/cli build-docs schemas/app.openapi.json
 ```
 
 **Raw schema URLs:**
