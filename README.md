@@ -1,4 +1,4 @@
-# aworld-lab-resources
+# AWorld Lab Resources
 
 Public mirror of AWorld API schemas and TypeScript SDKs.
 
