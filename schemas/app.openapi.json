@@ -78,8 +78,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Activity created successfully",
+          "200": {
+            "description": "Activity log created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -87,9 +87,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid input"
           },
           "401": {
             "description": "Unauthorized"
@@ -101,13 +98,134 @@
         "tags": [
           "ActivityLogs"
         ]
+      },
+      "get": {
+        "operationId": "activityLogs/list",
+        "summary": "List activity logs",
+        "description": "List activity log entries with pagination.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity logs retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListActivityLogsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "ActivityLogs"
+        ]
+      }
+    },
+    "/activity-logs/{activityId}": {
+      "get": {
+        "operationId": "activityLogs/get",
+        "summary": "Get activity log",
+        "description": "Retrieve a specific activity log entry by activity ID.",
+        "parameters": [
+          {
+            "name": "activityId",
+            "in": "path",
+            "description": "The unique ID of the activity. Should be a nanoid",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the activity. Should be a nanoid",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity log retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetActivityLogResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Activity log not found"
+          }
+        },
+        "tags": [
+          "ActivityLogs"
+        ]
       }
     },
     "/analytics/community": {
       "get": {
         "operationId": "analytics/community",
         "summary": "Get community metrics",
-        "description": "Retrieves aggregated community metrics for the workspace:\n    - pathsCompleted: Learners who completed at least one learning path\n    - totalLearners: Unique users who started any learning path\n    - quizSuccessRate: Average quiz success rate percentage",
+        "description": "Retrieve community-level analytics metrics.",
         "responses": {
           "200": {
             "description": "Community metrics retrieved successfully",
@@ -132,7 +250,7 @@
       "get": {
         "operationId": "badgeConfigurations/list",
         "summary": "List badge configurations",
-        "description": "Retrieves a paginated list of badge configurations available in the workspace. Use `fields` to include additional resolved data (progress, badge).",
+        "description": "Retrieves a paginated list of badge configurations with optional field resolution for translations, tags, progress, and badge data.",
         "parameters": [
           {
             "name": "fields",
@@ -230,8 +348,8 @@
     "/badge-configurations/{badgeConfigurationId}/tags": {
       "get": {
         "operationId": "badgeConfigurations/listTags",
-        "summary": "List badge configuration tags",
-        "description": "Retrieves a list of tags assigned to a specific badge configuration.\n    TagAssignments are used to categorize and organize badge configurations.",
+        "summary": "List badge configuration tag assignments",
+        "description": "List tag assignments for a specific badge configuration.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -301,7 +419,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Badge configuration tags retrieved successfully",
+            "description": "Tag assignments retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -312,21 +430,18 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Badge configuration not found"
           }
         },
         "tags": [
-          "Badges/Tags"
+          "Badges"
         ]
       }
     },
     "/badge-configurations/{badgeConfigurationId}/tags/{tagId}": {
       "get": {
         "operationId": "badgeConfigurations/getTag",
-        "summary": "Get badge configuration tag by ID",
-        "description": "Retrieves a specific tag assignment for a badge configuration by tag ID.",
+        "summary": "Get badge configuration tag assignment",
+        "description": "Retrieve a specific tag assignment for a badge configuration.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -341,8 +456,10 @@
           {
             "name": "tagId",
             "in": "path",
+            "description": "Unique identifier for the tag",
             "required": true,
             "schema": {
+              "description": "Unique identifier for the tag",
               "type": "string",
               "minLength": 1
             }
@@ -350,7 +467,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Badge configuration tag retrieved successfully",
+            "description": "Tag assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -363,11 +480,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Badge configuration or tag not found"
+            "description": "Tag assignment not found"
           }
         },
         "tags": [
-          "Badges/Tags"
+          "Badges"
         ]
       }
     },
@@ -375,7 +492,7 @@
       "get": {
         "operationId": "badgeConfigurations/getTranslation",
         "summary": "Get badge configuration translation",
-        "description": "Retrieves the translation for a specific badge configuration in the user's preferred language.",
+        "description": "Retrieve the translation for a specific badge configuration.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -403,11 +520,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Badge configuration or translation not found"
+            "description": "Badge configuration not found"
           }
         },
         "tags": [
-          "Badges/Translation"
+          "Badges"
         ]
       }
     },
@@ -415,7 +532,7 @@
       "get": {
         "operationId": "badges/list",
         "summary": "List badges",
-        "description": "Retrieves a list of badges earned by the authenticated user.\n    Use `fields=translation` to include translated label and description.\n    Use `fields=badgeLogs` to include badge assignment logs.",
+        "description": "List badges with optional additional fields (translation, badge logs).",
         "parameters": [
           {
             "name": "fields",
@@ -512,7 +629,7 @@
       "get": {
         "operationId": "badges/get",
         "summary": "Get badge",
-        "description": "Retrieves details of a specific badge by badge configuration ID.\n    Use `fields=translation` to include translated label and description.\n    Use `fields=badgeLogs` to include badge assignment logs.",
+        "description": "Retrieve a specific badge by its configuration ID, with optional additional fields (translation, badge logs).",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -567,7 +684,7 @@
       "get": {
         "operationId": "learningGroups/list",
         "summary": "List learning groups",
-        "description": "Retrieves a list of learning groups available to the user.\n    Supports filtering, pagination, and sorting options.",
+        "description": "List learning groups with optional additional fields (translation, tags, items) and pagination.",
         "parameters": [
           {
             "name": "catalogWorkspaceId",
@@ -668,15 +785,15 @@
           }
         },
         "tags": [
-          "Learning Groups"
+          "LearningGroups"
         ]
       }
     },
     "/learning-groups/{learningGroupId}": {
       "get": {
         "operationId": "learningGroups/get",
-        "summary": "Get learning group by ID",
-        "description": "Retrieves a specific learning group by its ID.\n    Includes learning group content, metadata, and associated information.",
+        "summary": "Get learning group",
+        "description": "Retrieve a specific learning group by ID, with optional additional fields (translation, tags, items, progress).",
         "parameters": [
           {
             "name": "context",
@@ -731,7 +848,100 @@
           }
         },
         "tags": [
-          "Learning Groups"
+          "LearningGroups"
+        ]
+      }
+    },
+    "/learning-groups/{learningGroupId}/items": {
+      "get": {
+        "operationId": "learningGroups/listItems",
+        "summary": "List learning group items",
+        "description": "List items belonging to a specific learning group.",
+        "parameters": [
+          {
+            "name": "learningGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Learning group items retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListLearningGroupItemsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Learning group not found"
+          }
+        },
+        "tags": [
+          "LearningGroups"
         ]
       }
     },
@@ -739,7 +949,7 @@
       "get": {
         "operationId": "learningGroups/listTags",
         "summary": "List learning group tag assignments",
-        "description": "Retrieves a list of tag assignments for a specific learning group",
+        "description": "List tag assignments for a specific learning group.",
         "parameters": [
           {
             "name": "learningGroupId",
@@ -778,7 +988,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of tag assignments retrieved successfully",
+            "description": "Tag assignments retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -789,13 +999,10 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Learning group not found"
           }
         },
         "tags": [
-          "Learning Groups/Tags"
+          "LearningGroups"
         ]
       }
     },
@@ -803,7 +1010,7 @@
       "get": {
         "operationId": "learningGroups/getTag",
         "summary": "Get learning group tag assignment",
-        "description": "Retrieves a specific tag assignment for a learning group",
+        "description": "Retrieve a specific tag assignment for a learning group.",
         "parameters": [
           {
             "name": "learningGroupId",
@@ -816,8 +1023,10 @@
           {
             "name": "tagId",
             "in": "path",
+            "description": "Unique identifier for the tag",
             "required": true,
             "schema": {
+              "description": "Unique identifier for the tag",
               "type": "string",
               "minLength": 1
             }
@@ -838,11 +1047,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Learning group or tag assignment not found"
+            "description": "Tag assignment not found"
           }
         },
         "tags": [
-          "Learning Groups/Tags"
+          "LearningGroups"
         ]
       }
     },
@@ -850,7 +1059,7 @@
       "get": {
         "operationId": "learningGroups/getTranslation",
         "summary": "Get learning group translation",
-        "description": "Retrieve the translation for a specific learning group",
+        "description": "Retrieve the translation for a specific learning group.",
         "parameters": [
           {
             "name": "learningGroupId",
@@ -876,11 +1085,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Learning group or translation not found"
+            "description": "Learning group not found"
           }
         },
         "tags": [
-          "Learning Groups/Translation"
+          "LearningGroups"
         ]
       }
     },
@@ -888,7 +1097,7 @@
       "get": {
         "operationId": "learningPathAssignments/list",
         "summary": "List learning path assignments",
-        "description": "Retrieves a list of learning path assignments available to the user.\n    Supports filtering, pagination, and sorting options.",
+        "description": "List learning path assignments with optional additional fields and pagination.",
         "parameters": [
           {
             "name": "fields",
@@ -945,6 +1154,19 @@
               "enum": [
                 "asc",
                 "desc"
+              ]
+            }
+          },
+          {
+            "name": "outcome",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "PASS",
+                "FAIL"
               ]
             }
           },
@@ -1017,15 +1239,15 @@
           }
         },
         "tags": [
-          "Learning Path Assignments"
+          "LearningPathAssignments"
         ]
       }
     },
     "/learning-path-assignments/{learningPathAssignmentId}": {
       "get": {
         "operationId": "learningPathAssignments/get",
-        "summary": "Get learning path assignment by ID",
-        "description": "Retrieves a specific learning path assignment by its ID.\n    Includes learning path content, metadata, and associated information.",
+        "summary": "Get learning path assignment",
+        "description": "Retrieve a specific learning path assignment by ID, with optional additional fields (translation, tags, items, progress).",
         "parameters": [
           {
             "name": "context",
@@ -1080,7 +1302,45 @@
           }
         },
         "tags": [
-          "Learning Path Assignments"
+          "LearningPathAssignments"
+        ]
+      }
+    },
+    "/learning-path-assignments/{learningPathAssignmentId}/current-attempt": {
+      "get": {
+        "operationId": "learningPathAssignments/currentAttemptGet",
+        "summary": "Get current attempt",
+        "description": "Retrieve the current attempt number for a specific learning path assignment.",
+        "parameters": [
+          {
+            "name": "learningPathAssignmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current attempt retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentAttemptResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Learning path assignment not found"
+          }
+        },
+        "tags": [
+          "LearningPathAssignments"
         ]
       }
     },
@@ -1088,7 +1348,7 @@
       "get": {
         "operationId": "learningPathAssignments/listItems",
         "summary": "List learning path assignment items",
-        "description": "Retrieves a list of items (quizzes, slides, stories, etc.) in a specific learning path assignment.\n    Items are returned in order and include resolved content data.",
+        "description": "List items belonging to a learning path assignment.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -1156,7 +1416,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Learning path items retrieved successfully",
+            "description": "Items retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -1173,7 +1433,45 @@
           }
         },
         "tags": [
-          "Learning Path Assignments/Items"
+          "LearningPathAssignments"
+        ]
+      }
+    },
+    "/learning-path-assignments/{learningPathAssignmentId}/retry": {
+      "post": {
+        "operationId": "learningPathAssignments/retry",
+        "summary": "Retry learning path assignment",
+        "description": "Retry a learning path assignment.",
+        "parameters": [
+          {
+            "name": "learningPathAssignmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assignment retried successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetryLearningPathAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Learning path assignment not found"
+          }
+        },
+        "tags": [
+          "LearningPathAssignments"
         ]
       }
     },
@@ -1181,7 +1479,7 @@
       "get": {
         "operationId": "learningPathAssignments/listTags",
         "summary": "List learning path assignment tags",
-        "description": "Retrieves a list of tags assigned to a specific learning path assignment.\n    Tags are used to categorize and organize learning paths.",
+        "description": "List tag assignments for a learning path assignment.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -1220,7 +1518,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Learning path tags retrieved successfully",
+            "description": "Tag assignments retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -1237,15 +1535,15 @@
           }
         },
         "tags": [
-          "Learning Path Assignments/Tags"
+          "LearningPathAssignments"
         ]
       }
     },
     "/learning-path-assignments/{learningPathAssignmentId}/tags/{tagId}": {
       "get": {
         "operationId": "learningPathAssignments/getTag",
-        "summary": "Get learning path assignment tag by ID",
-        "description": "Retrieves a specific tag assignment for a learning path by tag ID.",
+        "summary": "Get learning path assignment tag",
+        "description": "Retrieve a specific tag assignment for a learning path assignment.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -1258,8 +1556,10 @@
           {
             "name": "tagId",
             "in": "path",
+            "description": "Unique identifier for the tag",
             "required": true,
             "schema": {
+              "description": "Unique identifier for the tag",
               "type": "string",
               "minLength": 1
             }
@@ -1267,7 +1567,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Learning path tag retrieved successfully",
+            "description": "Tag assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -1280,11 +1580,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Learning path assignment or tag not found"
+            "description": "Learning path assignment not found"
           }
         },
         "tags": [
-          "Learning Path Assignments/Tags"
+          "LearningPathAssignments"
         ]
       }
     },
@@ -1292,7 +1592,7 @@
       "get": {
         "operationId": "learningPathAssignments/getTranslation",
         "summary": "Get learning path assignment translation",
-        "description": "Retrieves the translation for a specific learning path assignment in the user's preferred language.",
+        "description": "Retrieve the translation for a learning path assignment.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -1305,7 +1605,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Learning path translation retrieved successfully",
+            "description": "Translation retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -1318,304 +1618,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Learning path assignment or translation not found"
+            "description": "Learning path assignment not found"
           }
         },
         "tags": [
-          "Learning Path Assignments/Translation"
-        ]
-      }
-    },
-    "/learning-paths": {
-      "get": {
-        "operationId": "learningPaths/list",
-        "summary": "List learning paths",
-        "description": "Retrieves a list of learning paths available to the user.\n    Supports filtering, pagination, and sorting options.",
-        "parameters": [
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "tags",
-                  "translation",
-                  "items",
-                  "progress"
-                ]
-              }
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Size of the page",
-            "required": false,
-            "schema": {
-              "description": "Size of the page",
-              "type": "integer",
-              "example": 10,
-              "exclusiveMinimum": 0
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "description": "Pagination cursor for fetching the next set of results",
-            "required": false,
-            "schema": {
-              "description": "Pagination cursor for fetching the next set of results",
-              "type": [
-                "string",
-                "null"
-              ],
-              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-            }
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "description": "Sort order. Defaults to desc",
-            "required": false,
-            "schema": {
-              "description": "Sort order. Defaults to desc",
-              "type": "string",
-              "example": "desc",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
-            "name": "progressStatus",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "NOT_STARTED",
-                "IN_PROGRESS",
-                "COMPLETED"
-              ]
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Field to sort results by",
-            "required": false,
-            "schema": {
-              "description": "Field to sort results by",
-              "type": "string",
-              "example": "updatedAt",
-              "enum": [
-                "updatedAt"
-              ]
-            }
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "PENDING",
-                "ACTIVE",
-                "ENDED"
-              ]
-            }
-          },
-          {
-            "name": "visibility",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "LOCKED",
-                "UNLOCKED"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Learning paths retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListLearningPathsResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "tags": [
-          "Learning Paths"
-        ]
-      }
-    },
-    "/learning-paths/{learningGroupId}/items": {
-      "get": {
-        "operationId": "learningGroups/listItems",
-        "summary": "List learning path items",
-        "description": "Retrieve a list of all items for a specific learning path",
-        "parameters": [
-          {
-            "name": "learningGroupId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Size of the page",
-            "required": false,
-            "schema": {
-              "description": "Size of the page",
-              "type": "integer",
-              "example": 10,
-              "exclusiveMinimum": 0
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "description": "Pagination cursor for fetching the next set of results",
-            "required": false,
-            "schema": {
-              "description": "Pagination cursor for fetching the next set of results",
-              "type": [
-                "string",
-                "null"
-              ],
-              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-            }
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "description": "Sort order. Defaults to desc",
-            "required": false,
-            "schema": {
-              "description": "Sort order. Defaults to desc",
-              "type": "string",
-              "example": "desc",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Field to sort results by",
-            "required": false,
-            "schema": {
-              "description": "Field to sort results by",
-              "type": "string",
-              "example": "updatedAt",
-              "enum": [
-                "updatedAt"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of learning path items retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListLearningGroupItemsResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Learning path not found"
-          }
-        },
-        "tags": [
-          "Learning Paths/Items"
-        ]
-      }
-    },
-    "/learning-paths/{learningPathId}": {
-      "get": {
-        "operationId": "learningPaths/get",
-        "summary": "Get learning path by ID",
-        "description": "Retrieves a specific learning path by its ID.\n    Includes learning path content, metadata, and associated information.",
-        "parameters": [
-          {
-            "name": "context",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "tags",
-                  "translation",
-                  "items",
-                  "progress"
-                ]
-              }
-            }
-          },
-          {
-            "name": "learningPathAssignmentId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Learning path retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLearningPathResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Learning path not found"
-          }
-        },
-        "tags": [
-          "Learning Paths"
+          "LearningPathAssignments"
         ]
       }
     },
@@ -1623,7 +1630,7 @@
       "get": {
         "operationId": "missions/list",
         "summary": "List missions",
-        "description": "Retrieves a list of available missions for the authenticated user.\n    Missions are tasks or challenges that users can complete to earn rewards.\n    Use `fields=translation` to include translated label and description.",
+        "description": "List missions with optional additional fields (translation) and pagination.",
         "parameters": [
           {
             "name": "fields",
@@ -1719,7 +1726,7 @@
       "get": {
         "operationId": "missions/get",
         "summary": "Get mission",
-        "description": "Retrieves details of a specific mission by ID.\n    Use `fields=translation` to include translated label and description.",
+        "description": "Retrieve a specific mission by ID, with optional additional fields (translation).",
         "parameters": [
           {
             "name": "fields",
@@ -1779,7 +1786,7 @@
       "get": {
         "operationId": "quizzes/list",
         "summary": "List quizzes",
-        "description": "Retrieves a list of available quizzes for the authenticated user. \n    Quizzes are educational content that users can complete to test their knowledge.",
+        "description": "List quizzes with optional additional fields (translation, tags, style) and pagination.",
         "parameters": [
           {
             "name": "catalogWorkspaceId",
@@ -1790,6 +1797,22 @@
               "maxLength": 10,
               "minLength": 10,
               "pattern": "^[A-Za-z0-9_-]{10}$"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "translation",
+                  "computedStyle"
+                ]
+              }
             }
           },
           {
@@ -1871,8 +1894,8 @@
     "/quizzes/{quizId}": {
       "get": {
         "operationId": "quizzes/get",
-        "summary": "Get quiz by ID",
-        "description": "Retrieves a specific quiz by its ID. \n    Includes quiz questions, options, and associated metadata.",
+        "summary": "Get quiz",
+        "description": "Retrieve a specific quiz by ID, with optional additional fields (translation, tags, style, progress).",
         "parameters": [
           {
             "name": "context",
@@ -1893,7 +1916,8 @@
                 "enum": [
                   "tags",
                   "translation",
-                  "progress"
+                  "progress",
+                  "computedStyle"
                 ]
               }
             }
@@ -1933,8 +1957,8 @@
     "/quizzes/{quizId}/submit": {
       "post": {
         "operationId": "quizzes/submit",
-        "summary": "Submit quiz answers",
-        "description": "Submits answers for a specific quiz. \n    This endpoint processes the user's responses and returns the results.",
+        "summary": "Submit quiz answer",
+        "description": "Submit an answer for a quiz.",
         "parameters": [
           {
             "name": "quizId",
@@ -2003,9 +2027,6 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid input"
-          },
           "401": {
             "description": "Unauthorized"
           },
@@ -2021,8 +2042,8 @@
     "/quizzes/{quizId}/tags": {
       "get": {
         "operationId": "quizzes/listTags",
-        "summary": "List quiz tags",
-        "description": "Retrieves a list of tags assigned to a specific quiz. \n    TagAssignments are used to categorize and organize quizzes.",
+        "summary": "List quiz tag assignments",
+        "description": "List tag assignments for a specific quiz.",
         "parameters": [
           {
             "name": "limit",
@@ -2061,7 +2082,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Quiz tags retrieved successfully",
+            "description": "Tag assignments retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2072,21 +2093,18 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Quiz not found"
           }
         },
         "tags": [
-          "Quizzes/Tags"
+          "Quizzes"
         ]
       }
     },
     "/quizzes/{quizId}/tags/{tagId}": {
       "get": {
         "operationId": "quizzes/getTag",
-        "summary": "Get quiz tag by ID",
-        "description": "Retrieves a specific tag assignment for a quiz by tag ID.",
+        "summary": "Get quiz tag assignment",
+        "description": "Retrieve a specific tag assignment for a quiz.",
         "parameters": [
           {
             "name": "quizId",
@@ -2099,8 +2117,10 @@
           {
             "name": "tagId",
             "in": "path",
+            "description": "Unique identifier for the tag",
             "required": true,
             "schema": {
+              "description": "Unique identifier for the tag",
               "type": "string",
               "minLength": 1
             }
@@ -2108,7 +2128,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Quiz tag retrieved successfully",
+            "description": "Tag assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2121,11 +2141,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Quiz or tag not found"
+            "description": "Tag assignment not found"
           }
         },
         "tags": [
-          "Quizzes/Tags"
+          "Quizzes"
         ]
       }
     },
@@ -2133,7 +2153,7 @@
       "get": {
         "operationId": "quizzes/getTranslation",
         "summary": "Get quiz translation",
-        "description": "Retrieves the translation for a specific quiz in the user's preferred language.",
+        "description": "Retrieve the translation for a specific quiz.",
         "parameters": [
           {
             "name": "quizId",
@@ -2159,11 +2179,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Quiz or translation not found"
+            "description": "Quiz not found"
           }
         },
         "tags": [
-          "Quizzes/Translation"
+          "Quizzes"
         ]
       }
     },
@@ -2171,7 +2191,7 @@
       "get": {
         "operationId": "runtimeLeaderboards/list",
         "summary": "List runtime leaderboards",
-        "description": "Lists all active and upcoming runtime leaderboards available to the user. Supports filtering by state and pagination.",
+        "description": "List runtime leaderboards with optional translation and pagination.",
         "parameters": [
           {
             "name": "fields",
@@ -2258,7 +2278,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Runtime leaderboards retrieved successfully.",
+            "description": "Runtime leaderboards retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2268,20 +2288,19 @@
             }
           },
           "401": {
-            "description": "Unauthorized."
+            "description": "Unauthorized"
           }
         },
-        "deprecated": false,
         "tags": [
-          "Runtime Leaderboards"
+          "RuntimeLeaderboards"
         ]
       }
     },
     "/runtime-leaderboards/{runtimeLeaderboardId}": {
       "get": {
         "operationId": "runtimeLeaderboards/get",
-        "summary": "Get a runtime leaderboard by ID",
-        "description": "Retrieves detailed information about a specific runtime leaderboard, including its configuration and current state.",
+        "summary": "Get runtime leaderboard",
+        "description": "Retrieve a specific runtime leaderboard by ID, with optional translation.",
         "parameters": [
           {
             "name": "fields",
@@ -2308,7 +2327,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Runtime leaderboard retrieved successfully.",
+            "description": "Runtime leaderboard retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2318,15 +2337,14 @@
             }
           },
           "401": {
-            "description": "Unauthorized."
+            "description": "Unauthorized"
           },
           "404": {
-            "description": "Runtime leaderboard not found."
+            "description": "Runtime leaderboard not found"
           }
         },
-        "deprecated": false,
         "tags": [
-          "Runtime Leaderboards"
+          "RuntimeLeaderboards"
         ]
       }
     },
@@ -2334,7 +2352,7 @@
       "get": {
         "operationId": "runtimeLeaderboards/getRankings",
         "summary": "Get leaderboard rankings",
-        "description": "Retrieves the current rankings for a runtime leaderboard. Returns top users ordered by score. Supports pagination.",
+        "description": "Retrieve the rankings for a specific leaderboard.",
         "parameters": [
           {
             "name": "limit",
@@ -2371,7 +2389,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Leaderboard rankings retrieved successfully.",
+            "description": "Rankings retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2381,23 +2399,22 @@
             }
           },
           "401": {
-            "description": "Unauthorized."
+            "description": "Unauthorized"
           },
           "404": {
-            "description": "Runtime leaderboard not found."
+            "description": "Leaderboard not found"
           }
         },
-        "deprecated": false,
         "tags": [
-          "Runtime Leaderboards"
+          "RuntimeLeaderboards"
         ]
       }
     },
     "/runtime-leaderboards/{runtimeLeaderboardId}/rankings/me": {
       "get": {
         "operationId": "runtimeLeaderboards/getMyRanking",
-        "summary": "Get current user's ranking",
-        "description": "Retrieves the current user's position and score in the leaderboard, along with surrounding rankings for context.",
+        "summary": "Get my ranking",
+        "description": "Retrieve the current user's ranking in a specific leaderboard.",
         "parameters": [
           {
             "name": "runtimeLeaderboardId",
@@ -2410,7 +2427,7 @@
         ],
         "responses": {
           "200": {
-            "description": "User's ranking retrieved successfully.",
+            "description": "My ranking retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2420,15 +2437,14 @@
             }
           },
           "401": {
-            "description": "Unauthorized."
+            "description": "Unauthorized"
           },
           "404": {
-            "description": "Runtime leaderboard not found or user not on leaderboard."
+            "description": "Leaderboard not found"
           }
         },
-        "deprecated": false,
         "tags": [
-          "Runtime Leaderboards"
+          "RuntimeLeaderboards"
         ]
       }
     },
@@ -2436,7 +2452,7 @@
       "get": {
         "operationId": "slides/list",
         "summary": "List slides",
-        "description": "Retrieves a list of available slides for the authenticated user. \n    Stories are educational content that users can read and engage with.",
+        "description": "List slides with optional additional fields (translation, tags, style) and pagination.",
         "parameters": [
           {
             "name": "catalogWorkspaceId",
@@ -2459,7 +2475,8 @@
                 "type": "string",
                 "enum": [
                   "tags",
-                  "translation"
+                  "translation",
+                  "computedStyle"
                 ]
               }
             }
@@ -2522,7 +2539,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Stories retrieved successfully",
+            "description": "Slides retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2543,8 +2560,8 @@
     "/slides/{slideId}": {
       "get": {
         "operationId": "slides/get",
-        "summary": "Get slide by ID",
-        "description": "Retrieves a specific slide by its ID. \n    Includes slide content, metadata, and associated information.",
+        "summary": "Get slide",
+        "description": "Retrieve a specific slide by ID, with optional additional fields (translation, tags, style, progress).",
         "parameters": [
           {
             "name": "context",
@@ -2565,7 +2582,8 @@
                 "enum": [
                   "tags",
                   "translation",
-                  "progress"
+                  "progress",
+                  "computedStyle"
                 ]
               }
             }
@@ -2605,8 +2623,8 @@
     "/slides/{slideId}/submit": {
       "post": {
         "operationId": "slides/submit",
-        "summary": "Submit slide completion",
-        "description": "Marks a slide as completed by the user. \n    This endpoint tracks user engagement with slide content.",
+        "summary": "Submit slide progress",
+        "description": "Submit a completion for a slide.",
         "parameters": [
           {
             "name": "slideId",
@@ -2666,9 +2684,6 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid input"
-          },
           "401": {
             "description": "Unauthorized"
           },
@@ -2684,8 +2699,8 @@
     "/slides/{slideId}/tags": {
       "get": {
         "operationId": "slides/listTags",
-        "summary": "List slide tags",
-        "description": "Retrieves a list of tags assigned to a specific slide. \n    TagAssignments are used to categorize and organize slides.",
+        "summary": "List slide tag assignments",
+        "description": "List tag assignments for a specific slide.",
         "parameters": [
           {
             "name": "limit",
@@ -2724,7 +2739,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Slide tags retrieved successfully",
+            "description": "Tag assignments retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2735,21 +2750,18 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Slide not found"
           }
         },
         "tags": [
-          "Slides/TagAssignments"
+          "Slides"
         ]
       }
     },
     "/slides/{slideId}/tags/{tagId}": {
       "get": {
         "operationId": "slides/getTag",
-        "summary": "Get slide tag by ID",
-        "description": "Retrieves a specific tag assignment for a slide by tag ID.",
+        "summary": "Get slide tag assignment",
+        "description": "Retrieve a specific tag assignment for a slide.",
         "parameters": [
           {
             "name": "slideId",
@@ -2762,8 +2774,10 @@
           {
             "name": "tagId",
             "in": "path",
+            "description": "Unique identifier for the tag",
             "required": true,
             "schema": {
+              "description": "Unique identifier for the tag",
               "type": "string",
               "minLength": 1
             }
@@ -2771,7 +2785,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Slide tag retrieved successfully",
+            "description": "Tag assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2784,11 +2798,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Slide or tag not found"
+            "description": "Tag assignment not found"
           }
         },
         "tags": [
-          "Slides/TagAssignments"
+          "Slides"
         ]
       }
     },
@@ -2796,7 +2810,7 @@
       "get": {
         "operationId": "slides/getTranslation",
         "summary": "Get slide translation",
-        "description": "Retrieves the translation for a specific slide in the user's preferred language.",
+        "description": "Retrieve the translation for a specific slide.",
         "parameters": [
           {
             "name": "slideId",
@@ -2822,11 +2836,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Slide or translation not found"
+            "description": "Slide not found"
           }
         },
         "tags": [
-          "Slides/Translation"
+          "Slides"
         ]
       }
     },
@@ -2834,7 +2848,7 @@
       "get": {
         "operationId": "streaks/list",
         "summary": "List streaks",
-        "description": "Retrieves a list of streaks for the authenticated user. \n    Streaks track consecutive user activities and achievements over time.",
+        "description": "Retrieves a paginated list of user streaks with configuration details. Supports filtering by period type, date range, and optional field resolution for translations.",
         "parameters": [
           {
             "name": "fields",
@@ -2999,7 +3013,7 @@
       "get": {
         "operationId": "users/getMe",
         "summary": "Get current user",
-        "description": "Retrieves information about the currently authenticated user. \n    Includes user profile data, settings, and associated metadata.",
+        "description": "Retrieve the current authenticated user profile, with optional additional fields (tags, stats, learningGroupLogs, principal).",
         "parameters": [
           {
             "name": "fields",
@@ -3032,6 +3046,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
           }
         },
         "tags": [
@@ -3041,7 +3058,7 @@
       "patch": {
         "operationId": "users/updateMe",
         "summary": "Update current user",
-        "description": "Updates the currently authenticated user's profile. Only provided fields will be updated.",
+        "description": "Update the current authenticated user profile.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3081,11 +3098,37 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid input"
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "users/deleteMe",
+        "summary": "Delete current user",
+        "description": "Permanently delete the current authenticated user account.",
+        "responses": {
+          "200": {
+            "description": "User deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCurrentUserResponse"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
           }
         },
         "tags": [
@@ -3096,8 +3139,8 @@
     "/users/me/learning-group-logs": {
       "get": {
         "operationId": "users/listMyLearningGroupLogs",
-        "summary": "List current user's learning group logs",
-        "description": "Retrieves a paginated list of learning group log entries for the currently authenticated user. Each log tracks progress through a learning group.",
+        "summary": "List current user learning group logs",
+        "description": "List completed learning group logs for the current authenticated user.",
         "parameters": [
           {
             "name": "limit",
@@ -3144,7 +3187,7 @@
       "get": {
         "operationId": "users/me/principal/get",
         "summary": "Get current user principal",
-        "description": "Retrieves the principal information for the currently authenticated user. \n    Principal contains the user's identity details.",
+        "description": "Retrieve the Cognito principal for the current authenticated user.",
         "responses": {
           "200": {
             "description": "User principal retrieved successfully",
@@ -3158,6 +3201,37 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Principal not found"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/me/referral-code": {
+      "get": {
+        "operationId": "users/getMyReferralCode",
+        "summary": "Get current user referral code",
+        "description": "Get or create a referral code for the current authenticated user. Idempotent: returns existing code if already generated.",
+        "responses": {
+          "200": {
+            "description": "Referral code retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCurrentUserReferralCodeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
           }
         },
         "tags": [
@@ -3168,11 +3242,11 @@
     "/users/me/stats": {
       "get": {
         "operationId": "users/getMyStats",
-        "summary": "Get current user learning stats",
-        "description": "Retrieves learning statistics for the currently authenticated user.\n\t\tIncludes completed paths, quiz success rate, learning minutes, and total activities.",
+        "summary": "Get current user stats",
+        "description": "Retrieve learning stats for the current authenticated user.",
         "responses": {
           "200": {
-            "description": "Stats retrieved successfully",
+            "description": "User stats retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -3183,9 +3257,6 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "D1 database not configured for workspace"
           }
         },
         "tags": [
@@ -3196,8 +3267,8 @@
     "/users/me/tags": {
       "get": {
         "operationId": "users/me/tags/list",
-        "summary": "List current user tags",
-        "description": "Retrieves a list of tags assigned to the current user. \n    TagAssignments are used to categorize users and provide personalized experiences.",
+        "summary": "List current user tag assignments",
+        "description": "List tag assignments for the current authenticated user.",
         "parameters": [
           {
             "name": "limit",
@@ -3257,7 +3328,7 @@
         ],
         "responses": {
           "200": {
-            "description": "User tags retrieved successfully",
+            "description": "Tag assignments retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -3271,21 +3342,23 @@
           }
         },
         "tags": [
-          "Users/Tags"
+          "Users"
         ]
       }
     },
     "/users/me/tags/{tagId}": {
       "get": {
         "operationId": "users/me/tags/get",
-        "summary": "Get current user tag by ID",
-        "description": "Retrieves a specific tag assigned to the current user by tag ID.",
+        "summary": "Get current user tag assignment",
+        "description": "Retrieve a specific tag assignment for the current authenticated user.",
         "parameters": [
           {
             "name": "tagId",
             "in": "path",
+            "description": "Unique identifier for the tag",
             "required": true,
             "schema": {
+              "description": "Unique identifier for the tag",
               "type": "string",
               "minLength": 1
             }
@@ -3293,7 +3366,7 @@
         ],
         "responses": {
           "200": {
-            "description": "User tag retrieved successfully",
+            "description": "Tag assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -3306,11 +3379,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Tag not found"
+            "description": "Tag assignment not found"
           }
         },
         "tags": [
-          "Users/Tags"
+          "Users"
         ]
       }
     },
@@ -3318,7 +3391,7 @@
       "get": {
         "operationId": "virtualBalances/list",
         "summary": "List virtual balances",
-        "description": "Retrieves a list of virtual currency balances for the authenticated user.\n    Virtual balances track the amount of each virtual currency the user owns.\n    Use the `fields` query parameter to include the `translation` field.",
+        "description": "List virtual balances with optional translation and pagination.",
         "parameters": [
           {
             "name": "fields",
@@ -3413,8 +3486,8 @@
     "/virtual-balances/{virtualCurrencyId}": {
       "get": {
         "operationId": "virtualBalances/get",
-        "summary": "Get virtual balance by currency ID",
-        "description": "Retrieves the virtual balance for a specific virtual currency.\n    Shows the current amount of the specified virtual currency owned by the user.\n    Use the `fields` query parameter to include the `translation` field.",
+        "summary": "Get virtual balance",
+        "description": "Retrieve a virtual balance for a specific currency, with optional translation.",
         "parameters": [
           {
             "name": "fields",
@@ -3454,7 +3527,7 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Virtual currency or balance not found"
+            "description": "Virtual balance not found"
           }
         },
         "tags": [
@@ -3466,7 +3539,7 @@
       "get": {
         "operationId": "virtualTransactions/list",
         "summary": "List virtual transactions",
-        "description": "Retrieves a list of virtual currency transactions for the authenticated user. \n    Virtual transactions track credits, debits, and other changes to virtual currency balances.",
+        "description": "List virtual transactions with pagination.",
         "parameters": [
           {
             "name": "limit",
@@ -3546,7 +3619,7 @@
       "post": {
         "operationId": "virtualTransactions/create",
         "summary": "Create virtual transaction",
-        "description": "Creates a new virtual currency transaction. \n    This endpoint allows users to initiate transactions such as purchases or transfers using virtual currency.",
+        "description": "Create a new virtual transaction.",
         "parameters": [
           {
             "name": "x-idempotency-key",
@@ -3620,7 +3693,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Virtual transaction created successfully",
             "content": {
               "application/json": {
@@ -3630,14 +3703,11 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid input"
-          },
           "401": {
             "description": "Unauthorized"
           },
           "409": {
-            "description": "Virtual Transaction ID already exists"
+            "description": "Conflict"
           }
         },
         "tags": [
@@ -3648,8 +3718,8 @@
     "/virtual-transactions/{virtualTransactionId}": {
       "get": {
         "operationId": "virtualTransactions/get",
-        "summary": "Get virtual transaction by ID",
-        "description": "Retrieves a specific virtual transaction by its ID. \n    Shows detailed information about the transaction including amount, currency, and status.",
+        "summary": "Get virtual transaction",
+        "description": "Retrieve a specific virtual transaction by ID.",
         "parameters": [
           {
             "name": "virtualTransactionId",
@@ -3687,7 +3757,7 @@
       "post": {
         "operationId": "virtualTransactions/redeem",
         "summary": "Redeem virtual transaction",
-        "description": "Redeems a virtual transaction, typically converting virtual currency to real-world benefits or rewards. \n    This endpoint finalizes the redemption process for eligible transactions.",
+        "description": "Redeem a virtual transaction.",
         "parameters": [
           {
             "name": "virtualTransactionId",
@@ -3709,14 +3779,14 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid transaction or cannot be redeemed"
-          },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
             "description": "Virtual transaction not found"
+          },
+          "409": {
+            "description": "Conflict"
           }
         },
         "tags": [
@@ -3724,11 +3794,61 @@
         ]
       }
     },
+    "/workspace-codes/redeem": {
+      "post": {
+        "operationId": "workspaceCodes/redeem",
+        "summary": "Redeem a workspace code",
+        "description": "Redeem a workspace code for the current authenticated user. The code is submitted in the request body to avoid leaking it into access logs.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "description": "The human-readable activation code string.",
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 4,
+                    "pattern": "^[A-Z0-9_-]{4,50}$"
+                  }
+                },
+                "required": [
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workspace code redeemed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedeemWorkspaceCodeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Code is invalid, expired, or already redeemed"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "WorkspaceCodes"
+        ]
+      }
+    },
     "/workspace-configuration": {
       "get": {
         "operationId": "workspaceConfiguration/get",
         "summary": "Get workspace configuration",
-        "description": "Retrieves the configuration for the current workspace including branding, theme, layout, and feature flags. Returns default values if no configuration has been set.",
+        "description": "Retrieves the workspace configuration for the authenticated user's workspace. Returns branding, layout, theme, languages, features, and networking settings.",
         "responses": {
           "200": {
             "description": "Workspace configuration retrieved successfully",
@@ -3742,10 +3862,13 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Workspace configuration not found"
           }
         },
         "tags": [
-          "WorkspaceConfiguration"
+          "WorkspaceConfigurations"
         ]
       }
     }
@@ -3761,7 +3884,7 @@
             "type": "number"
           },
           "pathsCompleted": {
-            "description": "Learners who completed at least one learning path",
+            "description": "Total learning paths completed",
             "type": "number"
           },
           "totalLearners": {
@@ -3819,21 +3942,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "workspaceId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "sourceRegion": {
-            "$ref": "#/components/schemas/SourceRegion"
-          },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -3850,9 +3958,6 @@
           "activityId",
           "userId",
           "completedAt",
-          "accountId",
-          "workspaceId",
-          "sourceRegion",
           "createdAt",
           "updatedAt"
         ]
@@ -3976,90 +4081,80 @@
           "transactions"
         ]
       },
-      "GetBadgeConfigurationTagResponse": {
+      "CurrentAttemptResponse": {
         "type": "object",
         "properties": {
-          "tagId": {
+          "currentAttempt": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "currentAttempt"
+        ]
+      },
+      "DeleteCurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "userId",
+          "deleted"
+        ]
+      },
+      "GetActivityLogResponse": {
+        "type": "object",
+        "properties": {
+          "activityId": {
+            "description": "The unique ID of the activity. Should be a nanoid",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "name": {
+            "description": "Name of the activity",
             "type": "string",
             "minLength": 1
           },
-          "entityType": {
+          "origin": {
+            "description": "Whether the activity comes from a central catalog or is custom-created",
             "type": "string",
             "enum": [
-              "Activity",
-              "BadgeConfiguration",
-              "Quiz",
-              "LearningPath",
-              "LearningGroup",
-              "Media",
-              "MissionConfiguration",
-              "MissionRule",
-              "User",
-              "StreakRule",
-              "StreakConfiguration",
-              "Story",
-              "Slide"
+              "CATALOG",
+              "CUSTOM"
             ]
           },
-          "entityId": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "The unique ID of the activity. Should be a nanoid",
-                "example": "FUMzPf00hz_kcj2R2Hlzq"
-              },
-              {
-                "type": "string",
-                "description": "Unique identifier for the badge configuration (NanoID)."
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string",
-                "description": "The unique ID of the media file",
-                "example": "FUMzPf00hz_kcj2R2Hlzq"
-              },
-              {
-                "type": "string",
-                "description": "Unique identifier for the mission configuration (NanoID)."
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          "priority": {
-            "type": "integer",
-            "default": 0,
-            "minimum": 0
-          },
-          "accountId": {
+          "catalogWorkspaceId": {
+            "description": "ID of the catalog workspace this activity was cloned from",
             "type": "string",
             "maxLength": 10,
             "minLength": 10,
             "pattern": "^[A-Za-z0-9_-]{10}$"
           },
-          "workspaceId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
+          "catalogActivityId": {
+            "description": "ID reference to the original activity in the catalog if applicable",
+            "type": "string"
           },
-          "sourceRegion": {
-            "$ref": "#/components/schemas/SourceRegion"
+          "syncWithCatalog": {
+            "description": "Whether the activity should be synced with catalog updates",
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "description": "List of language codes available for this activity",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -4070,22 +4165,46 @@
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "required": [
+          "activityId",
+          "name",
+          "origin",
+          "defaultLang",
+          "langs",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetBadgeConfigurationTagResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
           },
-          "badgeConfigurationId": {
-            "description": "Unique identifier for the badge configuration (NanoID).",
-            "type": "string"
+          "priority": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
           }
         },
         "required": [
           "tagId",
-          "entityType",
-          "entityId",
-          "accountId",
-          "workspaceId",
-          "sourceRegion",
           "createdAt",
-          "updatedAt",
-          "badgeConfigurationId"
+          "updatedAt"
         ]
       },
       "GetBadgeConfigurationTranslationResponse": {
@@ -4280,6 +4399,27 @@
           "email"
         ]
       },
+      "GetCurrentUserReferralCodeResponse": {
+        "type": "object",
+        "properties": {
+          "referralCode": {
+            "description": "Human-friendly referral code for sharing.",
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 6,
+            "pattern": "^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$"
+          },
+          "referralToken": {
+            "description": "HMAC-signed referral token for programmatic links.",
+            "type": "string",
+            "minLength": 10
+          }
+        },
+        "required": [
+          "referralCode",
+          "referralToken"
+        ]
+      },
       "GetCurrentUserResponse": {
         "type": "object",
         "properties": {
@@ -4309,6 +4449,47 @@
           "timezone": {
             "$ref": "#/components/schemas/Timezone"
           },
+          "role": {
+            "type": "string",
+            "default": "member",
+            "enum": [
+              "owner",
+              "admin",
+              "manager",
+              "member",
+              "viewer"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "default": "active",
+            "enum": [
+              "active",
+              "suspended"
+            ]
+          },
+          "referralCode": {
+            "description": "Human-friendly referral code for sharing.",
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 6,
+            "pattern": "^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$"
+          },
+          "referredBy": {
+            "type": "string"
+          },
+          "referredCount": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          "welcomeEmailRequested": {
+            "type": "boolean"
+          },
+          "welcomeEmailSentAt": {
+            "type": "string",
+            "format": "date-time"
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -4337,6 +4518,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -4645,6 +4827,7 @@
         "type": "object",
         "properties": {
           "tagId": {
+            "description": "Unique identifier for the tag",
             "type": "string",
             "minLength": 1
           },
@@ -4719,9 +4902,6 @@
           "catalogLearningGroupId": {
             "type": "string"
           },
-          "syncWithCatalog": {
-            "type": "boolean"
-          },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
           },
@@ -4737,18 +4917,53 @@
             "type": "array",
             "items": {}
           },
-          "completionRule": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonLogicExpression"
-              },
-              {
-                "type": [
-                  "object",
-                  "null"
-                ]
-              }
+          "defaultLayoutId": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
             ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
+          "completionRule": {
+            "$ref": "#/components/schemas/JsonLogicExpression"
           },
           "outcomeRule": {
             "allOf": [
@@ -4795,6 +5010,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -4893,6 +5109,7 @@
                 "type": "string",
                 "enum": [
                   "SUCCESS",
+                  "PASS",
                   "FAIL"
                 ]
               },
@@ -4945,6 +5162,7 @@
                       "type": "string",
                       "enum": [
                         "SUCCESS",
+                        "PASS",
                         "FAIL"
                       ]
                     }
@@ -4993,86 +5211,14 @@
         "type": "object",
         "properties": {
           "tagId": {
+            "description": "Unique identifier for the tag",
             "type": "string",
             "minLength": 1
-          },
-          "entityType": {
-            "type": "string",
-            "enum": [
-              "Activity",
-              "BadgeConfiguration",
-              "Quiz",
-              "LearningPath",
-              "LearningGroup",
-              "Media",
-              "MissionConfiguration",
-              "MissionRule",
-              "User",
-              "StreakRule",
-              "StreakConfiguration",
-              "Story",
-              "Slide"
-            ]
-          },
-          "entityId": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "The unique ID of the activity. Should be a nanoid",
-                "example": "FUMzPf00hz_kcj2R2Hlzq"
-              },
-              {
-                "type": "string",
-                "description": "Unique identifier for the badge configuration (NanoID)."
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string",
-                "description": "The unique ID of the media file",
-                "example": "FUMzPf00hz_kcj2R2Hlzq"
-              },
-              {
-                "type": "string",
-                "description": "Unique identifier for the mission configuration (NanoID)."
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              }
-            ]
           },
           "priority": {
             "type": "integer",
             "default": 0,
             "minimum": 0
-          },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "workspaceId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "sourceRegion": {
-            "$ref": "#/components/schemas/SourceRegion"
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -5083,21 +5229,12 @@
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
             "format": "date-time"
-          },
-          "learningGroupId": {
-            "type": "string"
           }
         },
         "required": [
           "tagId",
-          "entityType",
-          "entityId",
-          "accountId",
-          "workspaceId",
-          "sourceRegion",
           "createdAt",
-          "updatedAt",
-          "learningGroupId"
+          "updatedAt"
         ]
       },
       "GetLearningGroupTranslationResponse": {
@@ -5165,9 +5302,6 @@
           "legacyLearningPathId": {
             "type": "string"
           },
-          "syncWithCatalog": {
-            "type": "boolean"
-          },
           "title": {
             "type": "string",
             "minLength": 1
@@ -5252,6 +5386,54 @@
                 "itemType"
               ]
             }
+          },
+          "contentThemeId": {
+            "type": "string"
+          },
+          "defaultLayoutId": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
           },
           "completionRule": {
             "allOf": [
@@ -5347,6 +5529,11 @@
           "unlockedByRuleId": {
             "type": "string"
           },
+          "currentAttempt": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
+          },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -5363,6 +5550,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -5461,8 +5649,14 @@
                 "type": "string",
                 "enum": [
                   "SUCCESS",
+                  "PASS",
                   "FAIL"
                 ]
+              },
+              "attempt": {
+                "type": "integer",
+                "default": 1,
+                "minimum": 1
               },
               "progress": {
                 "type": "object",
@@ -5514,8 +5708,35 @@
                       "type": "string",
                       "enum": [
                         "SUCCESS",
+                        "PASS",
                         "FAIL"
                       ]
+                    },
+                    "childItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "itemId": {
+                            "type": "string"
+                          },
+                          "itemType": {
+                            "type": "string"
+                          },
+                          "outcome": {
+                            "type": "string",
+                            "enum": [
+                              "SUCCESS",
+                              "PASS",
+                              "FAIL"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "itemId",
+                          "itemType"
+                        ]
+                      }
                     }
                   },
                   "required": [
@@ -5574,6 +5795,7 @@
         "type": "object",
         "properties": {
           "tagId": {
+            "description": "Unique identifier for the tag",
             "type": "string",
             "minLength": 1
           },
@@ -5634,437 +5856,6 @@
           "learningPathId",
           "lang",
           "title",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "GetLearningPathResponse": {
-        "type": "object",
-        "properties": {
-          "origin": {
-            "type": "string",
-            "enum": [
-              "CATALOG",
-              "AI",
-              "CUSTOM"
-            ]
-          },
-          "catalogWorkspaceId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "catalogLearningPathId": {
-            "type": "string"
-          },
-          "legacyLearningPathId": {
-            "type": "string"
-          },
-          "syncWithCatalog": {
-            "type": "boolean"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
-          "estimatedDuration": {
-            "type": "number"
-          },
-          "defaultLang": {
-            "$ref": "#/components/schemas/Lang"
-          },
-          "langs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Lang"
-            },
-            "maxItems": 10,
-            "minItems": 1
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "itemId": {
-                  "type": "string"
-                },
-                "itemType": {
-                  "type": "string",
-                  "enum": [
-                    "activity",
-                    "game",
-                    "quiz",
-                    "story",
-                    "slide",
-                    "learningGroup"
-                  ]
-                },
-                "itemData": {}
-              },
-              "required": [
-                "itemId",
-                "itemType"
-              ]
-            },
-            "default": []
-          },
-          "activities": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "itemId": {
-                  "type": "string"
-                },
-                "itemType": {
-                  "type": "string",
-                  "enum": [
-                    "activity",
-                    "game",
-                    "quiz",
-                    "story",
-                    "slide",
-                    "learningGroup"
-                  ]
-                },
-                "languages": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Lang"
-                  }
-                }
-              },
-              "required": [
-                "itemId",
-                "itemType"
-              ]
-            }
-          },
-          "completionRule": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonLogicExpression"
-              },
-              {
-                "type": [
-                  "object",
-                  "null"
-                ]
-              }
-            ]
-          },
-          "outcomeRule": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonLogicExpression"
-              },
-              {
-                "type": [
-                  "object",
-                  "null"
-                ]
-              }
-            ]
-          },
-          "startRule": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonLogicExpression"
-              },
-              {
-                "type": [
-                  "object",
-                  "null"
-                ]
-              }
-            ]
-          },
-          "learningPathAssignmentId": {
-            "type": "string"
-          },
-          "learningPathId": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "learningPathRuleId": {
-            "type": "string"
-          },
-          "groupId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "periodId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "timeframeType": {
-            "type": "string",
-            "enum": [
-              "PERMANENT",
-              "RANGE",
-              "RECURRING"
-            ]
-          },
-          "startsAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endsAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "state": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "ACTIVE",
-              "ENDED"
-            ]
-          },
-          "visibility": {
-            "type": "string",
-            "enum": [
-              "LOCKED",
-              "UNLOCKED"
-            ]
-          },
-          "unlockedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "unlockedByRuleId": {
-            "type": "string"
-          },
-          "createdAt": {
-            "description": "Creation date in ISO format (UTC Timezone)",
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "description": "Creation date in ISO format (UTC Timezone)",
-            "type": "string",
-            "format": "date-time"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "tagId": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "priority": {
-                  "type": "integer",
-                  "default": 0,
-                  "minimum": 0
-                },
-                "createdAt": {
-                  "description": "Creation date in ISO format (UTC Timezone)",
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "updatedAt": {
-                  "description": "Creation date in ISO format (UTC Timezone)",
-                  "type": "string",
-                  "format": "date-time"
-                }
-              },
-              "required": [
-                "tagId",
-                "createdAt",
-                "updatedAt"
-              ]
-            }
-          },
-          "translation": {
-            "type": "object",
-            "properties": {
-              "workspaceId": {
-                "type": "string",
-                "maxLength": 10,
-                "minLength": 10,
-                "pattern": "^[A-Za-z0-9_-]{10}$"
-              },
-              "learningPathId": {
-                "type": "string"
-              },
-              "lang": {
-                "$ref": "#/components/schemas/Lang"
-              },
-              "title": {
-                "type": "string",
-                "minLength": 1
-              },
-              "image": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": {
-                "type": "string"
-              },
-              "accountId": {
-                "type": "string",
-                "maxLength": 10,
-                "minLength": 10,
-                "pattern": "^[A-Za-z0-9_-]{10}$"
-              },
-              "sourceRegion": {
-                "$ref": "#/components/schemas/SourceRegion"
-              },
-              "createdAt": {
-                "description": "Creation date in ISO format (UTC Timezone)",
-                "type": "string",
-                "format": "date-time"
-              },
-              "updatedAt": {
-                "description": "Creation date in ISO format (UTC Timezone)",
-                "type": "string",
-                "format": "date-time"
-              }
-            },
-            "required": [
-              "workspaceId",
-              "learningPathId",
-              "lang",
-              "title",
-              "accountId",
-              "sourceRegion",
-              "createdAt",
-              "updatedAt"
-            ]
-          },
-          "progress": {
-            "type": "object",
-            "properties": {
-              "status": {
-                "type": "string",
-                "enum": [
-                  "NOT_STARTED",
-                  "IN_PROGRESS",
-                  "COMPLETED"
-                ]
-              },
-              "outcome": {
-                "type": "string",
-                "enum": [
-                  "SUCCESS",
-                  "FAIL"
-                ]
-              },
-              "progress": {
-                "type": "object",
-                "properties": {
-                  "total": {
-                    "type": "number"
-                  },
-                  "completed": {
-                    "type": "number"
-                  },
-                  "percentage": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "total",
-                  "completed",
-                  "percentage"
-                ]
-              },
-              "items": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "itemId": {
-                      "type": "string"
-                    },
-                    "itemType": {
-                      "type": "string",
-                      "enum": [
-                        "activity",
-                        "game",
-                        "quiz",
-                        "story",
-                        "slide",
-                        "learningGroup"
-                      ]
-                    },
-                    "progress": {
-                      "type": "string",
-                      "enum": [
-                        "START",
-                        "IN_PROGRESS",
-                        "COMPLETE"
-                      ]
-                    },
-                    "outcome": {
-                      "type": "string",
-                      "enum": [
-                        "SUCCESS",
-                        "FAIL"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "itemId",
-                    "itemType"
-                  ]
-                }
-              },
-              "currentItemId": {
-                "type": "string"
-              },
-              "currentItemType": {
-                "type": "string",
-                "enum": [
-                  "activity",
-                  "game",
-                  "quiz",
-                  "story",
-                  "slide",
-                  "learningGroup"
-                ]
-              },
-              "startedAt": {
-                "type": "string"
-              },
-              "completedAt": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "status",
-              "progress",
-              "items"
-            ]
-          }
-        },
-        "required": [
-          "origin",
-          "title",
-          "estimatedDuration",
-          "defaultLang",
-          "langs",
-          "learningPathAssignmentId",
-          "learningPathId",
-          "userId",
-          "periodId",
-          "timeframeType",
-          "startsAt",
-          "state",
-          "visibility",
           "createdAt",
           "updatedAt"
         ]
@@ -6284,9 +6075,6 @@
           "catalogQuizId": {
             "type": "string"
           },
-          "syncWithCatalog": {
-            "type": "boolean"
-          },
           "placement": {
             "type": "string",
             "enum": [
@@ -6312,6 +6100,51 @@
             "maxItems": 10,
             "minItems": 1
           },
+          "defaultLayoutId": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -6328,6 +6161,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -6450,6 +6284,53 @@
             "required": [
               "status"
             ]
+          },
+          "computedStyle": {
+            "type": "object",
+            "properties": {
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              }
+            }
           }
         },
         "required": [
@@ -6465,86 +6346,14 @@
         "type": "object",
         "properties": {
           "tagId": {
+            "description": "Unique identifier for the tag",
             "type": "string",
             "minLength": 1
-          },
-          "entityType": {
-            "type": "string",
-            "enum": [
-              "Activity",
-              "BadgeConfiguration",
-              "Quiz",
-              "LearningPath",
-              "LearningGroup",
-              "Media",
-              "MissionConfiguration",
-              "MissionRule",
-              "User",
-              "StreakRule",
-              "StreakConfiguration",
-              "Story",
-              "Slide"
-            ]
-          },
-          "entityId": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "The unique ID of the activity. Should be a nanoid",
-                "example": "FUMzPf00hz_kcj2R2Hlzq"
-              },
-              {
-                "type": "string",
-                "description": "Unique identifier for the badge configuration (NanoID)."
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string",
-                "description": "The unique ID of the media file",
-                "example": "FUMzPf00hz_kcj2R2Hlzq"
-              },
-              {
-                "type": "string",
-                "description": "Unique identifier for the mission configuration (NanoID)."
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              }
-            ]
           },
           "priority": {
             "type": "integer",
             "default": 0,
             "minimum": 0
-          },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "workspaceId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "sourceRegion": {
-            "$ref": "#/components/schemas/SourceRegion"
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -6555,21 +6364,12 @@
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
             "format": "date-time"
-          },
-          "quizId": {
-            "type": "string"
           }
         },
         "required": [
           "tagId",
-          "entityType",
-          "entityId",
-          "accountId",
-          "workspaceId",
-          "sourceRegion",
           "createdAt",
-          "updatedAt",
-          "quizId"
+          "updatedAt"
         ]
       },
       "GetQuizTranslationResponse": {
@@ -6578,92 +6378,28 @@
           "quizId": {
             "type": "string"
           },
-          "difficulty": {
-            "type": "string",
-            "enum": [
-              "EASY",
-              "MEDIUM",
-              "HARD"
-            ]
-          },
-          "correctAnswer": {
-            "type": "string",
-            "enum": [
-              "opt1",
-              "opt2",
-              "opt3",
-              "opt4"
-            ]
-          },
-          "origin": {
-            "type": "string",
-            "enum": [
-              "CATALOG",
-              "CUSTOM",
-              "AI"
-            ]
-          },
-          "catalogWorkspaceId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "catalogQuizId": {
-            "type": "string"
-          },
-          "syncWithCatalog": {
-            "type": "boolean"
-          },
-          "placement": {
-            "type": "string",
-            "enum": [
-              "STANDALONE",
-              "STORY",
-              "NEWS"
-            ]
-          },
-          "storyId": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          },
-          "defaultLang": {
+          "lang": {
             "$ref": "#/components/schemas/Lang"
           },
-          "langs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Lang"
-            },
-            "maxItems": 10,
-            "minItems": 1
-          },
-          "parentId": {
-            "type": "string"
-          },
-          "parentType": {
+          "question": {
             "type": "string",
-            "enum": [
-              "learningPath",
-              "learningGroup"
-            ]
+            "minLength": 1
           },
-          "accountId": {
+          "opt1": {
             "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
+            "minLength": 1
           },
-          "workspaceId": {
+          "opt2": {
             "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
+            "minLength": 1
           },
-          "sourceRegion": {
-            "$ref": "#/components/schemas/SourceRegion"
+          "opt3": {
+            "type": "string",
+            "minLength": 1
+          },
+          "opt4": {
+            "type": "string",
+            "minLength": 1
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -6678,15 +6414,10 @@
         },
         "required": [
           "quizId",
-          "difficulty",
-          "correctAnswer",
-          "origin",
-          "placement",
-          "defaultLang",
-          "langs",
-          "accountId",
-          "workspaceId",
-          "sourceRegion",
+          "lang",
+          "question",
+          "opt1",
+          "opt2",
           "createdAt",
           "updatedAt"
         ]
@@ -6972,9 +6703,6 @@
           "catalogSlideId": {
             "type": "string"
           },
-          "syncWithCatalog": {
-            "type": "boolean"
-          },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
           },
@@ -6986,8 +6714,50 @@
             "maxItems": 10,
             "minItems": 1
           },
-          "defaultSlideLayoutId": {
+          "defaultLayoutId": {
             "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
           },
           "parentId": {
             "type": "string"
@@ -7005,6 +6775,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -7056,15 +6827,6 @@
               },
               "content": {
                 "properties": {
-                  "background": {
-                    "type": "string"
-                  },
-                  "textColor": {
-                    "type": "string"
-                  },
-                  "boxColor": {
-                    "type": "string"
-                  },
                   "contents": {
                     "type": "array",
                     "items": {
@@ -7162,6 +6924,53 @@
             "required": [
               "status"
             ]
+          },
+          "computedStyle": {
+            "type": "object",
+            "properties": {
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              }
+            }
           }
         },
         "required": [
@@ -7174,6 +6983,7 @@
         "type": "object",
         "properties": {
           "tagId": {
+            "description": "Unique identifier for the tag",
             "type": "string",
             "minLength": 1
           },
@@ -7218,15 +7028,6 @@
           },
           "content": {
             "properties": {
-              "background": {
-                "type": "string"
-              },
-              "textColor": {
-                "type": "string"
-              },
-              "boxColor": {
-                "type": "string"
-              },
               "contents": {
                 "type": "array",
                 "items": {
@@ -7557,6 +7358,10 @@
                 "description": "URL to the workspace favicon.",
                 "type": "string",
                 "format": "uri"
+              },
+              "font": {
+                "description": "Font family name (e.g., 'Inter', 'Roboto'). Loaded from Google Fonts if available, falls back to system font.",
+                "type": "string"
               }
             }
           },
@@ -8445,6 +8250,57 @@
               }
             }
           },
+          "compliance": {
+            "description": "Compliance configuration for the workspace.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "privacyPolicyUrl": {
+                "description": "URL to the workspace privacy policy document.",
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "security": {
+            "description": "Security settings controlling workspace access and signup restrictions.",
+            "type": "object",
+            "default": {
+              "signupMode": "INVITE_ONLY",
+              "defaultUserRole": "member"
+            },
+            "properties": {
+              "signupMode": {
+                "description": "Controls how users can join this workspace. Defaults to INVITE_ONLY for security.",
+                "type": "string",
+                "default": "INVITE_ONLY",
+                "enum": [
+                  "OPEN",
+                  "INVITE_ONLY",
+                  "REFERRAL_ALLOWED"
+                ]
+              },
+              "allowedDomains": {
+                "description": "Email domains allowed for self-service signup (e.g., ['company.com', 'partner.org']). When set, all self-service paths (codes, referrals, open signup) enforce this domain check. Admin invitations bypass it. Empty or omitted means no domain restriction.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "defaultUserRole": {
+                "description": "Default role assigned to new users joining this workspace.",
+                "type": "string",
+                "default": "member",
+                "enum": [
+                  "owner",
+                  "admin",
+                  "manager",
+                  "member",
+                  "viewer"
+                ]
+              }
+            }
+          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -8522,6 +8378,7 @@
       "Lang": {
         "description": "Supported Locale",
         "type": "string",
+        "default": "en",
         "enum": [
           "aa",
           "ab",
@@ -8835,6 +8692,82 @@
           "zh-CN",
           "zh-TW",
           "zu"
+        ]
+      },
+      "ListActivityLogsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "activityLogId": {
+                  "type": "string"
+                },
+                "activityId": {
+                  "description": "The unique ID of the activity. Should be a nanoid",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "outcome": {
+                  "type": "string",
+                  "enum": [
+                    "SUCCESS",
+                    "FAILURE"
+                  ]
+                },
+                "value": {
+                  "type": "number",
+                  "default": 1
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "additionalData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                },
+                "completedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "activityLogId",
+                "activityId",
+                "userId",
+                "completedAt",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "items"
         ]
       },
       "ListBadgeConfigurationsResponse": {
@@ -9321,6 +9254,7 @@
                     "type": "object",
                     "properties": {
                       "tagId": {
+                        "description": "Unique identifier for the tag",
                         "type": "string",
                         "minLength": 1
                       },
@@ -9382,6 +9316,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -9709,6 +9644,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -9844,9 +9780,6 @@
                 "catalogLearningGroupId": {
                   "type": "string"
                 },
-                "syncWithCatalog": {
-                  "type": "boolean"
-                },
                 "defaultLang": {
                   "$ref": "#/components/schemas/Lang"
                 },
@@ -9861,6 +9794,51 @@
                 "items": {
                   "type": "array",
                   "items": {}
+                },
+                "defaultLayoutId": {
+                  "type": "string"
+                },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
                 },
                 "completionRule": {
                   "allOf": [
@@ -9930,6 +9908,7 @@
                     "type": "object",
                     "properties": {
                       "tagId": {
+                        "description": "Unique identifier for the tag",
                         "type": "string",
                         "minLength": 1
                       },
@@ -10046,6 +10025,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -10090,38 +10070,13 @@
         "properties": {
           "items": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "itemId": {
-                  "type": "string"
-                },
-                "itemType": {
-                  "type": "string",
-                  "enum": [
-                    "activity",
-                    "game",
-                    "quiz",
-                    "story",
-                    "slide",
-                    "learningGroup"
-                  ]
-                },
-                "itemData": {}
-              },
-              "required": [
-                "itemId",
-                "itemType"
-              ]
-            }
+            "items": {}
           },
           "nextToken": {
-            "description": "Pagination cursor for fetching the next set of results",
             "type": [
               "string",
               "null"
-            ],
-            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            ]
           }
         },
         "required": [
@@ -10158,9 +10113,6 @@
                 },
                 "legacyLearningPathId": {
                   "type": "string"
-                },
-                "syncWithCatalog": {
-                  "type": "boolean"
                 },
                 "title": {
                   "type": "string",
@@ -10246,6 +10198,54 @@
                       "itemType"
                     ]
                   }
+                },
+                "contentThemeId": {
+                  "type": "string"
+                },
+                "defaultLayoutId": {
+                  "type": "string"
+                },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
                 },
                 "completionRule": {
                   "allOf": [
@@ -10341,6 +10341,11 @@
                 "unlockedByRuleId": {
                   "type": "string"
                 },
+                "currentAttempt": {
+                  "type": "integer",
+                  "default": 1,
+                  "minimum": 1
+                },
                 "createdAt": {
                   "description": "Creation date in ISO format (UTC Timezone)",
                   "type": "string",
@@ -10357,6 +10362,7 @@
                     "type": "object",
                     "properties": {
                       "tagId": {
+                        "description": "Unique identifier for the tag",
                         "type": "string",
                         "minLength": 1
                       },
@@ -10455,8 +10461,14 @@
                       "type": "string",
                       "enum": [
                         "SUCCESS",
+                        "PASS",
                         "FAIL"
                       ]
+                    },
+                    "attempt": {
+                      "type": "integer",
+                      "default": 1,
+                      "minimum": 1
                     },
                     "progress": {
                       "type": "object",
@@ -10508,8 +10520,35 @@
                             "type": "string",
                             "enum": [
                               "SUCCESS",
+                              "PASS",
                               "FAIL"
                             ]
+                          },
+                          "childItems": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "itemId": {
+                                  "type": "string"
+                                },
+                                "itemType": {
+                                  "type": "string"
+                                },
+                                "outcome": {
+                                  "type": "string",
+                                  "enum": [
+                                    "SUCCESS",
+                                    "PASS",
+                                    "FAIL"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "itemId",
+                                "itemType"
+                              ]
+                            }
                           }
                         },
                         "required": [
@@ -10583,493 +10622,13 @@
         "properties": {
           "items": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "tagId": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "priority": {
-                  "type": "integer",
-                  "default": 0,
-                  "minimum": 0
-                },
-                "createdAt": {
-                  "description": "Creation date in ISO format (UTC Timezone)",
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "updatedAt": {
-                  "description": "Creation date in ISO format (UTC Timezone)",
-                  "type": "string",
-                  "format": "date-time"
-                }
-              },
-              "required": [
-                "tagId",
-                "createdAt",
-                "updatedAt"
-              ]
-            }
+            "items": {}
           },
           "nextToken": {
-            "description": "Pagination cursor for fetching the next set of results",
             "type": [
               "string",
               "null"
-            ],
-            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-          }
-        },
-        "required": [
-          "items"
-        ]
-      },
-      "ListLearningPathsResponse": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "learningPathId": {
-                  "type": "string"
-                },
-                "origin": {
-                  "type": "string",
-                  "enum": [
-                    "CATALOG",
-                    "AI",
-                    "CUSTOM"
-                  ]
-                },
-                "catalogWorkspaceId": {
-                  "type": "string",
-                  "maxLength": 10,
-                  "minLength": 10,
-                  "pattern": "^[A-Za-z0-9_-]{10}$"
-                },
-                "catalogLearningPathId": {
-                  "type": "string"
-                },
-                "legacyLearningPathId": {
-                  "type": "string"
-                },
-                "syncWithCatalog": {
-                  "type": "boolean"
-                },
-                "title": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": {
-                  "type": "string"
-                },
-                "image": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "estimatedDuration": {
-                  "type": "number"
-                },
-                "defaultLang": {
-                  "$ref": "#/components/schemas/Lang"
-                },
-                "langs": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Lang"
-                  },
-                  "maxItems": 10,
-                  "minItems": 1
-                },
-                "items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "itemId": {
-                        "type": "string"
-                      },
-                      "itemType": {
-                        "type": "string",
-                        "enum": [
-                          "activity",
-                          "game",
-                          "quiz",
-                          "story",
-                          "slide",
-                          "learningGroup"
-                        ]
-                      },
-                      "itemData": {}
-                    },
-                    "required": [
-                      "itemId",
-                      "itemType"
-                    ]
-                  },
-                  "default": []
-                },
-                "activities": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "itemId": {
-                        "type": "string"
-                      },
-                      "itemType": {
-                        "type": "string",
-                        "enum": [
-                          "activity",
-                          "game",
-                          "quiz",
-                          "story",
-                          "slide",
-                          "learningGroup"
-                        ]
-                      },
-                      "languages": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/Lang"
-                        }
-                      }
-                    },
-                    "required": [
-                      "itemId",
-                      "itemType"
-                    ]
-                  }
-                },
-                "completionRule": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/JsonLogicExpression"
-                    },
-                    {
-                      "type": [
-                        "object",
-                        "null"
-                      ]
-                    }
-                  ]
-                },
-                "outcomeRule": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/JsonLogicExpression"
-                    },
-                    {
-                      "type": [
-                        "object",
-                        "null"
-                      ]
-                    }
-                  ]
-                },
-                "startRule": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/JsonLogicExpression"
-                    },
-                    {
-                      "type": [
-                        "object",
-                        "null"
-                      ]
-                    }
-                  ]
-                },
-                "learningPathAssignmentId": {
-                  "type": "string"
-                },
-                "userId": {
-                  "type": "string"
-                },
-                "learningPathRuleId": {
-                  "type": "string"
-                },
-                "groupId": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "periodId": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "timeframeType": {
-                  "type": "string",
-                  "enum": [
-                    "PERMANENT",
-                    "RANGE",
-                    "RECURRING"
-                  ]
-                },
-                "startsAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "endsAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "state": {
-                  "type": "string",
-                  "enum": [
-                    "PENDING",
-                    "ACTIVE",
-                    "ENDED"
-                  ]
-                },
-                "visibility": {
-                  "type": "string",
-                  "enum": [
-                    "LOCKED",
-                    "UNLOCKED"
-                  ]
-                },
-                "unlockedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "unlockedByRuleId": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "description": "Creation date in ISO format (UTC Timezone)",
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "updatedAt": {
-                  "description": "Creation date in ISO format (UTC Timezone)",
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "tags": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "tagId": {
-                        "type": "string",
-                        "minLength": 1
-                      },
-                      "priority": {
-                        "type": "integer",
-                        "default": 0,
-                        "minimum": 0
-                      },
-                      "createdAt": {
-                        "description": "Creation date in ISO format (UTC Timezone)",
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updatedAt": {
-                        "description": "Creation date in ISO format (UTC Timezone)",
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    "required": [
-                      "tagId",
-                      "createdAt",
-                      "updatedAt"
-                    ]
-                  }
-                },
-                "translation": {
-                  "type": "object",
-                  "properties": {
-                    "workspaceId": {
-                      "type": "string",
-                      "maxLength": 10,
-                      "minLength": 10,
-                      "pattern": "^[A-Za-z0-9_-]{10}$"
-                    },
-                    "learningPathId": {
-                      "type": "string"
-                    },
-                    "lang": {
-                      "$ref": "#/components/schemas/Lang"
-                    },
-                    "title": {
-                      "type": "string",
-                      "minLength": 1
-                    },
-                    "image": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "accountId": {
-                      "type": "string",
-                      "maxLength": 10,
-                      "minLength": 10,
-                      "pattern": "^[A-Za-z0-9_-]{10}$"
-                    },
-                    "sourceRegion": {
-                      "$ref": "#/components/schemas/SourceRegion"
-                    },
-                    "createdAt": {
-                      "description": "Creation date in ISO format (UTC Timezone)",
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updatedAt": {
-                      "description": "Creation date in ISO format (UTC Timezone)",
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  },
-                  "required": [
-                    "workspaceId",
-                    "learningPathId",
-                    "lang",
-                    "title",
-                    "accountId",
-                    "sourceRegion",
-                    "createdAt",
-                    "updatedAt"
-                  ]
-                },
-                "progress": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "NOT_STARTED",
-                        "IN_PROGRESS",
-                        "COMPLETED"
-                      ]
-                    },
-                    "outcome": {
-                      "type": "string",
-                      "enum": [
-                        "SUCCESS",
-                        "FAIL"
-                      ]
-                    },
-                    "progress": {
-                      "type": "object",
-                      "properties": {
-                        "total": {
-                          "type": "number"
-                        },
-                        "completed": {
-                          "type": "number"
-                        },
-                        "percentage": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "total",
-                        "completed",
-                        "percentage"
-                      ]
-                    },
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "itemId": {
-                            "type": "string"
-                          },
-                          "itemType": {
-                            "type": "string",
-                            "enum": [
-                              "activity",
-                              "game",
-                              "quiz",
-                              "story",
-                              "slide",
-                              "learningGroup"
-                            ]
-                          },
-                          "progress": {
-                            "type": "string",
-                            "enum": [
-                              "START",
-                              "IN_PROGRESS",
-                              "COMPLETE"
-                            ]
-                          },
-                          "outcome": {
-                            "type": "string",
-                            "enum": [
-                              "SUCCESS",
-                              "FAIL"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "itemId",
-                          "itemType"
-                        ]
-                      }
-                    },
-                    "currentItemId": {
-                      "type": "string"
-                    },
-                    "currentItemType": {
-                      "type": "string",
-                      "enum": [
-                        "activity",
-                        "game",
-                        "quiz",
-                        "story",
-                        "slide",
-                        "learningGroup"
-                      ]
-                    },
-                    "startedAt": {
-                      "type": "string"
-                    },
-                    "completedAt": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "progress",
-                    "items"
-                  ]
-                }
-              },
-              "required": [
-                "learningPathId",
-                "origin",
-                "title",
-                "estimatedDuration",
-                "defaultLang",
-                "langs",
-                "learningPathAssignmentId",
-                "userId",
-                "periodId",
-                "timeframeType",
-                "startsAt",
-                "state",
-                "visibility",
-                "createdAt",
-                "updatedAt"
-              ]
-            }
-          },
-          "nextToken": {
-            "description": "Pagination cursor for fetching the next set of results",
-            "type": [
-              "string",
-              "null"
-            ],
-            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            ]
           }
         },
         "required": [
@@ -11288,6 +10847,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -11363,9 +10923,6 @@
                 "catalogQuizId": {
                   "type": "string"
                 },
-                "syncWithCatalog": {
-                  "type": "boolean"
-                },
                 "placement": {
                   "type": "string",
                   "enum": [
@@ -11390,6 +10947,51 @@
                   },
                   "maxItems": 10,
                   "minItems": 1
+                },
+                "defaultLayoutId": {
+                  "type": "string"
+                },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
                 },
                 "parentId": {
                   "type": "string"
@@ -11417,6 +11019,7 @@
                     "type": "object",
                     "properties": {
                       "tagId": {
+                        "description": "Unique identifier for the tag",
                         "type": "string",
                         "minLength": 1
                       },
@@ -11492,6 +11095,53 @@
                     "createdAt",
                     "updatedAt"
                   ]
+                },
+                "computedStyle": {
+                  "type": "object",
+                  "properties": {
+                    "background": {
+                      "type": "string"
+                    },
+                    "textColor": {
+                      "type": "string"
+                    },
+                    "boxColor": {
+                      "type": "string"
+                    },
+                    "backgroundImage": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "backgroundSize": {
+                      "type": "string",
+                      "enum": [
+                        "cover",
+                        "contain"
+                      ]
+                    },
+                    "backgroundPosition": {
+                      "type": "string",
+                      "enum": [
+                        "center",
+                        "top",
+                        "bottom",
+                        "left",
+                        "right"
+                      ]
+                    },
+                    "fontFamily": {
+                      "type": "string"
+                    },
+                    "contentJustify": {
+                      "type": "string",
+                      "enum": [
+                        "start",
+                        "center",
+                        "end",
+                        "space-between"
+                      ]
+                    }
+                  }
                 }
               },
               "required": [
@@ -11685,9 +11335,6 @@
                 "catalogSlideId": {
                   "type": "string"
                 },
-                "syncWithCatalog": {
-                  "type": "boolean"
-                },
                 "defaultLang": {
                   "$ref": "#/components/schemas/Lang"
                 },
@@ -11699,8 +11346,50 @@
                   "maxItems": 10,
                   "minItems": 1
                 },
-                "defaultSlideLayoutId": {
+                "defaultLayoutId": {
                   "type": "string"
+                },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
                 },
                 "parentId": {
                   "type": "string"
@@ -11728,6 +11417,7 @@
                     "type": "object",
                     "properties": {
                       "tagId": {
+                        "description": "Unique identifier for the tag",
                         "type": "string",
                         "minLength": 1
                       },
@@ -11779,15 +11469,6 @@
                     },
                     "content": {
                       "properties": {
-                        "background": {
-                          "type": "string"
-                        },
-                        "textColor": {
-                          "type": "string"
-                        },
-                        "boxColor": {
-                          "type": "string"
-                        },
                         "contents": {
                           "type": "array",
                           "items": {
@@ -11863,6 +11544,53 @@
                     "createdAt",
                     "updatedAt"
                   ]
+                },
+                "computedStyle": {
+                  "type": "object",
+                  "properties": {
+                    "background": {
+                      "type": "string"
+                    },
+                    "textColor": {
+                      "type": "string"
+                    },
+                    "boxColor": {
+                      "type": "string"
+                    },
+                    "backgroundImage": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "backgroundSize": {
+                      "type": "string",
+                      "enum": [
+                        "cover",
+                        "contain"
+                      ]
+                    },
+                    "backgroundPosition": {
+                      "type": "string",
+                      "enum": [
+                        "center",
+                        "top",
+                        "bottom",
+                        "left",
+                        "right"
+                      ]
+                    },
+                    "fontFamily": {
+                      "type": "string"
+                    },
+                    "contentJustify": {
+                      "type": "string",
+                      "enum": [
+                        "start",
+                        "center",
+                        "end",
+                        "space-between"
+                      ]
+                    }
+                  }
                 }
               },
               "required": [
@@ -11896,6 +11624,7 @@
               "type": "object",
               "properties": {
                 "tagId": {
+                  "description": "Unique identifier for the tag",
                   "type": "string",
                   "minLength": 1
                 },
@@ -12071,7 +11800,17 @@
                       "type": "string"
                     },
                     "matchCondition": {
-                      "$ref": "#/components/schemas/JsonLogicExpression"
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/JsonLogicExpression"
+                        },
+                        {
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        }
+                      ]
                     },
                     "origin": {
                       "type": "string",
@@ -12529,21 +12268,6 @@
                 "redeemedAt": {
                   "type": "string"
                 },
-                "accountId": {
-                  "type": "string",
-                  "maxLength": 10,
-                  "minLength": 10,
-                  "pattern": "^[A-Za-z0-9_-]{10}$"
-                },
-                "workspaceId": {
-                  "type": "string",
-                  "maxLength": 10,
-                  "minLength": 10,
-                  "pattern": "^[A-Za-z0-9_-]{10}$"
-                },
-                "sourceRegion": {
-                  "$ref": "#/components/schemas/SourceRegion"
-                },
                 "createdAt": {
                   "description": "Creation date in ISO format (UTC Timezone)",
                   "type": "string",
@@ -12568,9 +12292,6 @@
                 "counterpartType",
                 "counterpart",
                 "amount",
-                "accountId",
-                "workspaceId",
-                "sourceRegion",
                 "createdAt",
                 "updatedAt"
               ]
@@ -12579,6 +12300,145 @@
         },
         "required": [
           "transactions"
+        ]
+      },
+      "RedeemWorkspaceCodeResponse": {
+        "type": "object",
+        "properties": {
+          "redeemed": {
+            "type": "boolean"
+          },
+          "workspaceCodeId": {
+            "type": "string"
+          },
+          "role": {
+            "description": "Role override from the code. Undefined means use workspace default.",
+            "type": "string",
+            "enum": [
+              "owner",
+              "admin",
+              "manager",
+              "member",
+              "viewer"
+            ]
+          },
+          "metadata": {
+            "description": "Code metadata to be processed by rules.",
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "redeemed",
+          "workspaceCodeId"
+        ]
+      },
+      "RetryLearningPathAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "learningPathAssignmentId": {
+            "type": "string"
+          },
+          "learningPathId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "learningPathRuleId": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "periodId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "LOCKED",
+              "UNLOCKED"
+            ]
+          },
+          "unlockedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unlockedByRuleId": {
+            "type": "string"
+          },
+          "currentAttempt": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "learningPathAssignmentId",
+          "learningPathId",
+          "userId",
+          "periodId",
+          "timeframeType",
+          "startsAt",
+          "state",
+          "visibility",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "SourceRegion": {
@@ -12779,6 +12639,7 @@
       "Timezone": {
         "description": "Supported timezones",
         "type": "string",
+        "default": "UTC",
         "enum": [
           "Europe/Andorra",
           "Asia/Dubai",
@@ -13229,6 +13090,47 @@
           "timezone": {
             "$ref": "#/components/schemas/Timezone"
           },
+          "role": {
+            "type": "string",
+            "default": "member",
+            "enum": [
+              "owner",
+              "admin",
+              "manager",
+              "member",
+              "viewer"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "default": "active",
+            "enum": [
+              "active",
+              "suspended"
+            ]
+          },
+          "referralCode": {
+            "description": "Human-friendly referral code for sharing.",
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 6,
+            "pattern": "^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$"
+          },
+          "referredBy": {
+            "type": "string"
+          },
+          "referredCount": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          "welcomeEmailRequested": {
+            "type": "boolean"
+          },
+          "welcomeEmailSentAt": {
+            "type": "string",
+            "format": "date-time"
+          },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -13251,17 +13153,17 @@
     "securitySchemes": {
       "oAuth2": {
         "type": "oauth2",
-        "description": "This API uses OAuth 2 with the authorizationCode or clientCredentials (DEPRECATED) flows.",
+        "description": "This API uses OAuth 2 with the authorizationCode or clientCredentials flows.",
         "flows": {
           "authorizationCode": {
-            "tokenUrl": "https://aworld.cloud/oauth2/token",
-            "refreshUrl": "https://aworld.cloud/oauth2/refresh",
-            "authorizationUrl": "https://aworld.cloud/oauth2/authorize",
+            "tokenUrl": "https://auth.aworld.cloud/oauth2/token",
+            "refreshUrl": "https://auth.aworld.cloud/oauth2/refresh",
+            "authorizationUrl": "https://auth.aworld.cloud/oauth2/authorize",
             "scopes": {}
           },
           "clientCredentials": {
-            "tokenUrl": "https://aworld.cloud/oauth2/token",
-            "refreshUrl": "https://aworld.cloud/oauth2/refresh",
+            "tokenUrl": "https://auth.aworld.cloud/oauth2/token",
+            "refreshUrl": "https://auth.aworld.cloud/oauth2/refresh",
             "scopes": {}
           }
         }
@@ -13279,22 +13181,10 @@
       "name": "Badges"
     },
     {
-      "name": "Badges/Tags"
+      "name": "LearningGroups"
     },
     {
-      "name": "Badges/Translation"
-    },
-    {
-      "name": "Learning Paths"
-    },
-    {
-      "name": "Learning Paths/Activities"
-    },
-    {
-      "name": "Learning Paths/Tags"
-    },
-    {
-      "name": "Learning Paths/Translation"
+      "name": "LearningPathAssignments"
     },
     {
       "name": "Missions"
@@ -13303,13 +13193,10 @@
       "name": "Quizzes"
     },
     {
-      "name": "Quizzes/Tags"
+      "name": "RuntimeLeaderboards"
     },
     {
-      "name": "Quizzes/Translation"
-    },
-    {
-      "name": "Runtime Leaderboards"
+      "name": "Slides"
     },
     {
       "name": "Streaks"
@@ -13318,16 +13205,16 @@
       "name": "Users"
     },
     {
-      "name": "Users/Tags"
-    },
-    {
       "name": "VirtualBalances"
     },
     {
       "name": "VirtualTransactions"
     },
     {
-      "name": "WorkspaceConfiguration"
+      "name": "WorkspaceCodes"
+    },
+    {
+      "name": "WorkspaceConfigurations"
     }
   ],
   "security": [
