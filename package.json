@@ -1,8 +1,11 @@
 {
   "name": "aworld-lab-resources",
-  "module": "index.ts",
-  "type": "module",
   "private": true,
+  "type": "module",
+  "workspaces": [
+    "sdks/dashboard",
+    "sdks/app"
+  ],
   "devDependencies": {
     "@types/bun": "latest"
   },

@@ -11,8 +11,20 @@
         "typescript": "^5",
       },
     },
+    "sdks/app": {
+      "name": "@aworld/app-sdk",
+      "version": "0.0.0",
+    },
+    "sdks/dashboard": {
+      "name": "@aworld/dashboard-sdk",
+      "version": "0.0.0",
+    },
   },
   "packages": {
+    "@aworld/app-sdk": ["@aworld/app-sdk@workspace:sdks/app"],
+
+    "@aworld/dashboard-sdk": ["@aworld/dashboard-sdk@workspace:sdks/dashboard"],
+
     "@types/bun": ["@types/bun@1.3.10", "", { "dependencies": { "bun-types": "1.3.10" } }, "sha512-0+rlrUrOrTSskibryHbvQkDOWRJwJZqZlxrUs1u4oOoTln8+WIXBPmAuCF35SWB2z4Zl3E84Nl/D0P7803nigQ=="],
 
     "@types/node": ["@types/node@25.5.0", "", { "dependencies": { "undici-types": "~7.18.0" } }, "sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw=="],
