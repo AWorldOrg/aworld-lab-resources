@@ -246,12 +246,22 @@
         ]
       }
     },
-    "/badge-configurations": {
+    "/badges/{badgeConfigurationId}": {
       "get": {
-        "operationId": "badgeConfigurations/list",
-        "summary": "List badge configurations",
-        "description": "Retrieves a paginated list of badge configurations with optional field resolution for translations, tags, progress, and badge data.",
+        "operationId": "badges/get",
+        "summary": "Get badge",
+        "description": "Retrieve a specific badge by its configuration ID, with optional additional fields (translation, badge logs).",
         "parameters": [
+          {
+            "name": "badgeConfigurationId",
+            "in": "path",
+            "description": "Unique identifier for the badge configuration (NanoID).",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the badge configuration (NanoID).",
+              "type": "string"
+            }
+          },
           {
             "name": "fields",
             "in": "query",
@@ -261,217 +271,20 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "progress",
-                  "badge",
                   "translation",
-                  "tags"
+                  "badgeLogs"
                 ]
               }
             }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Size of the page",
-            "required": false,
-            "schema": {
-              "description": "Size of the page",
-              "type": "integer",
-              "example": 10,
-              "exclusiveMinimum": 0
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "description": "Pagination cursor for fetching the next set of results",
-            "required": false,
-            "schema": {
-              "description": "Pagination cursor for fetching the next set of results",
-              "type": [
-                "string",
-                "null"
-              ],
-              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-            }
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "description": "Sort order. Defaults to desc",
-            "required": false,
-            "schema": {
-              "description": "Sort order. Defaults to desc",
-              "type": "string",
-              "example": "desc",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Field to sort results by",
-            "required": false,
-            "schema": {
-              "description": "Field to sort results by",
-              "type": "string",
-              "example": "updatedAt",
-              "enum": [
-                "updatedAt"
-              ]
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Badge configurations retrieved successfully",
+            "description": "Badge retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListBadgeConfigurationsResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "tags": [
-          "Badges"
-        ]
-      }
-    },
-    "/badge-configurations/{badgeConfigurationId}/tags": {
-      "get": {
-        "operationId": "badgeConfigurations/listTags",
-        "summary": "List badge configuration tag assignments",
-        "description": "List tag assignments for a specific badge configuration.",
-        "parameters": [
-          {
-            "name": "badgeConfigurationId",
-            "in": "path",
-            "description": "Unique identifier for the badge configuration (NanoID).",
-            "required": true,
-            "schema": {
-              "description": "Unique identifier for the badge configuration (NanoID).",
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Size of the page",
-            "required": false,
-            "schema": {
-              "description": "Size of the page",
-              "type": "integer",
-              "example": 10,
-              "exclusiveMinimum": 0
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "description": "Pagination cursor for fetching the next set of results",
-            "required": false,
-            "schema": {
-              "description": "Pagination cursor for fetching the next set of results",
-              "type": [
-                "string",
-                "null"
-              ],
-              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-            }
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "description": "Sort order. Defaults to desc",
-            "required": false,
-            "schema": {
-              "description": "Sort order. Defaults to desc",
-              "type": "string",
-              "example": "desc",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Field to sort results by",
-            "required": false,
-            "schema": {
-              "description": "Field to sort results by",
-              "type": "string",
-              "example": "updatedAt",
-              "enum": [
-                "updatedAt"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Tag assignments retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListBadgeConfigurationTagAssignmentsResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "tags": [
-          "Badges"
-        ]
-      }
-    },
-    "/badge-configurations/{badgeConfigurationId}/tags/{tagId}": {
-      "get": {
-        "operationId": "badgeConfigurations/getTag",
-        "summary": "Get badge configuration tag assignment",
-        "description": "Retrieve a specific tag assignment for a badge configuration.",
-        "parameters": [
-          {
-            "name": "badgeConfigurationId",
-            "in": "path",
-            "description": "Unique identifier for the badge configuration (NanoID).",
-            "required": true,
-            "schema": {
-              "description": "Unique identifier for the badge configuration (NanoID).",
-              "type": "string"
-            }
-          },
-          {
-            "name": "tagId",
-            "in": "path",
-            "description": "Unique identifier for the tag",
-            "required": true,
-            "schema": {
-              "description": "Unique identifier for the tag",
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Tag assignment retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBadgeConfigurationTagResponse"
+                  "$ref": "#/components/schemas/GetBadgeResponse"
                 }
               }
             }
@@ -480,47 +293,7 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Tag assignment not found"
-          }
-        },
-        "tags": [
-          "Badges"
-        ]
-      }
-    },
-    "/badge-configurations/{badgeConfigurationId}/translation": {
-      "get": {
-        "operationId": "badgeConfigurations/getTranslation",
-        "summary": "Get badge configuration translation",
-        "description": "Retrieve the translation for a specific badge configuration.",
-        "parameters": [
-          {
-            "name": "badgeConfigurationId",
-            "in": "path",
-            "description": "Unique identifier for the badge configuration (NanoID).",
-            "required": true,
-            "schema": {
-              "description": "Unique identifier for the badge configuration (NanoID).",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Badge configuration translation retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBadgeConfigurationTranslationResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Badge configuration not found"
+            "description": "Badge not found"
           }
         },
         "tags": [
@@ -625,11 +398,150 @@
         ]
       }
     },
-    "/badges/{badgeConfigurationId}": {
+    "/badge-configurations": {
       "get": {
-        "operationId": "badges/get",
-        "summary": "Get badge",
-        "description": "Retrieve a specific badge by its configuration ID, with optional additional fields (translation, badge logs).",
+        "operationId": "badgeConfigurations/list",
+        "summary": "List badge configurations",
+        "description": "Retrieves a paginated list of badge configurations with optional field resolution for translations, tags, progress, and badge data.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "progress",
+                  "badge",
+                  "translation",
+                  "tags"
+                ]
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Badge configurations retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListBadgeConfigurationsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Badges"
+        ]
+      }
+    },
+    "/badge-configurations/{badgeConfigurationId}/translation": {
+      "get": {
+        "operationId": "badgeConfigurations/getTranslation",
+        "summary": "Get badge configuration translation",
+        "description": "Retrieve the translation for a specific badge configuration.",
+        "parameters": [
+          {
+            "name": "badgeConfigurationId",
+            "in": "path",
+            "description": "Unique identifier for the badge configuration (NanoID).",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the badge configuration (NanoID).",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Badge configuration translation retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBadgeConfigurationTranslationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Badge configuration not found"
+          }
+        },
+        "tags": [
+          "Badges"
+        ]
+      }
+    },
+    "/badge-configurations/{badgeConfigurationId}/tags/{tagId}": {
+      "get": {
+        "operationId": "badgeConfigurations/getTag",
+        "summary": "Get badge configuration tag assignment",
+        "description": "Retrieve a specific tag assignment for a badge configuration.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -642,28 +554,24 @@
             }
           },
           {
-            "name": "fields",
-            "in": "query",
-            "required": false,
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "translation",
-                  "badgeLogs"
-                ]
-              }
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Badge retrieved successfully",
+            "description": "Tag assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBadgeResponse"
+                  "$ref": "#/components/schemas/GetBadgeConfigurationTagResponse"
                 }
               }
             }
@@ -672,11 +580,166 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Badge not found"
+            "description": "Tag assignment not found"
           }
         },
         "tags": [
           "Badges"
+        ]
+      }
+    },
+    "/badge-configurations/{badgeConfigurationId}/tags": {
+      "get": {
+        "operationId": "badgeConfigurations/listTags",
+        "summary": "List badge configuration tag assignments",
+        "description": "List tag assignments for a specific badge configuration.",
+        "parameters": [
+          {
+            "name": "badgeConfigurationId",
+            "in": "path",
+            "description": "Unique identifier for the badge configuration (NanoID).",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the badge configuration (NanoID).",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignments retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListBadgeConfigurationTagAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Badges"
+        ]
+      }
+    },
+    "/learning-groups/{learningGroupId}": {
+      "get": {
+        "operationId": "learningGroups/get",
+        "summary": "Get learning group",
+        "description": "Retrieve a specific learning group by ID, with optional additional fields (translation, tags, items, progress).",
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "translation",
+                  "items",
+                  "progress"
+                ]
+              }
+            }
+          },
+          {
+            "name": "learningGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Learning group retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLearningGroupResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Learning group not found"
+          }
+        },
+        "tags": [
+          "LearningGroups"
         ]
       }
     },
@@ -789,37 +852,12 @@
         ]
       }
     },
-    "/learning-groups/{learningGroupId}": {
+    "/learning-groups/{learningGroupId}/translation": {
       "get": {
-        "operationId": "learningGroups/get",
-        "summary": "Get learning group",
-        "description": "Retrieve a specific learning group by ID, with optional additional fields (translation, tags, items, progress).",
+        "operationId": "learningGroups/getTranslation",
+        "summary": "Get learning group translation",
+        "description": "Retrieve the translation for a specific learning group.",
         "parameters": [
-          {
-            "name": "context",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "tags",
-                  "translation",
-                  "items",
-                  "progress"
-                ]
-              }
-            }
-          },
           {
             "name": "learningGroupId",
             "in": "path",
@@ -831,11 +869,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Learning group retrieved successfully",
+            "description": "Learning group translation retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetLearningGroupResponse"
+                  "$ref": "#/components/schemas/GetLearningGroupTranslationResponse"
                 }
               }
             }
@@ -845,6 +883,116 @@
           },
           "404": {
             "description": "Learning group not found"
+          }
+        },
+        "tags": [
+          "LearningGroups"
+        ]
+      }
+    },
+    "/learning-groups/{learningGroupId}/tags/{tagId}": {
+      "get": {
+        "operationId": "learningGroups/getTag",
+        "summary": "Get learning group tag assignment",
+        "description": "Retrieve a specific tag assignment for a learning group.",
+        "parameters": [
+          {
+            "name": "learningGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLearningGroupTagAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag assignment not found"
+          }
+        },
+        "tags": [
+          "LearningGroups"
+        ]
+      }
+    },
+    "/learning-groups/{learningGroupId}/tags": {
+      "get": {
+        "operationId": "learningGroups/listTags",
+        "summary": "List learning group tag assignments",
+        "description": "List tag assignments for a specific learning group.",
+        "parameters": [
+          {
+            "name": "learningGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignments retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListLearningGroupTagAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "tags": [
@@ -945,100 +1093,53 @@
         ]
       }
     },
-    "/learning-groups/{learningGroupId}/tags": {
+    "/learning-path-assignments/{learningPathAssignmentId}": {
       "get": {
-        "operationId": "learningGroups/listTags",
-        "summary": "List learning group tag assignments",
-        "description": "List tag assignments for a specific learning group.",
+        "operationId": "learningPathAssignments/get",
+        "summary": "Get learning path assignment",
+        "description": "Retrieve a specific learning path assignment by ID, with optional additional fields (translation, tags, items, progress).",
         "parameters": [
           {
-            "name": "learningGroupId",
-            "in": "path",
-            "required": true,
+            "name": "context",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "limit",
+            "name": "fields",
             "in": "query",
-            "description": "Size of the page",
             "required": false,
             "schema": {
-              "description": "Size of the page",
-              "type": "integer",
-              "example": 10,
-              "exclusiveMinimum": 0
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "description": "Pagination cursor for fetching the next set of results",
-            "required": false,
-            "schema": {
-              "description": "Pagination cursor for fetching the next set of results",
-              "type": [
-                "string",
-                "null"
-              ],
-              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Tag assignments retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListLearningGroupTagAssignmentsResponse"
-                }
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "translation",
+                  "items",
+                  "progress"
+                ]
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "tags": [
-          "LearningGroups"
-        ]
-      }
-    },
-    "/learning-groups/{learningGroupId}/tags/{tagId}": {
-      "get": {
-        "operationId": "learningGroups/getTag",
-        "summary": "Get learning group tag assignment",
-        "description": "Retrieve a specific tag assignment for a learning group.",
-        "parameters": [
           {
-            "name": "learningGroupId",
+            "name": "learningPathAssignmentId",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "tagId",
-            "in": "path",
-            "description": "Unique identifier for the tag",
-            "required": true,
-            "schema": {
-              "description": "Unique identifier for the tag",
-              "type": "string",
-              "minLength": 1
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Tag assignment retrieved successfully",
+            "description": "Learning path assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetLearningGroupTagAssignmentResponse"
+                  "$ref": "#/components/schemas/GetLearningPathAssignmentResponse"
                 }
               }
             }
@@ -1047,49 +1148,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Tag assignment not found"
+            "description": "Learning path assignment not found"
           }
         },
         "tags": [
-          "LearningGroups"
-        ]
-      }
-    },
-    "/learning-groups/{learningGroupId}/translation": {
-      "get": {
-        "operationId": "learningGroups/getTranslation",
-        "summary": "Get learning group translation",
-        "description": "Retrieve the translation for a specific learning group.",
-        "parameters": [
-          {
-            "name": "learningGroupId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Learning group translation retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLearningGroupTranslationResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Learning group not found"
-          }
-        },
-        "tags": [
-          "LearningGroups"
+          "LearningPathAssignments"
         ]
       }
     },
@@ -1243,37 +1306,12 @@
         ]
       }
     },
-    "/learning-path-assignments/{learningPathAssignmentId}": {
+    "/learning-path-assignments/{learningPathAssignmentId}/translation": {
       "get": {
-        "operationId": "learningPathAssignments/get",
-        "summary": "Get learning path assignment",
-        "description": "Retrieve a specific learning path assignment by ID, with optional additional fields (translation, tags, items, progress).",
+        "operationId": "learningPathAssignments/getTranslation",
+        "summary": "Get learning path assignment translation",
+        "description": "Retrieve the translation for a learning path assignment.",
         "parameters": [
-          {
-            "name": "context",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "tags",
-                  "translation",
-                  "items",
-                  "progress"
-                ]
-              }
-            }
-          },
           {
             "name": "learningPathAssignmentId",
             "in": "path",
@@ -1285,11 +1323,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Learning path assignment retrieved successfully",
+            "description": "Translation retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetLearningPathAssignmentResponse"
+                  "$ref": "#/components/schemas/GetLearningPathAssignmentTranslationResponse"
                 }
               }
             }
@@ -1306,11 +1344,11 @@
         ]
       }
     },
-    "/learning-path-assignments/{learningPathAssignmentId}/current-attempt": {
+    "/learning-path-assignments/{learningPathAssignmentId}/tags/{tagId}": {
       "get": {
-        "operationId": "learningPathAssignments/currentAttemptGet",
-        "summary": "Get current attempt",
-        "description": "Retrieve the current attempt number for a specific learning path assignment.",
+        "operationId": "learningPathAssignments/getTag",
+        "summary": "Get learning path assignment tag",
+        "description": "Retrieve a specific tag assignment for a learning path assignment.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -1319,15 +1357,90 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Current attempt retrieved successfully",
+            "description": "Tag assignment retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentAttemptResponse"
+                  "$ref": "#/components/schemas/GetLearningPathAssignmentTagResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Learning path assignment not found"
+          }
+        },
+        "tags": [
+          "LearningPathAssignments"
+        ]
+      }
+    },
+    "/learning-path-assignments/{learningPathAssignmentId}/tags": {
+      "get": {
+        "operationId": "learningPathAssignments/listTags",
+        "summary": "List learning path assignment tags",
+        "description": "List tag assignments for a learning path assignment.",
+        "parameters": [
+          {
+            "name": "learningPathAssignmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignments retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListLearningPathAssignmentTagsResponse"
                 }
               }
             }
@@ -1475,11 +1588,11 @@
         ]
       }
     },
-    "/learning-path-assignments/{learningPathAssignmentId}/tags": {
+    "/learning-path-assignments/{learningPathAssignmentId}/current-attempt": {
       "get": {
-        "operationId": "learningPathAssignments/listTags",
-        "summary": "List learning path assignment tags",
-        "description": "List tag assignments for a learning path assignment.",
+        "operationId": "learningPathAssignments/currentAttemptGet",
+        "summary": "Get current attempt",
+        "description": "Retrieve the current attempt number for a specific learning path assignment.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -1488,41 +1601,15 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Size of the page",
-            "required": false,
-            "schema": {
-              "description": "Size of the page",
-              "type": "integer",
-              "example": 10,
-              "exclusiveMinimum": 0
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "description": "Pagination cursor for fetching the next set of results",
-            "required": false,
-            "schema": {
-              "description": "Pagination cursor for fetching the next set of results",
-              "type": [
-                "string",
-                "null"
-              ],
-              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Tag assignments retrieved successfully",
+            "description": "Current attempt retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListLearningPathAssignmentTagsResponse"
+                  "$ref": "#/components/schemas/CurrentAttemptResponse"
                 }
               }
             }
@@ -1539,63 +1626,36 @@
         ]
       }
     },
-    "/learning-path-assignments/{learningPathAssignmentId}/tags/{tagId}": {
+    "/missions/{missionId}": {
       "get": {
-        "operationId": "learningPathAssignments/getTag",
-        "summary": "Get learning path assignment tag",
-        "description": "Retrieve a specific tag assignment for a learning path assignment.",
+        "operationId": "missions/get",
+        "summary": "Get mission",
+        "description": "Retrieve a specific mission by ID, with optional additional fields (translation).",
         "parameters": [
           {
-            "name": "learningPathAssignmentId",
-            "in": "path",
-            "required": true,
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translation"
+                ]
+              }
+            }
+          },
+          {
+            "name": "groupTagId",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "tagId",
-            "in": "path",
-            "description": "Unique identifier for the tag",
-            "required": true,
-            "schema": {
-              "description": "Unique identifier for the tag",
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Tag assignment retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLearningPathAssignmentTagResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Learning path assignment not found"
-          }
-        },
-        "tags": [
-          "LearningPathAssignments"
-        ]
-      }
-    },
-    "/learning-path-assignments/{learningPathAssignmentId}/translation": {
-      "get": {
-        "operationId": "learningPathAssignments/getTranslation",
-        "summary": "Get learning path assignment translation",
-        "description": "Retrieve the translation for a learning path assignment.",
-        "parameters": [
-          {
-            "name": "learningPathAssignmentId",
+            "name": "missionId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1605,11 +1665,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Translation retrieved successfully",
+            "description": "Mission retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetLearningPathAssignmentTranslationResponse"
+                  "$ref": "#/components/schemas/GetMissionResponse"
                 }
               }
             }
@@ -1618,11 +1678,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Learning path assignment not found"
+            "description": "Mission not found"
           }
         },
         "tags": [
-          "LearningPathAssignments"
+          "Missions"
         ]
       }
     },
@@ -1722,12 +1782,20 @@
         ]
       }
     },
-    "/missions/{missionId}": {
+    "/quizzes/{quizId}": {
       "get": {
-        "operationId": "missions/get",
-        "summary": "Get mission",
-        "description": "Retrieve a specific mission by ID, with optional additional fields (translation).",
+        "operationId": "quizzes/get",
+        "summary": "Get quiz",
+        "description": "Retrieve a specific quiz by ID, with optional additional fields (translation, tags, style, progress).",
         "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "fields",
             "in": "query",
@@ -1737,21 +1805,16 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translation"
+                  "tags",
+                  "translation",
+                  "progress",
+                  "computedStyle"
                 ]
               }
             }
           },
           {
-            "name": "groupTagId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "missionId",
+            "name": "quizId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1761,11 +1824,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Mission retrieved successfully",
+            "description": "Quiz retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetMissionResponse"
+                  "$ref": "#/components/schemas/GetQuizResponse"
                 }
               }
             }
@@ -1774,11 +1837,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Mission not found"
+            "description": "Quiz not found"
           }
         },
         "tags": [
-          "Missions"
+          "Quizzes"
         ]
       }
     },
@@ -1891,69 +1954,6 @@
         ]
       }
     },
-    "/quizzes/{quizId}": {
-      "get": {
-        "operationId": "quizzes/get",
-        "summary": "Get quiz",
-        "description": "Retrieve a specific quiz by ID, with optional additional fields (translation, tags, style, progress).",
-        "parameters": [
-          {
-            "name": "context",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "tags",
-                  "translation",
-                  "progress",
-                  "computedStyle"
-                ]
-              }
-            }
-          },
-          {
-            "name": "quizId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Quiz retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetQuizResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Quiz not found"
-          }
-        },
-        "tags": [
-          "Quizzes"
-        ]
-      }
-    },
     "/quizzes/{quizId}/submit": {
       "post": {
         "operationId": "quizzes/submit",
@@ -2039,6 +2039,93 @@
         ]
       }
     },
+    "/quizzes/{quizId}/translation": {
+      "get": {
+        "operationId": "quizzes/getTranslation",
+        "summary": "Get quiz translation",
+        "description": "Retrieve the translation for a specific quiz.",
+        "parameters": [
+          {
+            "name": "quizId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quiz translation retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetQuizTranslationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Quiz not found"
+          }
+        },
+        "tags": [
+          "Quizzes"
+        ]
+      }
+    },
+    "/quizzes/{quizId}/tags/{tagId}": {
+      "get": {
+        "operationId": "quizzes/getTag",
+        "summary": "Get quiz tag assignment",
+        "description": "Retrieve a specific tag assignment for a quiz.",
+        "parameters": [
+          {
+            "name": "quizId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetQuizTagResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag assignment not found"
+          }
+        },
+        "tags": [
+          "Quizzes"
+        ]
+      }
+    },
     "/quizzes/{quizId}/tags": {
       "get": {
         "operationId": "quizzes/listTags",
@@ -2100,63 +2187,28 @@
         ]
       }
     },
-    "/quizzes/{quizId}/tags/{tagId}": {
+    "/runtime-leaderboards/{runtimeLeaderboardId}": {
       "get": {
-        "operationId": "quizzes/getTag",
-        "summary": "Get quiz tag assignment",
-        "description": "Retrieve a specific tag assignment for a quiz.",
+        "operationId": "runtimeLeaderboards/get",
+        "summary": "Get runtime leaderboard",
+        "description": "Retrieve a specific runtime leaderboard by ID, with optional translation.",
         "parameters": [
           {
-            "name": "quizId",
-            "in": "path",
-            "required": true,
+            "name": "fields",
+            "in": "query",
+            "required": false,
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tagId",
-            "in": "path",
-            "description": "Unique identifier for the tag",
-            "required": true,
-            "schema": {
-              "description": "Unique identifier for the tag",
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Tag assignment retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetQuizTagResponse"
-                }
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translation"
+                ]
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Tag assignment not found"
-          }
-        },
-        "tags": [
-          "Quizzes"
-        ]
-      }
-    },
-    "/quizzes/{quizId}/translation": {
-      "get": {
-        "operationId": "quizzes/getTranslation",
-        "summary": "Get quiz translation",
-        "description": "Retrieve the translation for a specific quiz.",
-        "parameters": [
           {
-            "name": "quizId",
+            "name": "runtimeLeaderboardId",
             "in": "path",
             "required": true,
             "schema": {
@@ -2166,11 +2218,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Quiz translation retrieved successfully",
+            "description": "Runtime leaderboard retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetQuizTranslationResponse"
+                  "$ref": "#/components/schemas/GetRuntimeLeaderboardResponse"
                 }
               }
             }
@@ -2179,11 +2231,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Quiz not found"
+            "description": "Runtime leaderboard not found"
           }
         },
         "tags": [
-          "Quizzes"
+          "RuntimeLeaderboards"
         ]
       }
     },
@@ -2296,58 +2348,6 @@
         ]
       }
     },
-    "/runtime-leaderboards/{runtimeLeaderboardId}": {
-      "get": {
-        "operationId": "runtimeLeaderboards/get",
-        "summary": "Get runtime leaderboard",
-        "description": "Retrieve a specific runtime leaderboard by ID, with optional translation.",
-        "parameters": [
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "translation"
-                ]
-              }
-            }
-          },
-          {
-            "name": "runtimeLeaderboardId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Runtime leaderboard retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetRuntimeLeaderboardResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Runtime leaderboard not found"
-          }
-        },
-        "tags": [
-          "RuntimeLeaderboards"
-        ]
-      }
-    },
     "/runtime-leaderboards/{runtimeLeaderboardId}/rankings": {
       "get": {
         "operationId": "runtimeLeaderboards/getRankings",
@@ -2445,6 +2445,69 @@
         },
         "tags": [
           "RuntimeLeaderboards"
+        ]
+      }
+    },
+    "/slides/{slideId}": {
+      "get": {
+        "operationId": "slides/get",
+        "summary": "Get slide",
+        "description": "Retrieve a specific slide by ID, with optional additional fields (translation, tags, style, progress).",
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "translation",
+                  "progress",
+                  "computedStyle"
+                ]
+              }
+            }
+          },
+          {
+            "name": "slideId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Slide retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSlideResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Slide not found"
+          }
+        },
+        "tags": [
+          "Slides"
         ]
       }
     },
@@ -2557,69 +2620,6 @@
         ]
       }
     },
-    "/slides/{slideId}": {
-      "get": {
-        "operationId": "slides/get",
-        "summary": "Get slide",
-        "description": "Retrieve a specific slide by ID, with optional additional fields (translation, tags, style, progress).",
-        "parameters": [
-          {
-            "name": "context",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "tags",
-                  "translation",
-                  "progress",
-                  "computedStyle"
-                ]
-              }
-            }
-          },
-          {
-            "name": "slideId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Slide retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSlideResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Slide not found"
-          }
-        },
-        "tags": [
-          "Slides"
-        ]
-      }
-    },
     "/slides/{slideId}/submit": {
       "post": {
         "operationId": "slides/submit",
@@ -2696,38 +2696,12 @@
         ]
       }
     },
-    "/slides/{slideId}/tags": {
+    "/slides/{slideId}/translation": {
       "get": {
-        "operationId": "slides/listTags",
-        "summary": "List slide tag assignments",
-        "description": "List tag assignments for a specific slide.",
+        "operationId": "slides/getTranslation",
+        "summary": "Get slide translation",
+        "description": "Retrieve the translation for a specific slide.",
         "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Size of the page",
-            "required": false,
-            "schema": {
-              "description": "Size of the page",
-              "type": "integer",
-              "example": 10,
-              "exclusiveMinimum": 0
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "description": "Pagination cursor for fetching the next set of results",
-            "required": false,
-            "schema": {
-              "description": "Pagination cursor for fetching the next set of results",
-              "type": [
-                "string",
-                "null"
-              ],
-              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
-            }
-          },
           {
             "name": "slideId",
             "in": "path",
@@ -2739,17 +2713,20 @@
         ],
         "responses": {
           "200": {
-            "description": "Tag assignments retrieved successfully",
+            "description": "Slide translation retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListSlideTagAssignmentsResponse"
+                  "$ref": "#/components/schemas/GetSlideTranslationResponse"
                 }
               }
             }
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Slide not found"
           }
         },
         "tags": [
@@ -2806,12 +2783,38 @@
         ]
       }
     },
-    "/slides/{slideId}/translation": {
+    "/slides/{slideId}/tags": {
       "get": {
-        "operationId": "slides/getTranslation",
-        "summary": "Get slide translation",
-        "description": "Retrieve the translation for a specific slide.",
+        "operationId": "slides/listTags",
+        "summary": "List slide tag assignments",
+        "description": "List tag assignments for a specific slide.",
         "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
           {
             "name": "slideId",
             "in": "path",
@@ -2823,20 +2826,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Slide translation retrieved successfully",
+            "description": "Tag assignments retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSlideTranslationResponse"
+                  "$ref": "#/components/schemas/ListSlideTagAssignmentsResponse"
                 }
               }
             }
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Slide not found"
           }
         },
         "tags": [
@@ -3264,6 +3264,47 @@
         ]
       }
     },
+    "/users/me/tags/{tagId}": {
+      "get": {
+        "operationId": "users/me/tags/get",
+        "summary": "Get current user tag assignment",
+        "description": "Retrieve a specific tag assignment for the current authenticated user.",
+        "parameters": [
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCurrentUserTagResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag assignment not found"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/users/me/tags": {
       "get": {
         "operationId": "users/me/tags/list",
@@ -3346,31 +3387,42 @@
         ]
       }
     },
-    "/users/me/tags/{tagId}": {
+    "/virtual-balances/{virtualCurrencyId}": {
       "get": {
-        "operationId": "users/me/tags/get",
-        "summary": "Get current user tag assignment",
-        "description": "Retrieve a specific tag assignment for the current authenticated user.",
+        "operationId": "virtualBalances/get",
+        "summary": "Get virtual balance",
+        "description": "Retrieve a virtual balance for a specific currency, with optional translation.",
         "parameters": [
           {
-            "name": "tagId",
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translation"
+                ]
+              }
+            }
+          },
+          {
+            "name": "virtualCurrencyId",
             "in": "path",
-            "description": "Unique identifier for the tag",
             "required": true,
             "schema": {
-              "description": "Unique identifier for the tag",
-              "type": "string",
-              "minLength": 1
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Tag assignment retrieved successfully",
+            "description": "Virtual balance retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCurrentUserTagResponse"
+                  "$ref": "#/components/schemas/GetVirtualBalanceResponse"
                 }
               }
             }
@@ -3379,11 +3431,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Tag assignment not found"
+            "description": "Virtual balance not found"
           }
         },
         "tags": [
-          "Users"
+          "VirtualBalances"
         ]
       }
     },
@@ -3483,28 +3535,14 @@
         ]
       }
     },
-    "/virtual-balances/{virtualCurrencyId}": {
+    "/virtual-transactions/{virtualTransactionId}": {
       "get": {
-        "operationId": "virtualBalances/get",
-        "summary": "Get virtual balance",
-        "description": "Retrieve a virtual balance for a specific currency, with optional translation.",
+        "operationId": "virtualTransactions/get",
+        "summary": "Get virtual transaction",
+        "description": "Retrieve a specific virtual transaction by ID.",
         "parameters": [
           {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "translation"
-                ]
-              }
-            }
-          },
-          {
-            "name": "virtualCurrencyId",
+            "name": "virtualTransactionId",
             "in": "path",
             "required": true,
             "schema": {
@@ -3514,11 +3552,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Virtual balance retrieved successfully",
+            "description": "Virtual transaction retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetVirtualBalanceResponse"
+                  "$ref": "#/components/schemas/GetVirtualTransactionResponse"
                 }
               }
             }
@@ -3527,11 +3565,11 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Virtual balance not found"
+            "description": "Virtual transaction not found"
           }
         },
         "tags": [
-          "VirtualBalances"
+          "VirtualTransactions"
         ]
       }
     },
@@ -3708,44 +3746,6 @@
           },
           "409": {
             "description": "Conflict"
-          }
-        },
-        "tags": [
-          "VirtualTransactions"
-        ]
-      }
-    },
-    "/virtual-transactions/{virtualTransactionId}": {
-      "get": {
-        "operationId": "virtualTransactions/get",
-        "summary": "Get virtual transaction",
-        "description": "Retrieve a specific virtual transaction by ID.",
-        "parameters": [
-          {
-            "name": "virtualTransactionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Virtual transaction retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetVirtualTransactionResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Virtual transaction not found"
           }
         },
         "tags": [
