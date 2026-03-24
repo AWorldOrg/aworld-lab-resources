@@ -38,6 +38,12 @@
                       "example": "FUMzPf00hz_kcj2R2Hlzq"
                     }
                   },
+                  "pauseAfterSteps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
                   "content": {
                     "properties": {
                       "sections": {
@@ -337,6 +343,93 @@
           },
           "404": {
             "description": "Session not found"
+          }
+        },
+        "tags": [
+          "AI"
+        ]
+      }
+    },
+    "/ai/learningPaths/generate/{sessionId}/continue": {
+      "post": {
+        "operationId": "ai/learningPaths/generate/continue",
+        "summary": "Continue or retry a paused AI generation step",
+        "description": "Resumes a paused generation step, optionally with edited data or new instructions. Can also retry the step.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "The session ID for an AI generation request",
+            "required": true,
+            "schema": {
+              "description": "The session ID for an AI generation request",
+              "type": "string",
+              "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "step": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "continue",
+                      "retry"
+                    ]
+                  },
+                  "updates": {
+                    "type": "object",
+                    "properties": {
+                      "data": {},
+                      "instructions": {
+                        "type": "object",
+                        "properties": {
+                          "general": {
+                            "type": "string"
+                          },
+                          "images": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "step",
+                  "action"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generation resumed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContinueGenerationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or step not paused"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Session not found or not paused"
           }
         },
         "tags": [
@@ -6343,7 +6436,6 @@
                       "WELCOME",
                       "VERIFY_EMAIL",
                       "PASSWORD_RESET",
-                      "MAGIC_LINK",
                       "LOGIN_OTP",
                       "WORKSPACE_INVITATION",
                       "ALERT"
@@ -13468,6 +13560,426 @@
         ]
       }
     },
+    "/media": {
+      "get": {
+        "operationId": "media/list",
+        "summary": "List media files",
+        "description": "Retrieves a paginated list of media files from the library",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "translations"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fileType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "image",
+                "video",
+                "audio",
+                "document",
+                "other"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "workspace",
+              "enum": [
+                "workspace",
+                "common"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of media files retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListMediaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/media/{mediaId}": {
+      "get": {
+        "operationId": "media/get",
+        "summary": "Get media file by ID",
+        "description": "Retrieves a specific media file by its unique identifier",
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "description": "The unique ID of the media file",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the media file",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "workspace",
+              "enum": [
+                "workspace",
+                "common"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Media file retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMediaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Media file not found"
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      },
+      "patch": {
+        "operationId": "media/update",
+        "summary": "Update media file metadata",
+        "description": "Updates metadata for a media file in the library",
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "description": "The unique ID of the media file",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the media file",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "workspace",
+              "enum": [
+                "workspace",
+                "common"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "translations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "lang": {
+                          "$ref": "#/components/schemas/Lang"
+                        },
+                        "label": {
+                          "description": "Translated label for the Media",
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "description": {
+                          "description": "Translated description for the Media",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "lang",
+                        "label"
+                      ]
+                    },
+                    "maxItems": 10,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "translations"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Media file updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateMediaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Media file not found"
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      },
+      "delete": {
+        "operationId": "media/delete",
+        "summary": "Delete media file",
+        "description": "Deletes a media file from the library",
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "description": "The unique ID of the media file",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the media file",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "workspace",
+              "enum": [
+                "workspace",
+                "common"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Media file deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteMediaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Media file not found"
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/media/upload-url": {
+      "get": {
+        "operationId": "media/getUploadUrl",
+        "summary": "Get presigned upload URL",
+        "description": "Generates a presigned URL for uploading a media file to the library",
+        "parameters": [
+          {
+            "name": "contentType",
+            "in": "query",
+            "description": "MIME type of the file (must be an allowed type)",
+            "required": true,
+            "schema": {
+              "description": "MIME type of the file (must be an allowed type)",
+              "type": "string",
+              "enum": [
+                "image/jpeg",
+                "image/png",
+                "image/gif",
+                "image/webp",
+                "image/svg+xml",
+                "image/bmp",
+                "image/tiff",
+                "video/mp4",
+                "video/webm",
+                "video/quicktime",
+                "video/x-msvideo",
+                "video/mpeg",
+                "audio/mpeg",
+                "audio/wav",
+                "audio/ogg",
+                "audio/aac",
+                "audio/flac",
+                "application/pdf",
+                "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.ms-powerpoint",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "application/json",
+                "text/plain",
+                "text/csv"
+              ]
+            }
+          },
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "Original filename provided by user",
+            "required": true,
+            "schema": {
+              "description": "Original filename provided by user",
+              "type": "string",
+              "maxLength": 255,
+              "minLength": 1
+            }
+          },
+          {
+            "name": "fileSize",
+            "in": "query",
+            "description": "File size in bytes",
+            "required": true,
+            "schema": {
+              "description": "File size in bytes",
+              "type": "number"
+            }
+          },
+          {
+            "name": "fileType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "image",
+                "video",
+                "audio",
+                "document",
+                "other"
+              ]
+            }
+          },
+          {
+            "name": "mediaId",
+            "in": "query",
+            "description": "Optional media ID. If provided, replaces existing file",
+            "required": false,
+            "schema": {
+              "description": "Optional media ID. If provided, replaces existing file",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "workspace",
+              "enum": [
+                "workspace",
+                "common"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upload URL generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUploadUrlResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
+    },
     "/media/{mediaId}/tags": {
       "get": {
         "operationId": "media/listTags",
@@ -14163,426 +14675,6 @@
         ]
       }
     },
-    "/media": {
-      "get": {
-        "operationId": "media/list",
-        "summary": "List media files",
-        "description": "Retrieves a paginated list of media files from the library",
-        "parameters": [
-          {
-            "name": "fields",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "tags",
-                  "translations"
-                ]
-              }
-            }
-          },
-          {
-            "name": "fileType",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "image",
-                "video",
-                "audio",
-                "document",
-                "other"
-              ]
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 100,
-              "minimum": 1
-            }
-          },
-          {
-            "name": "nextToken",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "workspace",
-              "enum": [
-                "workspace",
-                "common"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of media files retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListMediaResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "tags": [
-          "MediaLibrary"
-        ]
-      }
-    },
-    "/media/{mediaId}": {
-      "get": {
-        "operationId": "media/get",
-        "summary": "Get media file by ID",
-        "description": "Retrieves a specific media file by its unique identifier",
-        "parameters": [
-          {
-            "name": "mediaId",
-            "in": "path",
-            "description": "The unique ID of the media file",
-            "required": true,
-            "schema": {
-              "description": "The unique ID of the media file",
-              "type": "string",
-              "example": "FUMzPf00hz_kcj2R2Hlzq"
-            }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "workspace",
-              "enum": [
-                "workspace",
-                "common"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Media file retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetMediaResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Media file not found"
-          }
-        },
-        "tags": [
-          "MediaLibrary"
-        ]
-      },
-      "patch": {
-        "operationId": "media/update",
-        "summary": "Update media file metadata",
-        "description": "Updates metadata for a media file in the library",
-        "parameters": [
-          {
-            "name": "mediaId",
-            "in": "path",
-            "description": "The unique ID of the media file",
-            "required": true,
-            "schema": {
-              "description": "The unique ID of the media file",
-              "type": "string",
-              "example": "FUMzPf00hz_kcj2R2Hlzq"
-            }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "workspace",
-              "enum": [
-                "workspace",
-                "common"
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "translations": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "lang": {
-                          "$ref": "#/components/schemas/Lang"
-                        },
-                        "label": {
-                          "description": "Translated label for the Media",
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        "description": {
-                          "description": "Translated description for the Media",
-                          "type": "string",
-                          "minLength": 1
-                        }
-                      },
-                      "required": [
-                        "lang",
-                        "label"
-                      ]
-                    },
-                    "maxItems": 10,
-                    "minItems": 1
-                  }
-                },
-                "required": [
-                  "translations"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Media file updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateMediaResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Media file not found"
-          }
-        },
-        "tags": [
-          "MediaLibrary"
-        ]
-      },
-      "delete": {
-        "operationId": "media/delete",
-        "summary": "Delete media file",
-        "description": "Deletes a media file from the library",
-        "parameters": [
-          {
-            "name": "mediaId",
-            "in": "path",
-            "description": "The unique ID of the media file",
-            "required": true,
-            "schema": {
-              "description": "The unique ID of the media file",
-              "type": "string",
-              "example": "FUMzPf00hz_kcj2R2Hlzq"
-            }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "workspace",
-              "enum": [
-                "workspace",
-                "common"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Media file deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteMediaResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Media file not found"
-          }
-        },
-        "tags": [
-          "MediaLibrary"
-        ]
-      }
-    },
-    "/media/upload-url": {
-      "get": {
-        "operationId": "media/getUploadUrl",
-        "summary": "Get presigned upload URL",
-        "description": "Generates a presigned URL for uploading a media file to the library",
-        "parameters": [
-          {
-            "name": "contentType",
-            "in": "query",
-            "description": "MIME type of the file (must be an allowed type)",
-            "required": true,
-            "schema": {
-              "description": "MIME type of the file (must be an allowed type)",
-              "type": "string",
-              "enum": [
-                "image/jpeg",
-                "image/png",
-                "image/gif",
-                "image/webp",
-                "image/svg+xml",
-                "image/bmp",
-                "image/tiff",
-                "video/mp4",
-                "video/webm",
-                "video/quicktime",
-                "video/x-msvideo",
-                "video/mpeg",
-                "audio/mpeg",
-                "audio/wav",
-                "audio/ogg",
-                "audio/aac",
-                "audio/flac",
-                "application/pdf",
-                "application/msword",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "application/vnd.ms-excel",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "application/vnd.ms-powerpoint",
-                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                "application/json",
-                "text/plain",
-                "text/csv"
-              ]
-            }
-          },
-          {
-            "name": "fileName",
-            "in": "query",
-            "description": "Original filename provided by user",
-            "required": true,
-            "schema": {
-              "description": "Original filename provided by user",
-              "type": "string",
-              "maxLength": 255,
-              "minLength": 1
-            }
-          },
-          {
-            "name": "fileSize",
-            "in": "query",
-            "description": "File size in bytes",
-            "required": true,
-            "schema": {
-              "description": "File size in bytes",
-              "type": "number"
-            }
-          },
-          {
-            "name": "fileType",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "image",
-                "video",
-                "audio",
-                "document",
-                "other"
-              ]
-            }
-          },
-          {
-            "name": "mediaId",
-            "in": "query",
-            "description": "Optional media ID. If provided, replaces existing file",
-            "required": false,
-            "schema": {
-              "description": "Optional media ID. If provided, replaces existing file",
-              "type": "string",
-              "example": "FUMzPf00hz_kcj2R2Hlzq"
-            }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "workspace",
-              "enum": [
-                "workspace",
-                "common"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Upload URL generated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUploadUrlResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "tags": [
-          "MediaLibrary"
-        ]
-      }
-    },
     "/media/{mediaId}/translations": {
       "get": {
         "operationId": "media/listTranslations",
@@ -14672,7 +14764,7 @@
           }
         },
         "tags": [
-          "MediaLibrary/Translations"
+          "Media/Translations"
         ]
       }
     },
@@ -27266,6 +27358,47 @@
         ]
       }
     },
+    "/tags/{tagId}/archive": {
+      "post": {
+        "operationId": "tags/archive",
+        "summary": "Archive tag",
+        "description": "Archives a tag, removing it from active use",
+        "parameters": [
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag archived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArchiveTagResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag not found"
+          }
+        },
+        "tags": [
+          "Tags"
+        ]
+      }
+    },
     "/tags/{tagId}/publish": {
       "post": {
         "operationId": "tags/publish",
@@ -27291,6 +27424,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PublishTagResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag not found"
+          }
+        },
+        "tags": [
+          "Tags"
+        ]
+      }
+    },
+    "/tags/{tagId}/unarchive": {
+      "post": {
+        "operationId": "tags/unarchive",
+        "summary": "Unarchive tag",
+        "description": "Restores an archived tag back to active status",
+        "parameters": [
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag unarchived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnarchiveTagResponse"
                 }
               }
             }
@@ -30156,6 +30330,71 @@
                         ]
                       }
                     }
+                  },
+                  "tagNamespaces": {
+                    "description": "Configuration for tag namespace grouping and display in the backoffice.",
+                    "type": "object",
+                    "default": {},
+                    "properties": {
+                      "learningPath": {
+                        "description": "Tag namespaces associated with learning paths.",
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "namespace": {
+                              "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "icon": {
+                              "description": "Lucide icon name to display for this namespace.",
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "labelKey": {
+                              "description": "i18n key used for the namespace display label.",
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "namespace",
+                            "icon",
+                            "labelKey"
+                          ]
+                        }
+                      },
+                      "user": {
+                        "description": "Tag namespaces associated with users.",
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "namespace": {
+                              "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "icon": {
+                              "description": "Lucide icon name to display for this namespace.",
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "labelKey": {
+                              "description": "i18n key used for the namespace display label.",
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "namespace",
+                            "icon",
+                            "labelKey"
+                          ]
+                        }
+                      }
+                    }
                   }
                 },
                 "required": [
@@ -31841,6 +32080,93 @@
           "updatedAt"
         ]
       },
+      "ArchiveTagResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
+          },
+          "namespace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variant": {
+            "type": "string",
+            "minLength": 1
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogTagId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "catalogWorkspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "tagId",
+          "namespace",
+          "variant",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "CancelGenerationResponse": {
         "type": "object",
         "properties": {
@@ -32339,6 +32665,26 @@
           "slidesCompleted",
           "completionRate",
           "uniqueUsers"
+        ]
+      },
+      "ContinueGenerationResponse": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "The session ID for an AI generation request",
+            "type": "string",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "resumed"
+            ]
+          }
+        },
+        "required": [
+          "sessionId",
+          "status"
         ]
       },
       "CreateActivityResponse": {
@@ -34090,7 +34436,6 @@
               "WELCOME",
               "VERIFY_EMAIL",
               "PASSWORD_RESET",
-              "MAGIC_LINK",
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT"
@@ -45569,7 +45914,6 @@
               "WELCOME",
               "VERIFY_EMAIL",
               "PASSWORD_RESET",
-              "MAGIC_LINK",
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT"
@@ -45655,8 +45999,10 @@
             "enum": [
               "started",
               "processing",
+              "awaiting_input",
               "completed",
-              "failed"
+              "failed",
+              "error"
             ]
           },
           "steps": {
@@ -45688,7 +46034,10 @@
                         "pending",
                         "running",
                         "completed",
-                        "failed"
+                        "failed",
+                        "retrying",
+                        "error",
+                        "awaiting_input"
                       ]
                     },
                     "description": {
@@ -45702,7 +46051,8 @@
                     },
                     "updatedAt": {
                       "type": "string"
-                    }
+                    },
+                    "data": {}
                   },
                   "required": [
                     "type",
@@ -49862,17 +50212,7 @@
                                 "type": "string"
                               },
                               "condition": {
-                                "allOf": [
-                                  {
-                                    "$ref": "#/components/schemas/JsonLogicExpression"
-                                  },
-                                  {
-                                    "type": [
-                                      "object",
-                                      "null"
-                                    ]
-                                  }
-                                ]
+                                "$ref": "#/components/schemas/JsonLogicExpression"
                               }
                             },
                             "required": [
@@ -54359,6 +54699,71 @@
               }
             }
           },
+          "tagNamespaces": {
+            "description": "Configuration for tag namespace grouping and display in the backoffice.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "learningPath": {
+                "description": "Tag namespaces associated with learning paths.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              },
+              "user": {
+                "description": "Tag namespaces associated with users.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              }
+            }
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -56722,7 +57127,6 @@
                     "WELCOME",
                     "VERIFY_EMAIL",
                     "PASSWORD_RESET",
-                    "MAGIC_LINK",
                     "LOGIN_OTP",
                     "WORKSPACE_INVITATION",
                     "ALERT"
@@ -64341,7 +64745,17 @@
                   "minItems": 1
                 },
                 "tagsMatchCondition": {
-                  "$ref": "#/components/schemas/JsonLogicExpression"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
                 },
                 "usersMatchCondition": {
                   "allOf": [
@@ -66442,7 +66856,6 @@
               "WELCOME",
               "VERIFY_EMAIL",
               "PASSWORD_RESET",
-              "MAGIC_LINK",
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT"
@@ -70344,6 +70757,71 @@
               }
             }
           },
+          "tagNamespaces": {
+            "description": "Configuration for tag namespace grouping and display in the backoffice.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "learningPath": {
+                "description": "Tag namespaces associated with learning paths.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              },
+              "user": {
+                "description": "Tag namespaces associated with users.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              }
+            }
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -72968,6 +73446,93 @@
           "updatedAt"
         ]
       },
+      "UnarchiveTagResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
+          },
+          "namespace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variant": {
+            "type": "string",
+            "minLength": 1
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogTagId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "catalogWorkspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "tagId",
+          "namespace",
+          "variant",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "UpdateActivityResponse": {
         "type": "object",
         "properties": {
@@ -74853,7 +75418,6 @@
               "WELCOME",
               "VERIFY_EMAIL",
               "PASSWORD_RESET",
-              "MAGIC_LINK",
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT"
@@ -82313,6 +82877,71 @@
               }
             }
           },
+          "tagNamespaces": {
+            "description": "Configuration for tag namespace grouping and display in the backoffice.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "learningPath": {
+                "description": "Tag namespaces associated with learning paths.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              },
+              "user": {
+                "description": "Tag namespaces associated with users.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              }
+            }
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -83603,6 +84232,71 @@
               }
             }
           },
+          "tagNamespaces": {
+            "description": "Configuration for tag namespace grouping and display in the backoffice.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "learningPath": {
+                "description": "Tag namespaces associated with learning paths.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              },
+              "user": {
+                "description": "Tag namespaces associated with users.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              }
+            }
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -83727,7 +84421,13 @@
       "name": "Missions"
     },
     {
-      "name": "MediaLibrary"
+      "name": "Media"
+    },
+    {
+      "name": "Media/Tags"
+    },
+    {
+      "name": "Media/Translations"
     },
     {
       "name": "Mobility"

@@ -8301,6 +8301,71 @@
               }
             }
           },
+          "tagNamespaces": {
+            "description": "Configuration for tag namespace grouping and display in the backoffice.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "learningPath": {
+                "description": "Tag namespaces associated with learning paths.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              },
+              "user": {
+                "description": "Tag namespaces associated with users.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              }
+            }
+          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
