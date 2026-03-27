@@ -3013,7 +3013,7 @@
       "get": {
         "operationId": "users/getMe",
         "summary": "Get current user",
-        "description": "Retrieve the current authenticated user profile, with optional additional fields (tags, stats, learningGroupLogs, principal).",
+        "description": "Retrieve the current authenticated user profile, with optional additional fields (tags, stats, learningGroupLogs, principal, permissions).",
         "parameters": [
           {
             "name": "fields",
@@ -3027,7 +3027,8 @@
                   "tags",
                   "principal",
                   "stats",
-                  "learningGroupLogs"
+                  "learningGroupLogs",
+                  "permissions"
                 ]
               }
             }
@@ -3170,6 +3171,31 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ListCurrentUserLearningGroupLogsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/me/permissions": {
+      "get": {
+        "operationId": "users/getMyPermissions",
+        "summary": "Get current user permissions",
+        "description": "Returns a boolean map of what the current user can/cannot do based on their role.",
+        "responses": {
+          "200": {
+            "description": "Permissions manifest retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCurrentUserPermissionsResponse"
                 }
               }
             }
@@ -4366,6 +4392,41 @@
           "updatedAt"
         ]
       },
+      "GetCurrentUserPermissionsResponse": {
+        "type": "object",
+        "properties": {
+          "content.read": {
+            "type": "boolean"
+          },
+          "content.create": {
+            "type": "boolean"
+          },
+          "content.update": {
+            "type": "boolean"
+          },
+          "content.delete": {
+            "type": "boolean"
+          },
+          "content.lifecycle": {
+            "type": "boolean"
+          },
+          "content.submit": {
+            "type": "boolean"
+          },
+          "users.manage": {
+            "type": "boolean"
+          },
+          "workspace.manage": {
+            "type": "boolean"
+          },
+          "analytics.read": {
+            "type": "boolean"
+          },
+          "workspaceConfiguration.update": {
+            "type": "boolean"
+          }
+        }
+      },
       "GetCurrentUserPrincipalResponse": {
         "type": "object",
         "properties": {
@@ -4789,6 +4850,41 @@
             "required": [
               "items"
             ]
+          },
+          "permissions": {
+            "type": "object",
+            "properties": {
+              "content.read": {
+                "type": "boolean"
+              },
+              "content.create": {
+                "type": "boolean"
+              },
+              "content.update": {
+                "type": "boolean"
+              },
+              "content.delete": {
+                "type": "boolean"
+              },
+              "content.lifecycle": {
+                "type": "boolean"
+              },
+              "content.submit": {
+                "type": "boolean"
+              },
+              "users.manage": {
+                "type": "boolean"
+              },
+              "workspace.manage": {
+                "type": "boolean"
+              },
+              "analytics.read": {
+                "type": "boolean"
+              },
+              "workspaceConfiguration.update": {
+                "type": "boolean"
+              }
+            }
           }
         },
         "required": [
@@ -6856,6 +6952,17 @@
                             "url": {
                               "type": "string",
                               "format": "uri"
+                            },
+                            "metadata": {
+                              "type": "object",
+                              "properties": {
+                                "prompt": {
+                                  "type": "string"
+                                },
+                                "style": {
+                                  "type": "string"
+                                }
+                              }
                             }
                           }
                         }
@@ -7057,6 +7164,17 @@
                         "url": {
                           "type": "string",
                           "format": "uri"
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "properties": {
+                            "prompt": {
+                              "type": "string"
+                            },
+                            "style": {
+                              "type": "string"
+                            }
+                          }
                         }
                       }
                     }
@@ -11563,6 +11681,17 @@
                                   "url": {
                                     "type": "string",
                                     "format": "uri"
+                                  },
+                                  "metadata": {
+                                    "type": "object",
+                                    "properties": {
+                                      "prompt": {
+                                        "type": "string"
+                                      },
+                                      "style": {
+                                        "type": "string"
+                                      }
+                                    }
                                   }
                                 }
                               }
