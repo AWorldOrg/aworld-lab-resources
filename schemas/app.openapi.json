@@ -13325,11 +13325,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "createdAt": {
-            "description": "Creation date in ISO format (UTC Timezone)",
-            "type": "string",
-            "format": "date-time"
-          },
           "updatedAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -13337,10 +13332,7 @@
           }
         },
         "required": [
-          "userId",
-          "principalId",
-          "createdAt",
-          "updatedAt"
+          "userId"
         ]
       }
     },
