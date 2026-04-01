@@ -226,6 +226,63 @@
         ]
       }
     },
+    "/ai/learningPaths/translate": {
+      "post": {
+        "operationId": "ai/learningPaths/translate",
+        "summary": "Translate learning path",
+        "description": "Initiate an AI-powered translation of an entire learning path into one or more target languages. Returns a session ID for polling status.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "learningPathId": {
+                    "type": "string"
+                  },
+                  "sourceLang": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "targetLangs": {
+                    "description": "Target languages to translate the learning path into",
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Lang"
+                    },
+                    "maxItems": 9,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "learningPathId",
+                  "sourceLang",
+                  "targetLangs"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Learning path translation started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranslateLearningPathResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "AI"
+        ]
+      }
+    },
     "/ai/localization/translate": {
       "post": {
         "operationId": "ai/translate",
@@ -13696,6 +13753,88 @@
           },
           "404": {
             "description": "Learning path not found"
+          }
+        },
+        "tags": [
+          "LearningPaths"
+        ]
+      }
+    },
+    "/learning-paths/translations/batch": {
+      "post": {
+        "operationId": "learningPaths/translations/batch",
+        "summary": "Batch update entity translations",
+        "description": "Updates translations for multiple entities in a single operation. Each entity receives new translation versions via updateEntityWithHistory. Returns per-item success/failure status.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "entityType": {
+                          "type": "string",
+                          "enum": [
+                            "slide",
+                            "quiz",
+                            "learningGroup",
+                            "learningPath"
+                          ]
+                        },
+                        "entityId": {
+                          "type": "string"
+                        },
+                        "item": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "translations": {
+                          "description": "Full set of translations for the entity (existing + new languages)",
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          },
+                          "maxItems": 10,
+                          "minItems": 1
+                        }
+                      },
+                      "required": [
+                        "entityType",
+                        "entityId",
+                        "item",
+                        "translations"
+                      ]
+                    },
+                    "maxItems": 25,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "items"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch translation completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchTranslationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "tags": [
@@ -34100,6 +34239,45 @@
           "sourceRegion",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "BatchTranslationResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entityType": {
+                  "type": "string",
+                  "enum": [
+                    "slide",
+                    "quiz",
+                    "learningGroup",
+                    "learningPath"
+                  ]
+                },
+                "entityId": {
+                  "type": "string"
+                },
+                "success": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "entityType",
+                "entityId",
+                "success"
+              ]
+            }
+          }
+        },
+        "required": [
+          "results"
         ]
       },
       "CancelGenerationResponse": {
@@ -75561,6 +75739,34 @@
           "Africa/Lusaka",
           "Africa/Harare",
           "UTC"
+        ]
+      },
+      "TranslateLearningPathResponse": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "The session ID for an AI generation request",
+            "type": "string",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "started"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sessionId",
+          "userId",
+          "status",
+          "createdAt"
         ]
       },
       "TranslateResponse": {
