@@ -3009,6 +3009,172 @@
         ]
       }
     },
+    "/surveys/{surveyId}": {
+      "get": {
+        "operationId": "surveys/get",
+        "summary": "Get survey",
+        "description": "Retrieve a published survey by ID.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAppSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/progress": {
+      "get": {
+        "operationId": "surveys/progress",
+        "summary": "Get survey progress",
+        "description": "Retrieve the current user's survey progress for resume. Returns null if no progress exists.",
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "default",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey progress retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSurveyProgressResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/submit": {
+      "put": {
+        "operationId": "surveys/submit",
+        "summary": "Submit survey answers",
+        "description": "Submit or auto-save survey answers. Upserts a single record per user/survey/context.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "answers": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  },
+                  "progress": {
+                    "type": "string",
+                    "enum": [
+                      "IN_PROGRESS",
+                      "COMPLETE"
+                    ]
+                  },
+                  "context": {
+                    "type": "string",
+                    "default": "default",
+                    "minLength": 1
+                  },
+                  "currentPageNo": {
+                    "type": "number"
+                  },
+                  "parentId": {
+                    "type": "string"
+                  },
+                  "parentType": {
+                    "type": "string",
+                    "enum": [
+                      "learningPath",
+                      "learningGroup"
+                    ]
+                  }
+                },
+                "required": [
+                  "answers",
+                  "progress"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Survey answers submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
     "/users/me": {
       "get": {
         "operationId": "users/getMe",
@@ -4199,6 +4365,67 @@
           "origin",
           "defaultLang",
           "langs",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetAppSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
           "createdAt",
           "updatedAt"
         ]
@@ -7210,6 +7437,91 @@
           "updatedAt"
         ]
       },
+      "GetSurveyProgressResponse": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "default": "default",
+            "minLength": 1
+          },
+          "progress": {
+            "type": "string",
+            "enum": [
+              "IN_PROGRESS",
+              "COMPLETE"
+            ]
+          },
+          "answers": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "currentPageNo": {
+            "type": "number"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "startedAt": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "userId",
+          "progress",
+          "answers",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "GetVirtualBalanceResponse": {
         "type": "object",
         "properties": {
@@ -7492,6 +7804,10 @@
                 "description": "Border radius value (e.g., '0.5rem').",
                 "type": "string"
               },
+              "buttonRadius": {
+                "description": "Border radius value for buttons (e.g., '0.5rem').",
+                "type": "string"
+              },
               "transition": {
                 "description": "CSS transition value for animations.",
                 "type": "string"
@@ -7554,6 +7870,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -7686,6 +8005,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -12830,6 +13152,88 @@
           "sourceRegion"
         ]
       },
+      "SubmitSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "default": "default",
+            "minLength": 1
+          },
+          "progress": {
+            "type": "string",
+            "enum": [
+              "IN_PROGRESS",
+              "COMPLETE"
+            ]
+          },
+          "answers": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "currentPageNo": {
+            "type": "number"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "startedAt": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "userId",
+          "progress",
+          "answers",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "Timezone": {
         "description": "Supported timezones",
         "type": "string",
@@ -13386,6 +13790,9 @@
     },
     {
       "name": "Streaks"
+    },
+    {
+      "name": "Surveys"
     },
     {
       "name": "Users"

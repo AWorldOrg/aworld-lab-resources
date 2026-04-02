@@ -26167,6 +26167,1108 @@
         ]
       }
     },
+    "/surveys/{surveyId}/tags": {
+      "post": {
+        "operationId": "surveys/createTags",
+        "summary": "Create multiple survey tag assignments",
+        "description": "Assigns multiple tags to a specific survey in a single operation.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "assignments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tagId": {
+                          "description": "Unique identifier for the tag",
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "priority": {
+                          "type": "integer",
+                          "default": 0,
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "tagId"
+                      ]
+                    },
+                    "maxItems": 25,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "assignments"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag assignments created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSurveyTagAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey or tag not found"
+          },
+          "409": {
+            "description": "Tag assignment already exists"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      },
+      "delete": {
+        "operationId": "surveys/deleteTags",
+        "summary": "Delete multiple survey tag assignments",
+        "description": "Removes multiple tag assignments from a specific survey in a single operation.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "assignments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tagId": {
+                          "description": "Unique identifier for the tag",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "tagId"
+                      ]
+                    },
+                    "maxItems": 25,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "assignments"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag assignments deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteSurveyTagAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag assignment not found"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      },
+      "get": {
+        "operationId": "surveys/listTags",
+        "summary": "List survey tag assignments",
+        "description": "List all tag assignments for a specific survey.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignments retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSurveyTagAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      },
+      "patch": {
+        "operationId": "surveys/updateTags",
+        "summary": "Update multiple survey tag assignments",
+        "description": "Updates multiple tag assignments for a specific survey in a single operation.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "assignments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tagId": {
+                          "description": "Unique identifier for the tag",
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "priority": {
+                          "type": "integer",
+                          "default": 0,
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "tagId"
+                      ]
+                    },
+                    "maxItems": 25,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "assignments"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag assignments updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSurveyTagAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey or tag not found"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/tags/{tagId}": {
+      "post": {
+        "operationId": "surveys/createTag",
+        "summary": "Create survey tag assignment",
+        "description": "Assigns a tag to a specific survey.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "priority": {
+                    "type": "integer",
+                    "default": 0,
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag assignment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSurveyTagAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey or tag not found"
+          },
+          "409": {
+            "description": "Tag assignment already exists"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      },
+      "delete": {
+        "operationId": "surveys/deleteTag",
+        "summary": "Delete survey tag assignment",
+        "description": "Removes a tag assignment from a specific survey.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignment deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteSurveyTagAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag assignment not found"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      },
+      "get": {
+        "operationId": "surveys/getTag",
+        "summary": "Get survey tag assignment",
+        "description": "Retrieve a specific tag assignment for a survey.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSurveyTagAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tag assignment not found"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      },
+      "patch": {
+        "operationId": "surveys/updateTag",
+        "summary": "Update survey tag assignment",
+        "description": "Updates a tag assignment for a specific survey.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "priority": {
+                    "type": "integer",
+                    "default": 0,
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag assignment updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSurveyTagAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey or tag not found"
+          }
+        },
+        "tags": [
+          "SurveyTagAssignments"
+        ]
+      }
+    },
+    "/surveys": {
+      "post": {
+        "operationId": "surveys/create",
+        "summary": "Create survey",
+        "description": "Creates a new survey with a SurveyJS definition.",
+        "parameters": [
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "defaultLang": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "origin": {
+                    "type": "string",
+                    "enum": [
+                      "CATALOG",
+                      "CUSTOM"
+                    ]
+                  },
+                  "parentId": {
+                    "type": "string"
+                  },
+                  "parentType": {
+                    "type": "string",
+                    "enum": [
+                      "learningPath",
+                      "learningGroup"
+                    ]
+                  },
+                  "definition": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  },
+                  "surveyId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "defaultLang",
+                  "definition"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Survey created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Survey already exists"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      },
+      "get": {
+        "operationId": "surveys/list",
+        "summary": "List surveys",
+        "description": "List surveys with pagination. Definition field is omitted for performance.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "surveyId",
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Surveys retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSurveysResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}": {
+      "get": {
+        "operationId": "surveys/get",
+        "summary": "Get survey",
+        "description": "Retrieve a specific survey by ID, with optional tags.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags"
+                ]
+              }
+            }
+          },
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      },
+      "put": {
+        "operationId": "surveys/update",
+        "summary": "Update survey",
+        "description": "Updates a survey with new data. Creates a DRAFT version that must be published separately.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "defaultLang": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "origin": {
+                    "type": "string",
+                    "enum": [
+                      "CATALOG",
+                      "CUSTOM"
+                    ]
+                  },
+                  "parentId": {
+                    "type": "string"
+                  },
+                  "parentType": {
+                    "type": "string",
+                    "enum": [
+                      "learningPath",
+                      "learningGroup"
+                    ]
+                  },
+                  "definition": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                },
+                "required": [
+                  "title",
+                  "defaultLang",
+                  "definition"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Survey updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/archive": {
+      "post": {
+        "operationId": "surveys/archive",
+        "summary": "Archive survey",
+        "description": "Archives a survey, removing it from active use.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey archived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArchiveSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/publish": {
+      "post": {
+        "operationId": "surveys/publish",
+        "summary": "Publish survey",
+        "description": "Publishes a survey, transitioning it from DRAFT to PUBLISHED state.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey published successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/survey-logs": {
+      "get": {
+        "operationId": "surveys/survey-logs/list",
+        "summary": "List survey logs",
+        "description": "List all survey log entries for a specific survey (dashboard analytics).",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          },
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey logs retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSurveyLogsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/unarchive": {
+      "post": {
+        "operationId": "surveys/unarchive",
+        "summary": "Unarchive survey",
+        "description": "Restores an archived survey back to active use.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey unarchived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnarchiveSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/survey-logs/{userId}": {
+      "get": {
+        "operationId": "surveys/survey-logs/get",
+        "summary": "Get survey log",
+        "description": "Retrieve a specific user's survey log entry (dashboard analytics).",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey log retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSurveyLogResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey log not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
     "/tag-rules": {
       "get": {
         "operationId": "tagRules/list",
@@ -29682,6 +30784,10 @@
                         "description": "Border radius value (e.g., '0.5rem').",
                         "type": "string"
                       },
+                      "buttonRadius": {
+                        "description": "Border radius value for buttons (e.g., '0.5rem').",
+                        "type": "string"
+                      },
                       "transition": {
                         "description": "CSS transition value for animations.",
                         "type": "string"
@@ -29743,6 +30849,9 @@
                             "type": "string"
                           },
                           "destructive": {
+                            "type": "string"
+                          },
+                          "destructiveForeground": {
                             "type": "string"
                           },
                           "success": {
@@ -29875,6 +30984,9 @@
                             "type": "string"
                           },
                           "destructive": {
+                            "type": "string"
+                          },
+                          "destructiveForeground": {
                             "type": "string"
                           },
                           "success": {
@@ -33861,6 +34973,85 @@
           "updatedAt"
         ]
       },
+      "ArchiveSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "ArchiveTagResponse": {
         "type": "object",
         "properties": {
@@ -34912,6 +36103,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -34944,6 +36136,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -35039,6 +36234,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -35071,6 +36267,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -35585,6 +36784,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -35617,6 +36817,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -35711,6 +36914,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -35743,6 +36947,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -35966,6 +37173,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -35998,6 +37206,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -36091,6 +37302,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -36123,6 +37335,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -36298,6 +37513,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -36330,6 +37546,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -36423,6 +37642,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -36455,6 +37675,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -37214,6 +38437,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -37246,6 +38470,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -37339,6 +38566,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -37371,6 +38599,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -38037,6 +39268,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -38069,6 +39301,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -38162,6 +39397,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -38194,6 +39430,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -38288,6 +39527,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -38320,6 +39560,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -38423,6 +39666,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -38455,6 +39699,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -39146,6 +40393,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -39178,6 +40426,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -39272,6 +40523,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -39304,6 +40556,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -39794,6 +41049,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -39826,6 +41082,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -39919,6 +41178,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -39951,6 +41211,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -40259,6 +41522,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -40291,6 +41555,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -40384,6 +41651,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -40416,6 +41684,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -41558,6 +42829,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -41590,6 +42862,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -41683,6 +42958,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -41715,6 +42991,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -41925,6 +43204,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -41957,6 +43237,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -42050,6 +43333,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -42082,6 +43366,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -42360,6 +43647,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -42392,6 +43680,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -42485,6 +43776,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -42517,6 +43809,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -42579,6 +43874,344 @@
                 "createdAt",
                 "updatedAt",
                 "streakRuleId"
+              ]
+            }
+          }
+        },
+        "required": [
+          "assignments"
+        ]
+      },
+      "CreateSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateSurveyTagAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "BadgeConfiguration",
+              "Quiz",
+              "LearningPath",
+              "LearningGroup",
+              "Media",
+              "MissionConfiguration",
+              "MissionRule",
+              "User",
+              "StreakRule",
+              "StreakConfiguration",
+              "Story",
+              "Slide",
+              "Survey",
+              "ContentTheme",
+              "ContentLayout"
+            ]
+          },
+          "entityId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "The unique ID of the activity. Should be a nanoid",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the badge configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "description": "The unique ID of the media file",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "surveyId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tagId",
+          "entityType",
+          "entityId",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt",
+          "surveyId"
+        ]
+      },
+      "CreateSurveyTagAssignmentsResponse": {
+        "type": "object",
+        "properties": {
+          "assignments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "entityType": {
+                  "type": "string",
+                  "enum": [
+                    "Activity",
+                    "BadgeConfiguration",
+                    "Quiz",
+                    "LearningPath",
+                    "LearningGroup",
+                    "Media",
+                    "MissionConfiguration",
+                    "MissionRule",
+                    "User",
+                    "StreakRule",
+                    "StreakConfiguration",
+                    "Story",
+                    "Slide",
+                    "Survey",
+                    "ContentTheme",
+                    "ContentLayout"
+                  ]
+                },
+                "entityId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the activity. Should be a nanoid",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the badge configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the media file",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "surveyId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tagId",
+                "entityType",
+                "entityId",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt",
+                "surveyId"
               ]
             }
           }
@@ -43008,6 +44641,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -43040,6 +44674,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -43133,6 +44770,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -43165,6 +44803,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -43611,6 +45252,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -43643,6 +45285,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -43711,6 +45356,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -43743,6 +45389,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -43812,6 +45461,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -43844,6 +45494,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -43911,6 +45564,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -43943,6 +45597,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -44011,6 +45668,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -44043,6 +45701,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -44109,6 +45770,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -44141,6 +45803,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -44208,6 +45873,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -44240,6 +45906,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -44306,6 +45975,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -44338,6 +46008,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -44405,6 +46078,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -44437,6 +46111,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -44503,6 +46180,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -44535,6 +46213,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -44647,6 +46328,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -44679,6 +46361,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -44745,6 +46430,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -44777,6 +46463,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -44861,6 +46550,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -44893,6 +46583,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -44961,6 +46654,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -44993,6 +46687,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -45062,6 +46759,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -45094,6 +46792,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -45161,6 +46862,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -45193,6 +46895,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -45261,6 +46966,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -45293,6 +46999,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -45359,6 +47068,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -45391,6 +47101,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -45458,6 +47171,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -45490,6 +47204,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -45556,6 +47273,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -45588,6 +47306,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -45655,6 +47376,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -45687,6 +47409,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -45753,6 +47478,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -45785,6 +47511,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -45852,6 +47581,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -45884,6 +47614,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -45950,6 +47683,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -45982,6 +47716,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -46049,6 +47786,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -46081,6 +47819,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -46147,6 +47888,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -46194,6 +47936,9 @@
                     },
                     {
                       "type": "string"
+                    },
+                    {
+                      "type": "string"
                     }
                   ]
                 },
@@ -46213,6 +47958,211 @@
                 "entityId",
                 "deleted",
                 "streakRuleId"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "assignments"
+        ]
+      },
+      "DeleteSurveyTagAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "BadgeConfiguration",
+              "Quiz",
+              "LearningPath",
+              "LearningGroup",
+              "Media",
+              "MissionConfiguration",
+              "MissionRule",
+              "User",
+              "StreakRule",
+              "StreakConfiguration",
+              "Story",
+              "Slide",
+              "Survey",
+              "ContentTheme",
+              "ContentLayout"
+            ]
+          },
+          "entityId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "The unique ID of the activity. Should be a nanoid",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the badge configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "description": "The unique ID of the media file",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "deleted": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "surveyId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {},
+        "required": [
+          "tagId",
+          "entityType",
+          "entityId",
+          "deleted",
+          "surveyId"
+        ]
+      },
+      "DeleteSurveyTagAssignmentsResponse": {
+        "type": "object",
+        "properties": {
+          "assignments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "entityType": {
+                  "type": "string",
+                  "enum": [
+                    "Activity",
+                    "BadgeConfiguration",
+                    "Quiz",
+                    "LearningPath",
+                    "LearningGroup",
+                    "Media",
+                    "MissionConfiguration",
+                    "MissionRule",
+                    "User",
+                    "StreakRule",
+                    "StreakConfiguration",
+                    "Story",
+                    "Slide",
+                    "Survey",
+                    "ContentTheme",
+                    "ContentLayout"
+                  ]
+                },
+                "entityId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the activity. Should be a nanoid",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the badge configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the media file",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                },
+                "surveyId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tagId",
+                "entityType",
+                "entityId",
+                "deleted",
+                "surveyId"
               ],
               "additionalProperties": {}
             }
@@ -46261,6 +48211,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -46293,6 +48244,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -46359,6 +48313,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -46391,6 +48346,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -47077,6 +49035,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -47109,6 +49068,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -47707,6 +49669,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -47739,6 +49702,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -48045,6 +50011,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -48077,6 +50044,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -48466,6 +50436,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -48498,6 +50469,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -49765,6 +51739,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -49797,6 +51772,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -51135,6 +53113,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -51167,6 +53146,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -51360,6 +53342,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -51392,6 +53375,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -52167,6 +54153,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -52199,6 +54186,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -52586,6 +54576,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -52618,6 +54609,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -53167,6 +55161,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -53199,6 +55194,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -54547,6 +56545,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -54579,6 +56578,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -54873,6 +56875,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -54905,6 +56908,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -55265,6 +57271,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -55297,6 +57304,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -55359,6 +57369,324 @@
           "createdAt",
           "updatedAt",
           "streakRuleId"
+        ]
+      },
+      "GetSurveyLogResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "default": "default",
+            "minLength": 1
+          },
+          "progress": {
+            "type": "string",
+            "enum": [
+              "IN_PROGRESS",
+              "COMPLETE"
+            ]
+          },
+          "answers": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "currentPageNo": {
+            "type": "number"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "startedAt": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "userId",
+          "progress",
+          "answers",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetSurveyTagAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "BadgeConfiguration",
+              "Quiz",
+              "LearningPath",
+              "LearningGroup",
+              "Media",
+              "MissionConfiguration",
+              "MissionRule",
+              "User",
+              "StreakRule",
+              "StreakConfiguration",
+              "Story",
+              "Slide",
+              "Survey",
+              "ContentTheme",
+              "ContentLayout"
+            ]
+          },
+          "entityId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "The unique ID of the activity. Should be a nanoid",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the badge configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "description": "The unique ID of the media file",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "surveyId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tagId",
+          "entityType",
+          "entityId",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt",
+          "surveyId"
         ]
       },
       "GetTagResponse": {
@@ -56464,6 +58792,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -56496,6 +58825,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -56993,6 +59325,10 @@
                 "description": "Border radius value (e.g., '0.5rem').",
                 "type": "string"
               },
+              "buttonRadius": {
+                "description": "Border radius value for buttons (e.g., '0.5rem').",
+                "type": "string"
+              },
               "transition": {
                 "description": "CSS transition value for animations.",
                 "type": "string"
@@ -57055,6 +59391,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -57187,6 +59526,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -58095,7 +60437,6 @@
             "type": "string",
             "enum": [
               "EDU",
-              "PLAY",
               "CUSTOM",
               "CATALOG"
             ]
@@ -58937,6 +61278,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -58969,6 +61311,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -59668,6 +62013,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -59700,6 +62046,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -60118,6 +62467,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -60150,6 +62500,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -60638,6 +62991,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -60670,6 +63024,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -61225,6 +63582,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -61257,6 +63615,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -62939,6 +65300,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -62971,6 +65333,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -63174,6 +65539,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -63206,6 +65572,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -64041,6 +66410,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -64073,6 +66443,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -64572,6 +66945,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -64604,6 +66978,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -65125,6 +67502,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -65157,6 +67535,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -66930,6 +69311,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -66962,6 +69344,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -67425,6 +69810,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -67457,6 +69843,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -67672,6 +70061,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -67704,6 +70094,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -67837,6 +70230,343 @@
                 "sourceRegion",
                 "createdAt",
                 "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListSurveyLogsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "surveyId": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "context": {
+                  "type": "string",
+                  "default": "default",
+                  "minLength": 1
+                },
+                "progress": {
+                  "type": "string",
+                  "enum": [
+                    "IN_PROGRESS",
+                    "COMPLETE"
+                  ]
+                },
+                "answers": {
+                  "type": "object",
+                  "additionalProperties": {}
+                },
+                "currentPageNo": {
+                  "type": "number"
+                },
+                "parentId": {
+                  "type": "string"
+                },
+                "parentType": {
+                  "type": "string",
+                  "enum": [
+                    "learningPath",
+                    "learningGroup"
+                  ]
+                },
+                "startedAt": {
+                  "type": "string"
+                },
+                "completedAt": {
+                  "type": "string"
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "surveyId",
+                "userId",
+                "progress",
+                "answers",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListSurveysResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "surveyId": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  }
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "CATALOG",
+                    "CUSTOM"
+                  ]
+                },
+                "parentId": {
+                  "type": "string"
+                },
+                "parentType": {
+                  "type": "string",
+                  "enum": [
+                    "learningPath",
+                    "learningGroup"
+                  ]
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "surveyId",
+                "title",
+                "defaultLang",
+                "langs",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListSurveyTagAssignmentsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "entityType": {
+                  "type": "string",
+                  "enum": [
+                    "Activity",
+                    "BadgeConfiguration",
+                    "Quiz",
+                    "LearningPath",
+                    "LearningGroup",
+                    "Media",
+                    "MissionConfiguration",
+                    "MissionRule",
+                    "User",
+                    "StreakRule",
+                    "StreakConfiguration",
+                    "Story",
+                    "Slide",
+                    "Survey",
+                    "ContentTheme",
+                    "ContentLayout"
+                  ]
+                },
+                "entityId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the activity. Should be a nanoid",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the badge configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the media file",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "surveyId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tagId",
+                "entityType",
+                "entityId",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt",
+                "surveyId"
               ]
             }
           },
@@ -68707,6 +71437,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -68739,6 +71470,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -73228,6 +75962,94 @@
           "stage"
         ]
       },
+      "PublishSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "PUBLISHED",
+              "ARCHIVED"
+            ]
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt",
+          "stage"
+        ]
+      },
       "PublishTagResponse": {
         "type": "object",
         "properties": {
@@ -73683,6 +76505,10 @@
                 "description": "Border radius value (e.g., '0.5rem').",
                 "type": "string"
               },
+              "buttonRadius": {
+                "description": "Border radius value for buttons (e.g., '0.5rem').",
+                "type": "string"
+              },
               "transition": {
                 "description": "CSS transition value for animations.",
                 "type": "string"
@@ -73745,6 +76571,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -73877,6 +76706,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -78598,6 +81430,85 @@
           "updatedAt"
         ]
       },
+      "UnarchiveSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "UnarchiveTagResponse": {
         "type": "object",
         "properties": {
@@ -79098,6 +82009,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -79130,6 +82042,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -79209,6 +82124,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -79241,6 +82157,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -79747,6 +82666,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -79779,6 +82699,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -79857,6 +82780,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -79889,6 +82813,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -80105,6 +83032,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -80137,6 +83065,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -80214,6 +83145,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -80246,6 +83178,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -80414,6 +83349,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -80446,6 +83382,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -80523,6 +83462,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -80555,6 +83495,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -80975,6 +83918,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -81007,6 +83951,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -81084,6 +84031,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -81116,6 +84064,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -81680,6 +84631,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -81712,6 +84664,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -81789,6 +84744,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -81821,6 +84777,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -81999,6 +84958,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -82031,6 +84991,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -82117,6 +85080,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -82149,6 +85113,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -82831,6 +85798,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -82863,6 +85831,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -82941,6 +85912,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -82973,6 +85945,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -83274,6 +86249,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -83306,6 +86282,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -83383,6 +86362,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -83415,6 +86395,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -83663,6 +86646,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -83695,6 +86679,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -83772,6 +86759,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -83804,6 +86792,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -84860,6 +87851,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -84892,6 +87884,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -84969,6 +87964,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -85001,6 +87997,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -85204,6 +88203,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -85236,6 +88236,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -85313,6 +88316,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -85345,6 +88349,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -85616,6 +88623,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -85648,6 +88656,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -85725,6 +88736,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -85772,6 +88784,9 @@
                     },
                     {
                       "type": "string"
+                    },
+                    {
+                      "type": "string"
                     }
                   ]
                 },
@@ -85801,6 +88816,321 @@
                   "format": "date-time"
                 },
                 "streakRuleId": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "assignments"
+        ]
+      },
+      "UpdateSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "PUBLISHED",
+              "ARCHIVED"
+            ]
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt",
+          "stage"
+        ]
+      },
+      "UpdateSurveyTagAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "BadgeConfiguration",
+              "Quiz",
+              "LearningPath",
+              "LearningGroup",
+              "Media",
+              "MissionConfiguration",
+              "MissionRule",
+              "User",
+              "StreakRule",
+              "StreakConfiguration",
+              "Story",
+              "Slide",
+              "Survey",
+              "ContentTheme",
+              "ContentLayout"
+            ]
+          },
+          "entityId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "The unique ID of the activity. Should be a nanoid",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the badge configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "description": "The unique ID of the media file",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              {
+                "type": "string",
+                "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "surveyId": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateSurveyTagAssignmentsResponse": {
+        "type": "object",
+        "properties": {
+          "assignments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "entityType": {
+                  "type": "string",
+                  "enum": [
+                    "Activity",
+                    "BadgeConfiguration",
+                    "Quiz",
+                    "LearningPath",
+                    "LearningGroup",
+                    "Media",
+                    "MissionConfiguration",
+                    "MissionRule",
+                    "User",
+                    "StreakRule",
+                    "StreakConfiguration",
+                    "Story",
+                    "Slide",
+                    "Survey",
+                    "ContentTheme",
+                    "ContentLayout"
+                  ]
+                },
+                "entityId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the activity. Should be a nanoid",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the badge configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string",
+                      "description": "The unique ID of the media file",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "surveyId": {
                   "type": "string"
                 }
               }
@@ -86241,6 +89571,7 @@
               "StreakConfiguration",
               "Story",
               "Slide",
+              "Survey",
               "ContentTheme",
               "ContentLayout"
             ]
@@ -86273,6 +89604,9 @@
               {
                 "type": "string",
                 "description": "Unique identifier for the mission configuration (NanoID)."
+              },
+              {
+                "type": "string"
               },
               {
                 "type": "string"
@@ -86350,6 +89684,7 @@
                     "StreakConfiguration",
                     "Story",
                     "Slide",
+                    "Survey",
                     "ContentTheme",
                     "ContentLayout"
                   ]
@@ -86382,6 +89717,9 @@
                     {
                       "type": "string",
                       "description": "Unique identifier for the mission configuration (NanoID)."
+                    },
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "string"
@@ -86578,6 +89916,10 @@
                 "description": "Border radius value (e.g., '0.5rem').",
                 "type": "string"
               },
+              "buttonRadius": {
+                "description": "Border radius value for buttons (e.g., '0.5rem').",
+                "type": "string"
+              },
               "transition": {
                 "description": "CSS transition value for animations.",
                 "type": "string"
@@ -86640,6 +89982,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -86772,6 +90117,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -87784,6 +91132,10 @@
                 "description": "Border radius value (e.g., '0.5rem').",
                 "type": "string"
               },
+              "buttonRadius": {
+                "description": "Border radius value for buttons (e.g., '0.5rem').",
+                "type": "string"
+              },
               "transition": {
                 "description": "CSS transition value for animations.",
                 "type": "string"
@@ -87846,6 +91198,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -87978,6 +91333,9 @@
                     "type": "string"
                   },
                   "destructive": {
+                    "type": "string"
+                  },
+                  "destructiveForeground": {
                     "type": "string"
                   },
                   "success": {
@@ -88988,6 +92346,12 @@
     },
     {
       "name": "StreakRules"
+    },
+    {
+      "name": "SurveyTagAssignments"
+    },
+    {
+      "name": "Surveys"
     },
     {
       "name": "TagRules"
