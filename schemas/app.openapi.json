@@ -680,6 +680,82 @@
         ]
       }
     },
+    "/extensions/signed-url": {
+      "get": {
+        "operationId": "extensions/signedUrl",
+        "summary": "Get signed Extensions URL",
+        "description": "Generate an HMAC-signed URL for redirecting to the Extensions app. Returns null if the requested feature is not enabled for the workspace.",
+        "parameters": [
+          {
+            "name": "activityId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "colorScheme",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "light",
+                "dark"
+              ]
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "onboarding",
+                "activity"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Signed URL generated (or null if feature disabled)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedUrlResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Extensions"
+        ]
+      }
+    },
     "/learning-groups": {
       "get": {
         "operationId": "learningGroups/list",
@@ -708,7 +784,8 @@
                 "enum": [
                   "tags",
                   "translation",
-                  "items"
+                  "items",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -815,7 +892,8 @@
                   "tags",
                   "translation",
                   "items",
-                  "progress"
+                  "progress",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -1111,7 +1189,8 @@
                   "tags",
                   "translation",
                   "items",
-                  "progress"
+                  "progress",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -1269,7 +1348,8 @@
                   "tags",
                   "translation",
                   "items",
-                  "progress"
+                  "progress",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -1641,7 +1721,8 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translation"
+                  "translation",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -1737,7 +1818,8 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translation"
+                  "translation",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -1810,7 +1892,8 @@
                 "enum": [
                   "tags",
                   "translation",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -1917,7 +2000,8 @@
                   "tags",
                   "translation",
                   "progress",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -2476,7 +2560,8 @@
                 "enum": [
                   "tags",
                   "translation",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -2583,7 +2668,8 @@
                   "tags",
                   "translation",
                   "progress",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -5521,6 +5607,73 @@
               "progress",
               "items"
             ]
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -6094,6 +6247,73 @@
               "progress",
               "items"
             ]
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -6345,6 +6565,73 @@
               "lang",
               "label"
             ]
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -6653,6 +6940,73 @@
                   "space-between"
                 ]
               }
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
             }
           }
         },
@@ -7304,6 +7658,73 @@
                   "space-between"
                 ]
               }
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
             }
           }
         },
@@ -8671,6 +9092,60 @@
                     ],
                     "additionalProperties": {}
                   }
+                ]
+              },
+              "onboarding": {
+                "description": "Native onboarding flow. When enabled, new users see a 3-step welcome carousel before login. Defaults to disabled.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            }
+          },
+          "extensions": {
+            "description": "Extensions app configuration for custom workspace experiences (onboarding, daily activities).",
+            "type": "object",
+            "default": {},
+            "additionalProperties": {},
+            "properties": {
+              "onboarding": {
+                "description": "Custom onboarding flow. When enabled, users are redirected to a workspace-specific onboarding experience after login.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "dailyActivity": {
+                "description": "Custom daily activity card. When enabled, the edu home shows a dynamic activity card with content managed by the Extensions app.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
                 ]
               }
             }
@@ -10496,6 +10971,73 @@
                     "createdAt",
                     "updatedAt"
                   ]
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
                 }
               },
               "required": [
@@ -11088,6 +11630,73 @@
                     "progress",
                     "items"
                   ]
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
                 }
               },
               "required": [
@@ -11307,6 +11916,73 @@
                     "lang",
                     "label"
                   ]
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
                 }
               },
               "required": [
@@ -11646,6 +12322,73 @@
                         "space-between"
                       ]
                     }
+                  }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
                   }
                 }
               },
@@ -12106,6 +12849,73 @@
                         "space-between"
                       ]
                     }
+                  }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
                   }
                 }
               },
@@ -12957,6 +13767,21 @@
           "updatedAt"
         ]
       },
+      "SignedUrlResponse": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
       "SourceRegion": {
         "description": "Geographic Region where the entry was originally generated",
         "type": "string",
@@ -13769,6 +14594,9 @@
     },
     {
       "name": "Badges"
+    },
+    {
+      "name": "Extensions"
     },
     {
       "name": "LearningGroups"

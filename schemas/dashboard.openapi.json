@@ -599,7 +599,8 @@
                 "type": "string",
                 "enum": [
                   "tags",
-                  "translations"
+                  "translations",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -814,7 +815,8 @@
                 "type": "string",
                 "enum": [
                   "tags",
-                  "translations"
+                  "translations",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -6944,6 +6946,47 @@
         ]
       }
     },
+    "/invitations/{invitationId}/resend": {
+      "post": {
+        "operationId": "invitations/resend",
+        "summary": "Resend invitation",
+        "description": "Resends the invitation email and resets the expiration timer to 7 days from now",
+        "parameters": [
+          {
+            "name": "invitationId",
+            "in": "path",
+            "description": "Unique identifier for the invitation.",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the invitation.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invitation email resend triggered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResendInvitationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invitation not found or not in PENDING status"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Invitations"
+        ]
+      }
+    },
     "/invitations/{invitationId}/revoke": {
       "post": {
         "operationId": "invitations/revoke",
@@ -7696,7 +7739,8 @@
                 "enum": [
                   "tags",
                   "translations",
-                  "items"
+                  "items",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -9043,7 +9087,8 @@
                 "enum": [
                   "tags",
                   "translations",
-                  "items"
+                  "items",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -9553,7 +9598,8 @@
                   "tags",
                   "translation",
                   "items",
-                  "progress"
+                  "progress",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -9852,7 +9898,8 @@
                   "tags",
                   "translation",
                   "items",
-                  "progress"
+                  "progress",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -11418,7 +11465,8 @@
                   "tags",
                   "translations",
                   "items",
-                  "assignments"
+                  "assignments",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -13310,7 +13358,8 @@
                   "tags",
                   "translations",
                   "items",
-                  "assignments"
+                  "assignments",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -13552,6 +13601,152 @@
           },
           "404": {
             "description": "Learning path not found"
+          }
+        },
+        "tags": [
+          "LearningPaths"
+        ]
+      }
+    },
+    "/learning-paths/search": {
+      "post": {
+        "operationId": "learningPaths/search",
+        "summary": "Search learning paths",
+        "description": "Search, filter, and sort learning paths using JSONLogic expressions with optional field resolution.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "tags",
+                        "translations",
+                        "items",
+                        "assignments"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Learning paths matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchLearningPathsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "tags": [
@@ -19569,7 +19764,8 @@
                 "enum": [
                   "tags",
                   "translations",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -19678,7 +19874,8 @@
                 "enum": [
                   "tags",
                   "translations",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -23115,7 +23312,8 @@
                 "enum": [
                   "tags",
                   "translations",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -23440,7 +23638,8 @@
                 "enum": [
                   "tags",
                   "translations",
-                  "computedStyle"
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -28355,6 +28554,149 @@
         ]
       }
     },
+    "/tags/search": {
+      "post": {
+        "operationId": "tags/search",
+        "summary": "Search tags",
+        "description": "Search, filter, and sort tags using JSONLogic expressions with optional field resolution.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "translations"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tags matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchTagsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Tags"
+        ]
+      }
+    },
     "/tags/{tagId}/archive": {
       "post": {
         "operationId": "tags/archive",
@@ -29631,6 +29973,150 @@
           },
           "404": {
             "description": "User not found"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/search": {
+      "post": {
+        "operationId": "users/search",
+        "summary": "Search users",
+        "description": "Search, filter, and sort users using JSONLogic expressions. Supports filtering by email, name (via Principal JOIN), tags, and all user fields.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "tags",
+                        "principal"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Users matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchUsersResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "tags": [
@@ -31649,6 +32135,26 @@
                             "additionalProperties": {}
                           }
                         ]
+                      },
+                      "onboarding": {
+                        "description": "Native onboarding flow. When enabled, new users see a 3-step welcome carousel before login. Defaults to disabled.",
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "enabled"
+                            ],
+                            "additionalProperties": {}
+                          }
+                        ]
                       }
                     }
                   },
@@ -31708,6 +32214,40 @@
                           "manager",
                           "member",
                           "viewer"
+                        ]
+                      }
+                    }
+                  },
+                  "extensions": {
+                    "description": "Extensions app configuration for custom workspace experiences (onboarding, daily activities).",
+                    "type": "object",
+                    "default": {},
+                    "additionalProperties": {},
+                    "properties": {
+                      "onboarding": {
+                        "description": "Custom onboarding flow. When enabled, users are redirected to a workspace-specific onboarding experience after login.",
+                        "type": "object",
+                        "additionalProperties": {},
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "enabled"
+                        ]
+                      },
+                      "dailyActivity": {
+                        "description": "Custom daily activity card. When enabled, the edu home shows a dynamic activity card with content managed by the Extensions app.",
+                        "type": "object",
+                        "additionalProperties": {},
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "enabled"
                         ]
                       }
                     }
@@ -32175,6 +32715,73 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ActivityTranslation"
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
             }
           }
         },
@@ -37912,6 +38519,15 @@
             "description": "Optional personal message to include in the invitation email.",
             "type": "string",
             "maxLength": 500
+          },
+          "emailRequested": {
+            "description": "Whether an email send has been requested. Set to true on create/resend, reset to false by the email subscriber.",
+            "type": "boolean"
+          },
+          "emailSentAt": {
+            "description": "ISO datetime when the invitation email was last sent.",
+            "type": "string",
+            "format": "date-time"
           },
           "accountId": {
             "type": "string",
@@ -48996,6 +49612,73 @@
             "items": {
               "$ref": "#/components/schemas/ActivityTranslation"
             }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -51385,6 +52068,15 @@
             "type": "string",
             "maxLength": 500
           },
+          "emailRequested": {
+            "description": "Whether an email send has been requested. Set to true on create/resend, reset to false by the email subscriber.",
+            "type": "boolean"
+          },
+          "emailSentAt": {
+            "description": "ISO datetime when the invitation email was last sent.",
+            "type": "string",
+            "format": "date-time"
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -51699,6 +52391,73 @@
                 "sourceRegion",
                 "createdAt",
                 "updatedAt"
+              ]
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
               ]
             }
           }
@@ -52349,6 +53108,73 @@
               "progress",
               "items"
             ]
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -52794,6 +53620,73 @@
                 "createdAt",
                 "updatedAt",
                 "user"
+              ]
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
               ]
             }
           }
@@ -55120,6 +56013,73 @@
                 ]
               }
             }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -56507,6 +57467,73 @@
                   "space-between"
                 ]
               }
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
             }
           }
         },
@@ -60193,6 +61220,60 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "onboarding": {
+                "description": "Native onboarding flow. When enabled, new users see a 3-step welcome carousel before login. Defaults to disabled.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            }
+          },
+          "extensions": {
+            "description": "Extensions app configuration for custom workspace experiences (onboarding, daily activities).",
+            "type": "object",
+            "default": {},
+            "additionalProperties": {},
+            "properties": {
+              "onboarding": {
+                "description": "Custom onboarding flow. When enabled, users are redirected to a workspace-specific onboarding experience after login.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "dailyActivity": {
+                "description": "Custom daily activity card. When enabled, the edu home shows a dynamic activity card with content managed by the Extensions app.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
               }
             }
           },
@@ -60616,6 +61697,15 @@
             "description": "Optional personal message to include in the invitation email.",
             "type": "string",
             "maxLength": 500
+          },
+          "emailRequested": {
+            "description": "Whether an email send has been requested. Set to true on create/resend, reset to false by the email subscriber.",
+            "type": "boolean"
+          },
+          "emailSentAt": {
+            "description": "ISO datetime when the invitation email was last sent.",
+            "type": "string",
+            "format": "date-time"
           },
           "accountId": {
             "type": "string",
@@ -63525,6 +64615,73 @@
                       "updatedAt"
                     ]
                   }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
                 }
               },
               "required": [
@@ -64436,6 +65593,73 @@
                     "progress",
                     "items"
                   ]
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
                 }
               },
               "required": [
@@ -65239,6 +66463,73 @@
                       "createdAt",
                       "updatedAt",
                       "user"
+                    ]
+                  }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
                     ]
                   }
                 }
@@ -68011,6 +69302,73 @@
                       ]
                     }
                   }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
                 }
               },
               "required": [
@@ -69254,6 +70612,73 @@
                         "space-between"
                       ]
                     }
+                  }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
                   }
                 }
               },
@@ -77373,6 +78798,60 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "onboarding": {
+                "description": "Native onboarding flow. When enabled, new users see a 3-step welcome carousel before login. Defaults to disabled.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            }
+          },
+          "extensions": {
+            "description": "Extensions app configuration for custom workspace experiences (onboarding, daily activities).",
+            "type": "object",
+            "default": {},
+            "additionalProperties": {},
+            "properties": {
+              "onboarding": {
+                "description": "Custom onboarding flow. When enabled, users are redirected to a workspace-specific onboarding experience after login.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "dailyActivity": {
+                "description": "Custom daily activity card. When enabled, the edu home shows a dynamic activity card with content managed by the Extensions app.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
               }
             }
           },
@@ -77725,6 +79204,31 @@
           "sourceRegion",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "ResendInvitationResponse": {
+        "type": "object",
+        "properties": {
+          "invitationId": {
+            "description": "Unique identifier for the invitation.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "emailRequested": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "invitationId",
+          "emailRequested",
+          "expiresAt"
         ]
       },
       "RevokeInvitationResponse": {
@@ -78112,6 +79616,868 @@
           "sourceRegion",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "SearchLearningPathsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "learningPathId": {
+                  "type": "string"
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "CATALOG",
+                    "AI",
+                    "CUSTOM"
+                  ]
+                },
+                "catalogWorkspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "catalogLearningPathId": {
+                  "type": "string"
+                },
+                "legacyLearningPathId": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "estimatedDuration": {
+                  "type": "number"
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "maxItems": 10,
+                  "minItems": 1
+                },
+                "items": {
+                  "type": "array",
+                  "items": {}
+                },
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "itemId": {
+                        "type": "string"
+                      },
+                      "itemType": {
+                        "type": "string",
+                        "enum": [
+                          "activity",
+                          "game",
+                          "quiz",
+                          "story",
+                          "slide",
+                          "learningGroup"
+                        ]
+                      },
+                      "languages": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Lang"
+                        }
+                      }
+                    },
+                    "required": [
+                      "itemId",
+                      "itemType"
+                    ]
+                  }
+                },
+                "contentThemeId": {
+                  "type": "string"
+                },
+                "defaultLayoutId": {
+                  "type": "string"
+                },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
+                },
+                "completionRule": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "outcomeRule": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "startRule": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "priority": {
+                        "type": "integer",
+                        "default": 0,
+                        "minimum": 0
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "tagId",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "learningPathId": {
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "workspaceId",
+                      "learningPathId",
+                      "lang",
+                      "title",
+                      "accountId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "assignments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "learningPathAssignmentId": {
+                        "type": "string"
+                      },
+                      "learningPathId": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "learningPathRuleId": {
+                        "type": "string"
+                      },
+                      "groupId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "periodId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "timeframeType": {
+                        "type": "string",
+                        "enum": [
+                          "PERMANENT",
+                          "RANGE",
+                          "RECURRING"
+                        ]
+                      },
+                      "startsAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "endsAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "state": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "ACTIVE",
+                          "ENDED"
+                        ]
+                      },
+                      "visibility": {
+                        "type": "string",
+                        "enum": [
+                          "LOCKED",
+                          "UNLOCKED"
+                        ]
+                      },
+                      "unlockedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "unlockedByRuleId": {
+                        "type": "string"
+                      },
+                      "currentAttempt": {
+                        "type": "integer",
+                        "default": 1,
+                        "minimum": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "nickname": {
+                            "type": "string",
+                            "maxLength": 40,
+                            "minLength": 2,
+                            "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
+                          },
+                          "profileImage": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        },
+                        "required": [
+                          "userId"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "learningPathAssignmentId",
+                      "learningPathId",
+                      "userId",
+                      "periodId",
+                      "timeframeType",
+                      "startsAt",
+                      "state",
+                      "visibility",
+                      "accountId",
+                      "workspaceId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt",
+                      "user"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "learningPathId",
+                "origin",
+                "title",
+                "estimatedDuration",
+                "defaultLang",
+                "langs",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SearchTagsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "namespace": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "variant": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "CATALOG",
+                    "CUSTOM"
+                  ]
+                },
+                "catalogTagId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "catalogWorkspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "syncWithCatalog": {
+                  "type": "boolean"
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "maxItems": 10,
+                  "minItems": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "workspaceId",
+                      "tagId",
+                      "lang",
+                      "label",
+                      "accountId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "tagId",
+                "namespace",
+                "variant",
+                "origin",
+                "defaultLang",
+                "langs",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SearchUsersResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "principalId": {
+                  "type": "string"
+                },
+                "externalId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nickname": {
+                  "type": "string",
+                  "maxLength": 40,
+                  "minLength": 2,
+                  "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
+                },
+                "profileImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "lang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "timezone": {
+                  "$ref": "#/components/schemas/Timezone"
+                },
+                "role": {
+                  "type": "string",
+                  "default": "member",
+                  "enum": [
+                    "owner",
+                    "admin",
+                    "manager",
+                    "member",
+                    "viewer"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "default": "active",
+                  "enum": [
+                    "active",
+                    "suspended"
+                  ]
+                },
+                "referralCode": {
+                  "description": "Human-friendly referral code for sharing.",
+                  "type": "string",
+                  "maxLength": 6,
+                  "minLength": 6,
+                  "pattern": "^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$"
+                },
+                "referredBy": {
+                  "type": "string"
+                },
+                "referredCount": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "welcomeEmailRequested": {
+                  "type": "boolean"
+                },
+                "welcomeEmailSentAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "priority": {
+                        "type": "integer",
+                        "default": 0,
+                        "minimum": 0
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "tagId",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "principal": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "principalId": {
+                          "type": "string"
+                        },
+                        "sub": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "maxLength": 50,
+                          "minLength": 2,
+                          "pattern": "^[\\p{L}\\p{M}' -]+$/u"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "maxLength": 50,
+                          "minLength": 2,
+                          "pattern": "^[\\p{L}\\p{M}' -]+$/u"
+                        },
+                        "createdAt": {
+                          "description": "Creation date in ISO format (UTC Timezone)",
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "description": "Creation date in ISO format (UTC Timezone)",
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "principalId",
+                        "sub",
+                        "email",
+                        "firstName",
+                        "lastName",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "principalId": {
+                          "type": "string"
+                        },
+                        "sub": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "maxLength": 50,
+                          "minLength": 2,
+                          "pattern": "^[\\p{L}\\p{M}' -]+$/u"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "maxLength": 50,
+                          "minLength": 2,
+                          "pattern": "^[\\p{L}\\p{M}' -]+$/u"
+                        }
+                      },
+                      "required": [
+                        "principalId",
+                        "sub",
+                        "email"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "principalId",
+                "accountId",
+                "workspaceId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
         ]
       },
       "SourceRegion": {
@@ -90784,6 +93150,60 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "onboarding": {
+                "description": "Native onboarding flow. When enabled, new users see a 3-step welcome carousel before login. Defaults to disabled.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            }
+          },
+          "extensions": {
+            "description": "Extensions app configuration for custom workspace experiences (onboarding, daily activities).",
+            "type": "object",
+            "default": {},
+            "additionalProperties": {},
+            "properties": {
+              "onboarding": {
+                "description": "Custom onboarding flow. When enabled, users are redirected to a workspace-specific onboarding experience after login.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "dailyActivity": {
+                "description": "Custom daily activity card. When enabled, the edu home shows a dynamic activity card with content managed by the Extensions app.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
               }
             }
           },
@@ -91999,6 +94419,60 @@
                     ],
                     "additionalProperties": {}
                   }
+                ]
+              },
+              "onboarding": {
+                "description": "Native onboarding flow. When enabled, new users see a 3-step welcome carousel before login. Defaults to disabled.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            }
+          },
+          "extensions": {
+            "description": "Extensions app configuration for custom workspace experiences (onboarding, daily activities).",
+            "type": "object",
+            "default": {},
+            "additionalProperties": {},
+            "properties": {
+              "onboarding": {
+                "description": "Custom onboarding flow. When enabled, users are redirected to a workspace-specific onboarding experience after login.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "dailyActivity": {
+                "description": "Custom daily activity card. When enabled, the edu home shows a dynamic activity card with content managed by the Extensions app.",
+                "type": "object",
+                "additionalProperties": {},
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
                 ]
               }
             }
