@@ -14069,6 +14069,7 @@
                 "video",
                 "audio",
                 "document",
+                "font",
                 "other"
               ]
             }
@@ -14383,7 +14384,20 @@
                 "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                 "application/json",
                 "text/plain",
-                "text/csv"
+                "text/csv",
+                "font/woff2",
+                "font/woff",
+                "font/ttf",
+                "font/otf",
+                "font/sfnt",
+                "application/font-woff",
+                "application/font-woff2",
+                "application/x-font-ttf",
+                "application/x-font-opentype",
+                "application/x-font-otf",
+                "application/x-font-woff",
+                "application/vnd.ms-opentype",
+                "application/font-sfnt"
               ]
             }
           },
@@ -14420,6 +14434,7 @@
                 "video",
                 "audio",
                 "document",
+                "font",
                 "other"
               ]
             }
@@ -31257,8 +31272,95 @@
                         "format": "uri"
                       },
                       "font": {
-                        "description": "Font family name (e.g., 'Inter', 'Roboto'). Loaded from Google Fonts if available, falls back to system font.",
-                        "type": "string"
+                        "description": "Font configuration. Accepts a FontConfig object or a plain string (legacy Google Fonts name).",
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "google"
+                                ]
+                              },
+                              "family": {
+                                "description": "Google Fonts family name (e.g. 'Inter', 'Roboto').",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "family"
+                            ],
+                            "description": "A Google Fonts reference."
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "custom"
+                                ]
+                              },
+                              "family": {
+                                "description": "Font family name to use in CSS (e.g. 'Univers LT Std').",
+                                "type": "string"
+                              },
+                              "files": {
+                                "description": "Uploaded font files (at least one).",
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "description": "CDN URL of the font file.",
+                                      "type": "string",
+                                      "format": "uri"
+                                    },
+                                    "format": {
+                                      "description": "Font format for @font-face src.",
+                                      "type": "string",
+                                      "enum": [
+                                        "woff2",
+                                        "woff",
+                                        "truetype",
+                                        "opentype"
+                                      ]
+                                    },
+                                    "weight": {
+                                      "description": "CSS font-weight, e.g. \"400\", \"700\".",
+                                      "type": "string"
+                                    },
+                                    "style": {
+                                      "description": "CSS font-style.",
+                                      "type": "string",
+                                      "enum": [
+                                        "normal",
+                                        "italic"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "url",
+                                    "format"
+                                  ],
+                                  "description": "A single custom font file reference."
+                                },
+                                "minItems": 1
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "family",
+                              "files"
+                            ],
+                            "description": "Custom uploaded font files."
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
                       }
                     }
                   },
@@ -54139,6 +54241,7 @@
               "video",
               "audio",
               "document",
+              "font",
               "other"
             ]
           },
@@ -60338,8 +60441,95 @@
                 "format": "uri"
               },
               "font": {
-                "description": "Font family name (e.g., 'Inter', 'Roboto'). Loaded from Google Fonts if available, falls back to system font.",
-                "type": "string"
+                "description": "Font configuration. Accepts a FontConfig object or a plain string (legacy Google Fonts name).",
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "google"
+                        ]
+                      },
+                      "family": {
+                        "description": "Google Fonts family name (e.g. 'Inter', 'Roboto').",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family"
+                    ],
+                    "description": "A Google Fonts reference."
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "custom"
+                        ]
+                      },
+                      "family": {
+                        "description": "Font family name to use in CSS (e.g. 'Univers LT Std').",
+                        "type": "string"
+                      },
+                      "files": {
+                        "description": "Uploaded font files (at least one).",
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "description": "CDN URL of the font file.",
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "format": {
+                              "description": "Font format for @font-face src.",
+                              "type": "string",
+                              "enum": [
+                                "woff2",
+                                "woff",
+                                "truetype",
+                                "opentype"
+                              ]
+                            },
+                            "weight": {
+                              "description": "CSS font-weight, e.g. \"400\", \"700\".",
+                              "type": "string"
+                            },
+                            "style": {
+                              "description": "CSS font-style.",
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "italic"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "format"
+                          ],
+                          "description": "A single custom font file reference."
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family",
+                      "files"
+                    ],
+                    "description": "Custom uploaded font files."
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
               }
             }
           },
@@ -73399,6 +73589,7 @@
               "video",
               "audio",
               "document",
+              "font",
               "other"
             ]
           },
@@ -77916,8 +78107,95 @@
                 "format": "uri"
               },
               "font": {
-                "description": "Font family name (e.g., 'Inter', 'Roboto'). Loaded from Google Fonts if available, falls back to system font.",
-                "type": "string"
+                "description": "Font configuration. Accepts a FontConfig object or a plain string (legacy Google Fonts name).",
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "google"
+                        ]
+                      },
+                      "family": {
+                        "description": "Google Fonts family name (e.g. 'Inter', 'Roboto').",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family"
+                    ],
+                    "description": "A Google Fonts reference."
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "custom"
+                        ]
+                      },
+                      "family": {
+                        "description": "Font family name to use in CSS (e.g. 'Univers LT Std').",
+                        "type": "string"
+                      },
+                      "files": {
+                        "description": "Uploaded font files (at least one).",
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "description": "CDN URL of the font file.",
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "format": {
+                              "description": "Font format for @font-face src.",
+                              "type": "string",
+                              "enum": [
+                                "woff2",
+                                "woff",
+                                "truetype",
+                                "opentype"
+                              ]
+                            },
+                            "weight": {
+                              "description": "CSS font-weight, e.g. \"400\", \"700\".",
+                              "type": "string"
+                            },
+                            "style": {
+                              "description": "CSS font-style.",
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "italic"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "format"
+                          ],
+                          "description": "A single custom font file reference."
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family",
+                      "files"
+                    ],
+                    "description": "Custom uploaded font files."
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
               }
             }
           },
@@ -87234,6 +87512,7 @@
               "video",
               "audio",
               "document",
+              "font",
               "other"
             ]
           },
@@ -92268,8 +92547,95 @@
                 "format": "uri"
               },
               "font": {
-                "description": "Font family name (e.g., 'Inter', 'Roboto'). Loaded from Google Fonts if available, falls back to system font.",
-                "type": "string"
+                "description": "Font configuration. Accepts a FontConfig object or a plain string (legacy Google Fonts name).",
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "google"
+                        ]
+                      },
+                      "family": {
+                        "description": "Google Fonts family name (e.g. 'Inter', 'Roboto').",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family"
+                    ],
+                    "description": "A Google Fonts reference."
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "custom"
+                        ]
+                      },
+                      "family": {
+                        "description": "Font family name to use in CSS (e.g. 'Univers LT Std').",
+                        "type": "string"
+                      },
+                      "files": {
+                        "description": "Uploaded font files (at least one).",
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "description": "CDN URL of the font file.",
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "format": {
+                              "description": "Font format for @font-face src.",
+                              "type": "string",
+                              "enum": [
+                                "woff2",
+                                "woff",
+                                "truetype",
+                                "opentype"
+                              ]
+                            },
+                            "weight": {
+                              "description": "CSS font-weight, e.g. \"400\", \"700\".",
+                              "type": "string"
+                            },
+                            "style": {
+                              "description": "CSS font-style.",
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "italic"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "format"
+                          ],
+                          "description": "A single custom font file reference."
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family",
+                      "files"
+                    ],
+                    "description": "Custom uploaded font files."
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
               }
             }
           },
@@ -93538,8 +93904,95 @@
                 "format": "uri"
               },
               "font": {
-                "description": "Font family name (e.g., 'Inter', 'Roboto'). Loaded from Google Fonts if available, falls back to system font.",
-                "type": "string"
+                "description": "Font configuration. Accepts a FontConfig object or a plain string (legacy Google Fonts name).",
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "google"
+                        ]
+                      },
+                      "family": {
+                        "description": "Google Fonts family name (e.g. 'Inter', 'Roboto').",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family"
+                    ],
+                    "description": "A Google Fonts reference."
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "custom"
+                        ]
+                      },
+                      "family": {
+                        "description": "Font family name to use in CSS (e.g. 'Univers LT Std').",
+                        "type": "string"
+                      },
+                      "files": {
+                        "description": "Uploaded font files (at least one).",
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "description": "CDN URL of the font file.",
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "format": {
+                              "description": "Font format for @font-face src.",
+                              "type": "string",
+                              "enum": [
+                                "woff2",
+                                "woff",
+                                "truetype",
+                                "opentype"
+                              ]
+                            },
+                            "weight": {
+                              "description": "CSS font-weight, e.g. \"400\", \"700\".",
+                              "type": "string"
+                            },
+                            "style": {
+                              "description": "CSS font-style.",
+                              "type": "string",
+                              "enum": [
+                                "normal",
+                                "italic"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "format"
+                          ],
+                          "description": "A single custom font file reference."
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "family",
+                      "files"
+                    ],
+                    "description": "Custom uploaded font files."
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
               }
             }
           },
