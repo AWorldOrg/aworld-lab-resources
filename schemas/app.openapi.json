@@ -8463,6 +8463,15 @@
                   },
                   "primaryGradient": {
                     "type": "string"
+                  },
+                  "primaryGradientForeground": {
+                    "type": "string"
+                  },
+                  "backgroundGradient": {
+                    "type": "string"
+                  },
+                  "backgroundGradientForeground": {
+                    "type": "string"
                   }
                 }
               },
@@ -8597,6 +8606,15 @@
                     "type": "string"
                   },
                   "primaryGradient": {
+                    "type": "string"
+                  },
+                  "primaryGradientForeground": {
+                    "type": "string"
+                  },
+                  "backgroundGradient": {
+                    "type": "string"
+                  },
+                  "backgroundGradientForeground": {
                     "type": "string"
                   }
                 }
