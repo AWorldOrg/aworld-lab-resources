@@ -7853,17 +7853,6 @@
                       "custom"
                     ]
                   },
-                  "title": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "uri"
-                  },
                   "estimatedDuration": {
                     "type": "number"
                   },
@@ -8441,17 +8430,6 @@
                                 "custom"
                               ]
                             },
-                            "title": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "description": {
-                              "type": "string"
-                            },
-                            "image": {
-                              "type": "string",
-                              "format": "uri"
-                            },
                             "estimatedDuration": {
                               "type": "number"
                             },
@@ -9012,7 +8990,6 @@
                           },
                           "required": [
                             "_type",
-                            "title",
                             "defaultLang",
                             "translations"
                           ]
@@ -9028,7 +9005,6 @@
                   }
                 },
                 "required": [
-                  "title",
                   "defaultLang",
                   "translations"
                 ]
@@ -9153,17 +9129,6 @@
                       "test",
                       "custom"
                     ]
-                  },
-                  "title": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "uri"
                   },
                   "estimatedDuration": {
                     "type": "number"
@@ -9350,7 +9315,6 @@
                   }
                 },
                 "required": [
-                  "title",
                   "defaultLang",
                   "translations"
                 ]
@@ -11593,17 +11557,6 @@
                   "legacyLearningPathId": {
                     "type": "string"
                   },
-                  "title": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "uri"
-                  },
                   "estimatedDuration": {
                     "type": "number"
                   },
@@ -11673,17 +11626,6 @@
                                 "test",
                                 "custom"
                               ]
-                            },
-                            "title": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "description": {
-                              "type": "string"
-                            },
-                            "image": {
-                              "type": "string",
-                              "format": "uri"
                             },
                             "estimatedDuration": {
                               "type": "number"
@@ -12262,17 +12204,6 @@
                                           "custom"
                                         ]
                                       },
-                                      "title": {
-                                        "type": "string",
-                                        "minLength": 1
-                                      },
-                                      "description": {
-                                        "type": "string"
-                                      },
-                                      "image": {
-                                        "type": "string",
-                                        "format": "uri"
-                                      },
                                       "estimatedDuration": {
                                         "type": "number"
                                       },
@@ -12833,7 +12764,6 @@
                                     },
                                     "required": [
                                       "_type",
-                                      "title",
                                       "defaultLang",
                                       "translations"
                                     ]
@@ -12845,7 +12775,6 @@
                           },
                           "required": [
                             "_type",
-                            "title",
                             "defaultLang",
                             "translations"
                           ]
@@ -13297,7 +13226,6 @@
                   }
                 },
                 "required": [
-                  "title",
                   "estimatedDuration",
                   "defaultLang",
                   "translations"
@@ -13447,17 +13375,6 @@
                   "legacyLearningPathId": {
                     "type": "string"
                   },
-                  "title": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "uri"
-                  },
                   "estimatedDuration": {
                     "type": "number"
                   },
@@ -13576,7 +13493,6 @@
                 },
                 "required": [
                   "origin",
-                  "title",
                   "estimatedDuration",
                   "defaultLang",
                   "translations"
@@ -20386,7 +20302,8 @@
                       "Tag",
                       "LearningPath",
                       "LearningGroup",
-                      "Slide"
+                      "Slide",
+                      "Streak"
                     ]
                   },
                   "matchEntityId": {
@@ -20655,7 +20572,8 @@
                       "Tag",
                       "LearningPath",
                       "LearningGroup",
-                      "Slide"
+                      "Slide",
+                      "Streak"
                     ]
                   },
                   "matchEntityId": {
@@ -33666,17 +33584,6 @@
               "custom"
             ]
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -33868,7 +33775,6 @@
         },
         "required": [
           "learningGroupId",
-          "title",
           "defaultLang",
           "langs",
           "accountId",
@@ -33903,17 +33809,6 @@
           },
           "legacyLearningPathId": {
             "type": "string"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
           },
           "estimatedDuration": {
             "type": "number"
@@ -34110,7 +34005,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -35110,7 +35004,8 @@
               "Tag",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "Streak"
             ]
           },
           "matchEntityId": {
@@ -36453,17 +36348,6 @@
           "legacyLearningPathId": {
             "type": "string"
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -36657,7 +36541,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -38704,17 +38587,6 @@
                   "custom"
                 ]
               },
-              "title": {
-                "type": "string",
-                "minLength": 1
-              },
-              "description": {
-                "type": "string"
-              },
-              "image": {
-                "type": "string",
-                "format": "uri"
-              },
               "estimatedDuration": {
                 "type": "number"
               },
@@ -38904,7 +38776,6 @@
             },
             "required": [
               "learningGroupId",
-              "title",
               "defaultLang",
               "langs",
               "accountId",
@@ -38926,17 +38797,6 @@
                   "test",
                   "custom"
                 ]
-              },
-              "title": {
-                "type": "string",
-                "minLength": 1
-              },
-              "description": {
-                "type": "string"
-              },
-              "image": {
-                "type": "string",
-                "format": "uri"
               },
               "estimatedDuration": {
                 "type": "number"
@@ -39137,7 +38997,6 @@
             },
             "required": [
               "learningGroupId",
-              "title",
               "defaultLang",
               "langs",
               "accountId",
@@ -39542,17 +39401,6 @@
           "legacyLearningPathId": {
             "type": "string"
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -39746,7 +39594,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -42521,7 +42368,8 @@
               "Tag",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "Streak"
             ]
           },
           "matchEntityId": {
@@ -52250,17 +52098,6 @@
               "custom"
             ]
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -52584,7 +52421,6 @@
         },
         "required": [
           "learningGroupId",
-          "title",
           "defaultLang",
           "langs",
           "accountId",
@@ -52743,17 +52579,6 @@
           },
           "legacyLearningPathId": {
             "type": "string"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
           },
           "estimatedDuration": {
             "type": "number"
@@ -53300,7 +53125,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -53343,17 +53167,6 @@
           },
           "legacyLearningPathId": {
             "type": "string"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
           },
           "estimatedDuration": {
             "type": "number"
@@ -53814,7 +53627,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -56370,7 +56182,8 @@
               "Tag",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "Streak"
             ]
           },
           "matchEntityId": {
@@ -64588,17 +64401,6 @@
                     "custom"
                   ]
                 },
-                "title": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": {
-                  "type": "string"
-                },
-                "image": {
-                  "type": "string",
-                  "format": "uri"
-                },
                 "estimatedDuration": {
                   "type": "number"
                 },
@@ -64912,7 +64714,6 @@
               },
               "required": [
                 "learningGroupId",
-                "title",
                 "defaultLang",
                 "langs",
                 "accountId",
@@ -65334,17 +65135,6 @@
                 },
                 "legacyLearningPathId": {
                   "type": "string"
-                },
-                "title": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": {
-                  "type": "string"
-                },
-                "image": {
-                  "type": "string",
-                  "format": "uri"
                 },
                 "estimatedDuration": {
                   "type": "number"
@@ -65891,7 +65681,6 @@
               "required": [
                 "learningPathId",
                 "origin",
-                "title",
                 "estimatedDuration",
                 "defaultLang",
                 "langs",
@@ -66292,17 +66081,6 @@
                 },
                 "legacyLearningPathId": {
                   "type": "string"
-                },
-                "title": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": {
-                  "type": "string"
-                },
-                "image": {
-                  "type": "string",
-                  "format": "uri"
                 },
                 "estimatedDuration": {
                   "type": "number"
@@ -66763,7 +66541,6 @@
               "required": [
                 "learningPathId",
                 "origin",
-                "title",
                 "estimatedDuration",
                 "defaultLang",
                 "langs",
@@ -74721,17 +74498,6 @@
               "custom"
             ]
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -74931,7 +74697,6 @@
         },
         "required": [
           "learningGroupId",
-          "title",
           "defaultLang",
           "langs",
           "accountId",
@@ -74967,17 +74732,6 @@
           },
           "legacyLearningPathId": {
             "type": "string"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
           },
           "estimatedDuration": {
             "type": "number"
@@ -75182,7 +74936,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -76443,7 +76196,8 @@
               "Tag",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "Streak"
             ]
           },
           "matchEntityId": {
@@ -79733,7 +79487,8 @@
               "Tag",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "Streak"
             ]
           },
           "matchEntityId": {
@@ -79980,17 +79735,6 @@
                 },
                 "legacyLearningPathId": {
                   "type": "string"
-                },
-                "title": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": {
-                  "type": "string"
-                },
-                "image": {
-                  "type": "string",
-                  "format": "uri"
                 },
                 "estimatedDuration": {
                   "type": "number"
@@ -80384,7 +80128,6 @@
               "required": [
                 "learningPathId",
                 "origin",
-                "title",
                 "estimatedDuration",
                 "defaultLang",
                 "langs",
@@ -82094,17 +81837,6 @@
               "custom"
             ]
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -82296,7 +82028,6 @@
         },
         "required": [
           "learningGroupId",
-          "title",
           "defaultLang",
           "langs",
           "accountId",
@@ -82331,17 +82062,6 @@
           },
           "legacyLearningPathId": {
             "type": "string"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
           },
           "estimatedDuration": {
             "type": "number"
@@ -82538,7 +82258,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -83538,7 +83257,8 @@
               "Tag",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "Streak"
             ]
           },
           "matchEntityId": {
@@ -86371,17 +86091,6 @@
               "custom"
             ]
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -86581,7 +86290,6 @@
         },
         "required": [
           "learningGroupId",
-          "title",
           "defaultLang",
           "langs",
           "accountId",
@@ -86845,17 +86553,6 @@
           "legacyLearningPathId": {
             "type": "string"
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -87059,7 +86756,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -89576,7 +89272,8 @@
               "Tag",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "Streak"
             ]
           },
           "matchEntityId": {

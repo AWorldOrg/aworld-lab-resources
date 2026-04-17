@@ -680,6 +680,31 @@
         ]
       }
     },
+    "/extensions/daily-activity": {
+      "get": {
+        "operationId": "extensions/dailyActivity",
+        "summary": "Get daily activity card data",
+        "description": "Returns the current daily activity card data for the user's workspace. Returns null if the feature is not enabled.",
+        "responses": {
+          "200": {
+            "description": "Daily activity data (or null if feature disabled / no activity)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyActivityResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Extensions"
+        ]
+      }
+    },
     "/extensions/signed-url": {
       "get": {
         "operationId": "extensions/signedUrl",
@@ -3095,6 +3120,58 @@
         ]
       }
     },
+    "/streaks/{streakId}": {
+      "get": {
+        "operationId": "streaks/get",
+        "summary": "Get streak",
+        "description": "Retrieve a specific streak by ID, enriched with its configuration. Supports optional field resolution for translations.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translation"
+                ]
+              }
+            }
+          },
+          {
+            "name": "streakId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Streak retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStreakResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Streak not found"
+          }
+        },
+        "tags": [
+          "Streaks"
+        ]
+      }
+    },
     "/surveys/{surveyId}": {
       "get": {
         "operationId": "surveys/get",
@@ -4371,6 +4448,60 @@
           "currentAttempt"
         ]
       },
+      "DailyActivityResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "complete_profile",
+                  "complete_finfit",
+                  "spotlight"
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "cta": {
+                "type": "string"
+              },
+              "xpReward": {
+                "type": "number"
+              },
+              "countdown": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "activityId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status",
+              "title",
+              "description",
+              "cta",
+              "xpReward",
+              "countdown",
+              "activityId"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "DeleteCurrentUserResponse": {
         "type": "object",
         "properties": {
@@ -5277,17 +5408,6 @@
               "custom"
             ]
           },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
-          },
           "estimatedDuration": {
             "type": "number"
           },
@@ -5678,7 +5798,6 @@
         },
         "required": [
           "learningGroupId",
-          "title",
           "defaultLang",
           "langs"
         ]
@@ -5777,17 +5896,6 @@
           },
           "legacyLearningPathId": {
             "type": "string"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "uri"
           },
           "estimatedDuration": {
             "type": "number"
@@ -6319,7 +6427,6 @@
         "required": [
           "learningPathId",
           "origin",
-          "title",
           "estimatedDuration",
           "defaultLang",
           "langs",
@@ -7856,6 +7963,234 @@
           "content",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "GetStreakResponse": {
+        "type": "object",
+        "properties": {
+          "streakId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "streakRuleId": {
+            "type": "string"
+          },
+          "periodId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "COMPLETED",
+              "BROKEN",
+              "ENDED"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "REGULAR",
+              "FREEZE",
+              "ANY"
+            ]
+          },
+          "cadence": {
+            "type": "string",
+            "enum": [
+              "DAY",
+              "WEEK"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "DAYS",
+              "WEEKS"
+            ]
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "periodType": {
+            "type": "string",
+            "enum": [
+              "DAY",
+              "WEEK",
+              "MONTH",
+              "YEAR",
+              "ITERATION",
+              "GOAL"
+            ]
+          },
+          "iterationId": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "goalId": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "target": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "perfectWeek": {
+            "type": "boolean"
+          },
+          "perfectMonth": {
+            "type": "boolean"
+          },
+          "perfectYear": {
+            "type": "boolean"
+          },
+          "lastContributingDay": {
+            "type": "string"
+          },
+          "timezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "streakConfiguration": {
+            "type": "object",
+            "properties": {
+              "streakConfigurationId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string"
+              },
+              "matchType": {
+                "type": "string",
+                "enum": [
+                  "INSTANCE",
+                  "ENTITY",
+                  "TAG"
+                ]
+              },
+              "matchEntity": {
+                "type": "string",
+                "enum": [
+                  "Mission",
+                  "Activity",
+                  "Quiz",
+                  "Tag"
+                ]
+              },
+              "matchEntityId": {
+                "type": "string"
+              },
+              "matchCondition": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonLogicExpression"
+                  },
+                  {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "CATALOG",
+                  "CUSTOM"
+                ]
+              },
+              "streakConfigurationCatalogId": {
+                "type": "string"
+              },
+              "syncWithCatalog": {
+                "type": "boolean"
+              },
+              "defaultLang": {
+                "$ref": "#/components/schemas/Lang"
+              },
+              "langs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "maxItems": 10,
+                "minItems": 1
+              },
+              "icon": {
+                "type": "string",
+                "format": "uri"
+              },
+              "createdAt": {
+                "description": "Creation date in ISO format (UTC Timezone)",
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "description": "Creation date in ISO format (UTC Timezone)",
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "streakConfigurationId",
+              "name",
+              "matchType",
+              "matchEntity",
+              "matchCondition",
+              "origin",
+              "defaultLang",
+              "langs",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "translation": {
+            "type": "object",
+            "properties": {
+              "lang": {
+                "$ref": "#/components/schemas/Lang"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "lang",
+              "label"
+            ]
+          }
+        },
+        "required": [
+          "streakId",
+          "userId",
+          "streakRuleId",
+          "status",
+          "kind",
+          "cadence",
+          "metric",
+          "count",
+          "periodType"
         ]
       },
       "GetSurveyProgressResponse": {
@@ -10831,17 +11166,6 @@
                     "custom"
                   ]
                 },
-                "title": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": {
-                  "type": "string"
-                },
-                "image": {
-                  "type": "string",
-                  "format": "uri"
-                },
                 "estimatedDuration": {
                   "type": "number"
                 },
@@ -11147,7 +11471,6 @@
               },
               "required": [
                 "learningGroupId",
-                "title",
                 "defaultLang",
                 "langs",
                 "createdAt",
@@ -11265,17 +11588,6 @@
                 },
                 "legacyLearningPathId": {
                   "type": "string"
-                },
-                "title": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": {
-                  "type": "string"
-                },
-                "image": {
-                  "type": "string",
-                  "format": "uri"
                 },
                 "estimatedDuration": {
                   "type": "number"
@@ -11807,7 +12119,6 @@
               "required": [
                 "learningPathId",
                 "origin",
-                "title",
                 "estimatedDuration",
                 "defaultLang",
                 "langs",
