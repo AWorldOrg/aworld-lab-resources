@@ -6797,6 +6797,27 @@
                 "updatedAt"
               ]
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -6824,6 +6845,16 @@
         "description": "Creates a new invitation to join the workspace with a specific role",
         "parameters": [
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -6832,6 +6863,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -6921,6 +6963,27 @@
               "type": "string",
               "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -6962,6 +7025,27 @@
               "type": "string",
               "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -7000,6 +7084,27 @@
             "required": true,
             "schema": {
               "description": "Unique identifier for the invitation.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
               "type": "string",
               "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
@@ -18441,6 +18546,16 @@
         "description": "Creates a new mission assignment for a user or group. Supports INDIVIDUAL (requires userId) and GROUP (requires groupTagId) mission types.",
         "parameters": [
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -18449,6 +18564,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -18542,6 +18668,29 @@
         "operationId": "mobilityActivations/list",
         "summary": "List mobility activations",
         "description": "List pagination-enabled mobility activation records.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Activations retrieved successfully",
@@ -18565,6 +18714,29 @@
         "operationId": "mobilityActivations/create",
         "summary": "Create or update mobility activation",
         "description": "Toggle tracking on or off. When turning off, the MotionTag user is deleted.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -18612,6 +18784,29 @@
         "operationId": "mobilityMilestones/list",
         "summary": "List mobility milestones",
         "description": "List pagination-enabled mobility milestones for a user.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Milestones retrieved successfully",
@@ -18719,6 +18914,27 @@
                 "updatedAt"
               ]
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -18754,6 +18970,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -18784,6 +19021,29 @@
         "operationId": "mobilityMotiontag/getStatus",
         "summary": "Get MotionTag status",
         "description": "Check if MotionTag is enabled for the workspace.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Status retrieved successfully",
@@ -18809,6 +19069,29 @@
         "operationId": "mobilityMotiontag/getToken",
         "summary": "Get MotionTag token",
         "description": "Get JWT token for MotionTag SDK authentication.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Token retrieved successfully",
@@ -18841,6 +19124,27 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -28807,6 +29111,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -28837,6 +29162,29 @@
         "operationId": "users/me/principal/get",
         "summary": "Get current user principal",
         "description": "Retrieve the Cognito principal for the current authenticated user.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "User principal retrieved successfully",
@@ -28928,6 +29276,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -28966,6 +29335,16 @@
             }
           },
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -28974,6 +29353,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29054,6 +29444,16 @@
             }
           },
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -29062,6 +29462,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29139,6 +29550,27 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29225,6 +29657,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -29274,6 +29727,16 @@
             }
           },
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -29282,6 +29745,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29352,6 +29826,16 @@
             }
           },
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -29360,6 +29844,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29424,6 +29919,27 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29525,6 +30041,27 @@
                 "updatedAt"
               ]
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -29552,6 +30089,16 @@
         "description": "Creates a new user with the specified configurations.",
         "parameters": [
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -29560,6 +30107,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29705,6 +30263,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -29740,6 +30319,27 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29831,6 +30431,16 @@
             }
           },
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -29839,6 +30449,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -29888,6 +30509,27 @@
                 ]
               }
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -29918,6 +30560,29 @@
         "operationId": "users/search",
         "summary": "Search users",
         "description": "Search, filter, and sort users using JSONLogic expressions. Supports filtering by email, name (via Principal JOIN), tags, and all user fields.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -30085,6 +30750,27 @@
                 ]
               }
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -30115,6 +30801,29 @@
         "operationId": "users/getMyPermissions",
         "summary": "Get current user permissions",
         "description": "Returns a boolean map of what the current user can/cannot do based on their role.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Permissions manifest retrieved successfully",
@@ -30140,6 +30849,29 @@
         "operationId": "users/me/getReferralCode",
         "summary": "Get current user referral code",
         "description": "Get or create a referral code for the current authenticated user. Idempotent: returns existing code if already generated.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Referral code retrieved successfully",
@@ -30674,6 +31406,16 @@
         "description": "Creates one or more virtual transactions (credits, debits, or transfers between users). Supports batch operations up to 20 transactions per request.",
         "parameters": [
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -30682,6 +31424,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -30878,6 +31631,27 @@
                 "updatedAt"
               ]
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -30905,6 +31679,16 @@
         "description": "Creates a new workspace code for the current workspace. Optionally provide a custom code string; auto-generated if omitted.",
         "parameters": [
           {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-idempotency-key",
             "in": "header",
             "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
@@ -30913,6 +31697,17 @@
               "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
               "type": "string",
               "minLength": 1
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -31023,6 +31818,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
           }
         ],
         "responses": {
@@ -31060,6 +31876,27 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
@@ -31103,6 +31940,27 @@
               "maxLength": 50,
               "minLength": 4,
               "pattern": "^[A-Z0-9_-]{4,50}$"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           }
         ],
