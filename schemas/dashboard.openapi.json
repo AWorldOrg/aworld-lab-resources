@@ -9525,8 +9525,22 @@
       "post": {
         "operationId": "learningGroups/archive",
         "summary": "Archive learning group",
-        "description": "Archives a learning group, removing it from active use.",
+        "description": "Archives a learning group. With cascade=true (default), also archives all child entities (slides, quizzes, nested groups) and removes the LG from its parent's items.",
         "parameters": [
+          {
+            "name": "cascade",
+            "in": "query",
+            "description": "Whether to archive all child entities (slides, quizzes, nested groups) recursively",
+            "required": false,
+            "schema": {
+              "description": "Whether to archive all child entities (slides, quizzes, nested groups) recursively",
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "default": true
+            }
+          },
           {
             "name": "learningGroupId",
             "in": "path",
@@ -9549,6 +9563,94 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Learning group not found"
+          }
+        },
+        "tags": [
+          "LearningGroups"
+        ]
+      }
+    },
+    "/learning-groups/{learningGroupId}/clone": {
+      "post": {
+        "operationId": "learningGroups/clone",
+        "summary": "Clone learning group",
+        "description": "Clones a learning group with all its children (slides, quizzes, nested groups), optionally from a catalog workspace.",
+        "parameters": [
+          {
+            "name": "learningGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "catalogWorkspaceId": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "minLength": 10,
+                    "pattern": "^[A-Za-z0-9_-]{10}$"
+                  },
+                  "publish": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "cascade": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "parentId": {
+                    "type": "string"
+                  },
+                  "parentType": {
+                    "type": "string",
+                    "enum": [
+                      "learningPath",
+                      "learningGroup"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Learning group cloned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneLearningGroupResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "No access to catalog workspace"
           },
           "404": {
             "description": "Learning group not found"
@@ -9655,6 +9757,18 @@
         "summary": "List learning path assignments",
         "description": "List learning path assignments for a specific user. Supports optional field resolution (translation, tags, items, progress) and filtering by state, visibility, progressStatus, and outcome.",
         "parameters": [
+          {
+            "name": "assignmentType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "REQUIRED",
+                "OPTIONAL"
+              ]
+            }
+          },
           {
             "name": "fields",
             "in": "query",
@@ -9849,6 +9963,13 @@
                       "RANGE",
                       "PERMANENT"
                     ]
+                  },
+                  "assignmentType": {
+                    "type": "string",
+                    "enum": [
+                      "REQUIRED",
+                      "OPTIONAL"
+                    ]
                   }
                 },
                 "required": [
@@ -9856,7 +9977,8 @@
                   "userId",
                   "startsAt",
                   "visibility",
-                  "timeframeType"
+                  "timeframeType",
+                  "assignmentType"
                 ]
               }
             }
@@ -10499,6 +10621,31 @@
                       "ENDED"
                     ]
                   },
+                  "revocationPolicy": {
+                    "type": "string",
+                    "default": "KEEP",
+                    "enum": [
+                      "KEEP",
+                      "REVOKE",
+                      "REVOKE_IF_NOT_STARTED"
+                    ]
+                  },
+                  "duplicatePolicy": {
+                    "type": "string",
+                    "default": "DISALLOW_ACTIVE",
+                    "enum": [
+                      "ALLOW",
+                      "DISALLOW_ACTIVE"
+                    ]
+                  },
+                  "assignmentType": {
+                    "type": "string",
+                    "default": "REQUIRED",
+                    "enum": [
+                      "REQUIRED",
+                      "OPTIONAL"
+                    ]
+                  },
                   "eventMatchType": {
                     "type": "string",
                     "enum": [
@@ -10817,6 +10964,31 @@
                           "null"
                         ]
                       }
+                    ]
+                  },
+                  "revocationPolicy": {
+                    "type": "string",
+                    "default": "KEEP",
+                    "enum": [
+                      "KEEP",
+                      "REVOKE",
+                      "REVOKE_IF_NOT_STARTED"
+                    ]
+                  },
+                  "duplicatePolicy": {
+                    "type": "string",
+                    "default": "DISALLOW_ACTIVE",
+                    "enum": [
+                      "ALLOW",
+                      "DISALLOW_ACTIVE"
+                    ]
+                  },
+                  "assignmentType": {
+                    "type": "string",
+                    "default": "REQUIRED",
+                    "enum": [
+                      "REQUIRED",
+                      "OPTIONAL"
                     ]
                   },
                   "translations": {
@@ -13779,8 +13951,22 @@
       "post": {
         "operationId": "learningPaths/archive",
         "summary": "Archive learning path",
-        "description": "Archives a learning path.",
+        "description": "Archives a learning path. With cascade=true (default), also archives all child learning groups and their children.",
         "parameters": [
+          {
+            "name": "cascade",
+            "in": "query",
+            "description": "Whether to archive all child entities (learning groups, slides, quizzes) recursively",
+            "required": false,
+            "schema": {
+              "description": "Whether to archive all child entities (learning groups, slides, quizzes) recursively",
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "default": true
+            }
+          },
           {
             "name": "learningPathId",
             "in": "path",
@@ -13817,7 +14003,7 @@
       "post": {
         "operationId": "learningPaths/clone",
         "summary": "Clone learning path",
-        "description": "Clones a learning path from a catalog workspace into the requesting workspace.",
+        "description": "Clones a learning path with all its children, optionally from a catalog workspace into the requesting workspace.",
         "parameters": [
           {
             "name": "learningPathId",
@@ -13851,11 +14037,16 @@
                     "maxLength": 10,
                     "minLength": 10,
                     "pattern": "^[A-Za-z0-9_-]{10}$"
+                  },
+                  "publish": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "cascade": {
+                    "type": "boolean",
+                    "default": false
                   }
-                },
-                "required": [
-                  "catalogWorkspaceId"
-                ]
+                }
               }
             }
           }
@@ -14357,6 +14548,150 @@
           },
           "404": {
             "description": "Media file not found"
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/media/search": {
+      "post": {
+        "operationId": "media/search",
+        "summary": "Search media",
+        "description": "Search, filter, and sort media files using JSONLogic expressions with optional field resolution.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "tags",
+                        "translations"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Media files matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchMediaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "tags": [
@@ -20390,6 +20725,80 @@
         ]
       }
     },
+    "/quizzes/{quizId}/clone": {
+      "post": {
+        "operationId": "quizzes/clone",
+        "summary": "Clone quiz",
+        "description": "Clones a quiz, optionally from a catalog workspace into the requesting workspace.",
+        "parameters": [
+          {
+            "name": "quizId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "catalogWorkspaceId": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "minLength": 10,
+                    "pattern": "^[A-Za-z0-9_-]{10}$"
+                  },
+                  "publish": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Quiz cloned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneQuizResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "No access to catalog workspace"
+          },
+          "404": {
+            "description": "Quiz not found"
+          }
+        },
+        "tags": [
+          "Quizzes"
+        ]
+      }
+    },
     "/quizzes/{quizId}/publish": {
       "post": {
         "operationId": "quizzes/publish",
@@ -21470,6 +21879,68 @@
           },
           "404": {
             "description": "Runtime leaderboard not found"
+          }
+        },
+        "tags": [
+          "Runtime Leaderboards"
+        ]
+      }
+    },
+    "/runtime-leaderboards/{runtimeLeaderboardId}/rankings": {
+      "get": {
+        "operationId": "runtimeLeaderboards/getRankings",
+        "summary": "Get leaderboard rankings",
+        "description": "Retrieve the rankings for a specific leaderboard. Supports ACTIVE and ENDED leaderboards.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "exclusiveMinimum": 0,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "runtimeLeaderboardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rankings retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRuntimeLeaderboardRankingsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Leaderboard not found"
           }
         },
         "tags": [
@@ -24151,6 +24622,80 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Slide not found"
+          }
+        },
+        "tags": [
+          "Slides"
+        ]
+      }
+    },
+    "/slides/{slideId}/clone": {
+      "post": {
+        "operationId": "slides/clone",
+        "summary": "Clone slide",
+        "description": "Clones a slide, optionally from a catalog workspace into the requesting workspace.",
+        "parameters": [
+          {
+            "name": "slideId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "catalogWorkspaceId": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "minLength": 10,
+                    "pattern": "^[A-Za-z0-9_-]{10}$"
+                  },
+                  "publish": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Slide cloned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneSlideResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "No access to catalog workspace"
           },
           "404": {
             "description": "Slide not found"
@@ -37180,6 +37725,444 @@
           "updatedAt"
         ]
       },
+      "CloneLearningGroupResponse": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "learningGroupId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "default": "custom",
+                "enum": [
+                  "story",
+                  "test",
+                  "custom"
+                ]
+              },
+              "estimatedDuration": {
+                "type": "number"
+              },
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "CATALOG",
+                  "AI",
+                  "CUSTOM"
+                ]
+              },
+              "legacyLearningGroupId": {
+                "type": "string"
+              },
+              "catalogWorkspaceId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "catalogLearningGroupId": {
+                "type": "string"
+              },
+              "defaultLang": {
+                "$ref": "#/components/schemas/Lang"
+              },
+              "langs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "maxItems": 10,
+                "minItems": 1
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "itemId": {
+                      "type": "string"
+                    },
+                    "itemType": {
+                      "type": "string",
+                      "enum": [
+                        "activity",
+                        "game",
+                        "quiz",
+                        "slide",
+                        "learningGroup"
+                      ]
+                    },
+                    "languages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Lang"
+                      }
+                    }
+                  },
+                  "required": [
+                    "itemId",
+                    "itemType"
+                  ]
+                },
+                "default": []
+              },
+              "defaultLayoutId": {
+                "type": "string"
+              },
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              },
+              "completionRule": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonLogicExpression"
+                  },
+                  {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "outcomeRule": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonLogicExpression"
+                  },
+                  {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "startRule": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonLogicExpression"
+                  },
+                  {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "source": {
+                "type": "string"
+              },
+              "parentId": {
+                "type": "string"
+              },
+              "parentType": {
+                "type": "string",
+                "enum": [
+                  "learningPath",
+                  "learningGroup"
+                ]
+              },
+              "accountId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "workspaceId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "sourceRegion": {
+                "$ref": "#/components/schemas/SourceRegion"
+              },
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "DRAFT",
+                  "PUBLISHED",
+                  "ARCHIVED"
+                ]
+              }
+            },
+            "required": [
+              "learningGroupId",
+              "defaultLang",
+              "langs",
+              "accountId",
+              "workspaceId",
+              "sourceRegion"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "learningGroupId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "default": "custom",
+                "enum": [
+                  "story",
+                  "test",
+                  "custom"
+                ]
+              },
+              "estimatedDuration": {
+                "type": "number"
+              },
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "CATALOG",
+                  "AI",
+                  "CUSTOM"
+                ]
+              },
+              "legacyLearningGroupId": {
+                "type": "string"
+              },
+              "catalogWorkspaceId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "catalogLearningGroupId": {
+                "type": "string"
+              },
+              "defaultLang": {
+                "$ref": "#/components/schemas/Lang"
+              },
+              "langs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "maxItems": 10,
+                "minItems": 1
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "itemId": {
+                      "type": "string"
+                    },
+                    "itemType": {
+                      "type": "string",
+                      "enum": [
+                        "activity",
+                        "game",
+                        "quiz",
+                        "slide",
+                        "learningGroup"
+                      ]
+                    },
+                    "languages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Lang"
+                      }
+                    }
+                  },
+                  "required": [
+                    "itemId",
+                    "itemType"
+                  ]
+                },
+                "default": []
+              },
+              "defaultLayoutId": {
+                "type": "string"
+              },
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              },
+              "completionRule": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonLogicExpression"
+                  },
+                  {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "outcomeRule": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonLogicExpression"
+                  },
+                  {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "startRule": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonLogicExpression"
+                  },
+                  {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "source": {
+                "type": "string"
+              },
+              "parentId": {
+                "type": "string"
+              },
+              "parentType": {
+                "type": "string",
+                "enum": [
+                  "learningPath",
+                  "learningGroup"
+                ]
+              },
+              "accountId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "workspaceId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "sourceRegion": {
+                "$ref": "#/components/schemas/SourceRegion"
+              },
+              "createdAt": {
+                "description": "Creation date in ISO format (UTC Timezone)",
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "description": "Creation date in ISO format (UTC Timezone)",
+                "type": "string",
+                "format": "date-time"
+              },
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "DRAFT",
+                  "PUBLISHED",
+                  "ARCHIVED"
+                ]
+              }
+            },
+            "required": [
+              "learningGroupId",
+              "defaultLang",
+              "langs",
+              "accountId",
+              "workspaceId",
+              "sourceRegion",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        ]
+      },
       "CloneLearningPathResponse": {
         "type": "object",
         "properties": {
@@ -37405,6 +38388,293 @@
           "accountId",
           "workspaceId",
           "sourceRegion"
+        ]
+      },
+      "CloneQuizResponse": {
+        "type": "object",
+        "properties": {
+          "quizId": {
+            "type": "string"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "EASY",
+              "MEDIUM",
+              "HARD"
+            ]
+          },
+          "correctAnswer": {
+            "type": "string",
+            "enum": [
+              "opt1",
+              "opt2",
+              "opt3",
+              "opt4"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM",
+              "AI"
+            ]
+          },
+          "catalogWorkspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "catalogQuizId": {
+            "type": "string"
+          },
+          "placement": {
+            "type": "string",
+            "enum": [
+              "STANDALONE",
+              "STORY",
+              "NEWS"
+            ]
+          },
+          "storyId": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "defaultLayoutId": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "quizId",
+          "difficulty",
+          "correctAnswer",
+          "origin",
+          "placement",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CloneSlideResponse": {
+        "type": "object",
+        "properties": {
+          "slideId": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "AI",
+              "CUSTOM"
+            ]
+          },
+          "catalogWorkspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "catalogSlideId": {
+            "type": "string"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "defaultLayoutId": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "slideId",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "ContentAnalyticsResponse": {
@@ -40179,6 +41449,14 @@
               "UNLOCKED"
             ]
           },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
+            ]
+          },
           "unlockedAt": {
             "type": "string",
             "format": "date-time"
@@ -40582,6 +41860,31 @@
               "PENDING",
               "ACTIVE",
               "ENDED"
+            ]
+          },
+          "revocationPolicy": {
+            "type": "string",
+            "default": "KEEP",
+            "enum": [
+              "KEEP",
+              "REVOKE",
+              "REVOKE_IF_NOT_STARTED"
+            ]
+          },
+          "duplicatePolicy": {
+            "type": "string",
+            "default": "DISALLOW_ACTIVE",
+            "enum": [
+              "ALLOW",
+              "DISALLOW_ACTIVE"
+            ]
+          },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
             ]
           },
           "eventMatchType": {
@@ -53647,6 +54950,14 @@
               "UNLOCKED"
             ]
           },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
+            ]
+          },
           "unlockedAt": {
             "type": "string",
             "format": "date-time"
@@ -54337,6 +55648,14 @@
                     "UNLOCKED"
                   ]
                 },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
+                  ]
+                },
                 "unlockedAt": {
                   "type": "string",
                   "format": "date-time"
@@ -54617,6 +55936,31 @@
               "PENDING",
               "ACTIVE",
               "ENDED"
+            ]
+          },
+          "revocationPolicy": {
+            "type": "string",
+            "default": "KEEP",
+            "enum": [
+              "KEEP",
+              "REVOKE",
+              "REVOKE_IF_NOT_STARTED"
+            ]
+          },
+          "duplicatePolicy": {
+            "type": "string",
+            "default": "DISALLOW_ACTIVE",
+            "enum": [
+              "ALLOW",
+              "DISALLOW_ACTIVE"
+            ]
+          },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
             ]
           },
           "eventMatchType": {
@@ -57853,6 +59197,118 @@
           "sourceRegion",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "GetRuntimeLeaderboardRankingsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rank": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "entityId": {
+                  "type": "string"
+                },
+                "entityType": {
+                  "type": "string"
+                },
+                "primaryEntityName": {
+                  "type": "string"
+                },
+                "secondaryEntityName": {
+                  "type": "string"
+                },
+                "entityImageUrl": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "score": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "rank",
+                "entityId",
+                "entityType",
+                "score"
+              ]
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "currentEntityRank": {
+            "type": "object",
+            "properties": {
+              "rank": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "entityId": {
+                "type": "string"
+              },
+              "entityType": {
+                "type": "string"
+              },
+              "primaryEntityName": {
+                "type": "string"
+              },
+              "secondaryEntityName": {
+                "type": "string"
+              },
+              "entityImageUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "score": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "rank",
+              "entityId",
+              "entityType",
+              "score"
+            ]
+          },
+          "leaderboard": {
+            "type": "object",
+            "properties": {
+              "runtimeLeaderboardId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "displayTopN": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "showScore": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "runtimeLeaderboardId",
+              "name",
+              "displayTopN",
+              "showScore"
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "totalCount",
+          "leaderboard"
         ]
       },
       "GetRuntimeLeaderboardResponse": {
@@ -65873,6 +67329,14 @@
                     "UNLOCKED"
                   ]
                 },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
+                  ]
+                },
                 "unlockedAt": {
                   "type": "string",
                   "format": "date-time"
@@ -66201,6 +67665,14 @@
                   "enum": [
                     "LOCKED",
                     "UNLOCKED"
+                  ]
+                },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
                   ]
                 },
                 "unlockedAt": {
@@ -66742,6 +68214,31 @@
                     "ENDED"
                   ]
                 },
+                "revocationPolicy": {
+                  "type": "string",
+                  "default": "KEEP",
+                  "enum": [
+                    "KEEP",
+                    "REVOKE",
+                    "REVOKE_IF_NOT_STARTED"
+                  ]
+                },
+                "duplicatePolicy": {
+                  "type": "string",
+                  "default": "DISALLOW_ACTIVE",
+                  "enum": [
+                    "ALLOW",
+                    "DISALLOW_ACTIVE"
+                  ]
+                },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
+                  ]
+                },
                 "eventMatchType": {
                   "type": "string",
                   "enum": [
@@ -67249,6 +68746,14 @@
                         "enum": [
                           "LOCKED",
                           "UNLOCKED"
+                        ]
+                      },
+                      "assignmentType": {
+                        "type": "string",
+                        "default": "REQUIRED",
+                        "enum": [
+                          "REQUIRED",
+                          "OPTIONAL"
                         ]
                       },
                       "unlockedAt": {
@@ -75929,6 +77434,31 @@
               "ENDED"
             ]
           },
+          "revocationPolicy": {
+            "type": "string",
+            "default": "KEEP",
+            "enum": [
+              "KEEP",
+              "REVOKE",
+              "REVOKE_IF_NOT_STARTED"
+            ]
+          },
+          "duplicatePolicy": {
+            "type": "string",
+            "default": "DISALLOW_ACTIVE",
+            "enum": [
+              "ALLOW",
+              "DISALLOW_ACTIVE"
+            ]
+          },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
+            ]
+          },
           "eventMatchType": {
             "type": "string",
             "enum": [
@@ -80905,6 +82435,14 @@
                           "UNLOCKED"
                         ]
                       },
+                      "assignmentType": {
+                        "type": "string",
+                        "default": "REQUIRED",
+                        "enum": [
+                          "REQUIRED",
+                          "OPTIONAL"
+                        ]
+                      },
                       "unlockedAt": {
                         "type": "string",
                         "format": "date-time"
@@ -80991,6 +82529,164 @@
                 "langs",
                 "accountId",
                 "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SearchMediaResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "mediaId": {
+                  "description": "The unique ID of the media file",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "fileName": {
+                  "description": "Storage filename",
+                  "type": "string",
+                  "maxLength": 255,
+                  "minLength": 1
+                },
+                "originalFileName": {
+                  "description": "User-provided filename",
+                  "type": "string",
+                  "maxLength": 255,
+                  "minLength": 1
+                },
+                "contentType": {
+                  "description": "MIME type",
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                },
+                "fileType": {
+                  "type": "string",
+                  "enum": [
+                    "image",
+                    "video",
+                    "audio",
+                    "document",
+                    "font",
+                    "other"
+                  ]
+                },
+                "scope": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "common"
+                  ]
+                },
+                "key": {
+                  "description": "R2 object key",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fileSize": {
+                  "description": "File size in bytes",
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "url": {
+                  "description": "CDN URL",
+                  "type": "string",
+                  "format": "uri"
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "priority": {
+                        "type": "integer",
+                        "default": 0,
+                        "minimum": 0
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "tagId",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MediaTranslation"
+                  }
+                }
+              },
+              "required": [
+                "mediaId",
+                "fileName",
+                "originalFileName",
+                "contentType",
+                "fileType",
+                "scope",
+                "key",
+                "fileSize",
+                "url",
                 "sourceRegion",
                 "createdAt",
                 "updatedAt"
@@ -87747,6 +89443,31 @@
               "PENDING",
               "ACTIVE",
               "ENDED"
+            ]
+          },
+          "revocationPolicy": {
+            "type": "string",
+            "default": "KEEP",
+            "enum": [
+              "KEEP",
+              "REVOKE",
+              "REVOKE_IF_NOT_STARTED"
+            ]
+          },
+          "duplicatePolicy": {
+            "type": "string",
+            "default": "DISALLOW_ACTIVE",
+            "enum": [
+              "ALLOW",
+              "DISALLOW_ACTIVE"
+            ]
+          },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
             ]
           },
           "eventMatchType": {

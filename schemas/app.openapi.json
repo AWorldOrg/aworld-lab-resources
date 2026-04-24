@@ -1604,6 +1604,18 @@
         "description": "List learning path assignments with optional additional fields and pagination.",
         "parameters": [
           {
+            "name": "assignmentType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "REQUIRED",
+                "OPTIONAL"
+              ]
+            }
+          },
+          {
             "name": "fields",
             "in": "query",
             "required": false,
@@ -7508,6 +7520,14 @@
               "UNLOCKED"
             ]
           },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
+            ]
+          },
           "unlockedAt": {
             "type": "string",
             "format": "date-time"
@@ -13200,6 +13220,14 @@
                     "UNLOCKED"
                   ]
                 },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
+                  ]
+                },
                 "unlockedAt": {
                   "type": "string",
                   "format": "date-time"
@@ -15575,6 +15603,14 @@
             "enum": [
               "LOCKED",
               "UNLOCKED"
+            ]
+          },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
             ]
           },
           "unlockedAt": {
