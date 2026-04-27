@@ -53750,6 +53750,7 @@
                       "type": "string",
                       "enum": [
                         "SUCCESS",
+                        "PASS",
                         "FAIL"
                       ]
                     },
@@ -53774,10 +53775,14 @@
                           "itemType": {
                             "type": "string",
                             "enum": [
-                              "slide",
+                              "activity",
+                              "game",
                               "quiz",
+                              "slide",
+                              "learningGroup",
                               "story",
-                              "test"
+                              "test",
+                              "custom"
                             ]
                           },
                           "progress": {
@@ -53792,6 +53797,7 @@
                             "type": "string",
                             "enum": [
                               "SUCCESS",
+                              "PASS",
                               "FAIL"
                             ]
                           }
@@ -53808,10 +53814,14 @@
                     "currentItemType": {
                       "type": "string",
                       "enum": [
-                        "slide",
+                        "activity",
+                        "game",
                         "quiz",
+                        "slide",
+                        "learningGroup",
                         "story",
-                        "test"
+                        "test",
+                        "custom"
                       ]
                     },
                     "startedAt": {
@@ -54113,7 +54123,10 @@
             ],
             "properties": {
               "learningPathId": {
-                "type": "string"
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "status": {
                 "type": "string"
@@ -61890,6 +61903,7 @@
                       "type": "string",
                       "enum": [
                         "SUCCESS",
+                        "PASS",
                         "FAIL"
                       ]
                     },
@@ -61914,10 +61928,14 @@
                           "itemType": {
                             "type": "string",
                             "enum": [
-                              "slide",
+                              "activity",
+                              "game",
                               "quiz",
+                              "slide",
+                              "learningGroup",
                               "story",
-                              "test"
+                              "test",
+                              "custom"
                             ]
                           },
                           "progress": {
@@ -61932,6 +61950,7 @@
                             "type": "string",
                             "enum": [
                               "SUCCESS",
+                              "PASS",
                               "FAIL"
                             ]
                           }
@@ -61948,10 +61967,14 @@
                     "currentItemType": {
                       "type": "string",
                       "enum": [
-                        "slide",
+                        "activity",
+                        "game",
                         "quiz",
+                        "slide",
+                        "learningGroup",
                         "story",
-                        "test"
+                        "test",
+                        "custom"
                       ]
                     },
                     "startedAt": {
