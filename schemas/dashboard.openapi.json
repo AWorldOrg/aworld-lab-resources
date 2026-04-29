@@ -13484,6 +13484,10 @@
                           "type": "string",
                           "format": "uri"
                         },
+                        "video": {
+                          "type": "string",
+                          "format": "uri"
+                        },
                         "description": {
                           "type": "string"
                         }
@@ -13752,6 +13756,10 @@
                           "minLength": 1
                         },
                         "image": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "video": {
                           "type": "string",
                           "format": "uri"
                         },
@@ -30902,18 +30910,26 @@
                     "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
                   },
                   "profileImage": {
-                    "type": "string",
+                    "description": "Pass `null` to clear the profile image; omit the key to leave it unchanged.",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "format": "uri"
+                  },
+                  "externalId": {
+                    "description": "Pass `null` to clear the external ID; omit the key to leave it unchanged.",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1
                   },
                   "lang": {
                     "$ref": "#/components/schemas/Lang"
                   },
                   "timezone": {
                     "$ref": "#/components/schemas/Timezone"
-                  },
-                  "externalId": {
-                    "type": "string",
-                    "minLength": 1
                   },
                   "status": {
                     "type": "string",
@@ -32704,6 +32720,18 @@
                       "stroke": {
                         "description": "Stroke width for UI elements.",
                         "type": "string"
+                      },
+                      "avatarsEnabled": {
+                        "description": "When false, the profile setup screen only offers the user's initials — no image avatars at all. When true or omitted, the avatar pool (custom or platform defaults) is shown.",
+                        "type": "boolean"
+                      },
+                      "avatarPool": {
+                        "description": "Pool of avatar image URLs the user can pick from on the profile setup screen. When omitted, the app falls back to the platform's common defaults. Ignored when avatarsEnabled is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "format": "uri"
+                        }
                       }
                     }
                   },
@@ -55064,6 +55092,10 @@
                 "type": "string",
                 "format": "uri"
               },
+              "video": {
+                "type": "string",
+                "format": "uri"
+              },
               "description": {
                 "type": "string"
               },
@@ -55570,6 +55602,10 @@
                   "type": "string",
                   "format": "uri"
                 },
+                "video": {
+                  "type": "string",
+                  "format": "uri"
+                },
                 "description": {
                   "type": "string"
                 },
@@ -55719,7 +55755,10 @@
                       "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
                     },
                     "profileImage": {
-                      "type": "string",
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "format": "uri"
                     }
                   },
@@ -62721,6 +62760,18 @@
               "stroke": {
                 "description": "Stroke width for UI elements.",
                 "type": "string"
+              },
+              "avatarsEnabled": {
+                "description": "When false, the profile setup screen only offers the user's initials — no image avatars at all. When true or omitted, the avatar pool (custom or platform defaults) is shown.",
+                "type": "boolean"
+              },
+              "avatarPool": {
+                "description": "Pool of avatar image URLs the user can pick from on the profile setup screen. When omitted, the app falls back to the platform's common defaults. Ignored when avatarsEnabled is false.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
             }
           },
@@ -67410,7 +67461,10 @@
                       "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
                     },
                     "profileImage": {
-                      "type": "string",
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "format": "uri"
                     }
                   },
@@ -67788,6 +67842,10 @@
                       "minLength": 1
                     },
                     "image": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "video": {
                       "type": "string",
                       "format": "uri"
                     },
@@ -68680,6 +68738,10 @@
                         "type": "string",
                         "format": "uri"
                       },
+                      "video": {
+                        "type": "string",
+                        "format": "uri"
+                      },
                       "description": {
                         "type": "string"
                       },
@@ -68829,7 +68891,10 @@
                             "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
                           },
                           "profileImage": {
-                            "type": "string",
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "format": "uri"
                           }
                         },
@@ -69119,6 +69184,10 @@
                   "minLength": 1
                 },
                 "image": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "video": {
                   "type": "string",
                   "format": "uri"
                 },
@@ -80420,6 +80489,18 @@
               "stroke": {
                 "description": "Stroke width for UI elements.",
                 "type": "string"
+              },
+              "avatarsEnabled": {
+                "description": "When false, the profile setup screen only offers the user's initials — no image avatars at all. When true or omitted, the avatar pool (custom or platform defaults) is shown.",
+                "type": "boolean"
+              },
+              "avatarPool": {
+                "description": "Pool of avatar image URLs the user can pick from on the profile setup screen. When omitted, the app falls back to the platform's common defaults. Ignored when avatarsEnabled is false.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
             }
           },
@@ -82367,6 +82448,10 @@
                         "type": "string",
                         "format": "uri"
                       },
+                      "video": {
+                        "type": "string",
+                        "format": "uri"
+                      },
                       "description": {
                         "type": "string"
                       },
@@ -82516,7 +82601,10 @@
                             "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
                           },
                           "profileImage": {
-                            "type": "string",
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "format": "uri"
                           }
                         },
@@ -94534,6 +94622,11 @@
             "minLength": 10,
             "pattern": "^[A-Za-z0-9_-]{10}$"
           },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
           "updatedAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -94542,7 +94635,11 @@
         },
         "required": [
           "userId",
-          "workspaceId"
+          "principalId",
+          "accountId",
+          "workspaceId",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "UpdateUserTagAssignmentResponse": {
@@ -95012,6 +95109,18 @@
               "stroke": {
                 "description": "Stroke width for UI elements.",
                 "type": "string"
+              },
+              "avatarsEnabled": {
+                "description": "When false, the profile setup screen only offers the user's initials — no image avatars at all. When true or omitted, the avatar pool (custom or platform defaults) is shown.",
+                "type": "boolean"
+              },
+              "avatarPool": {
+                "description": "Pool of avatar image URLs the user can pick from on the profile setup screen. When omitted, the app falls back to the platform's common defaults. Ignored when avatarsEnabled is false.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
             }
           },
@@ -96387,6 +96496,18 @@
               "stroke": {
                 "description": "Stroke width for UI elements.",
                 "type": "string"
+              },
+              "avatarsEnabled": {
+                "description": "When false, the profile setup screen only offers the user's initials — no image avatars at all. When true or omitted, the avatar pool (custom or platform defaults) is shown.",
+                "type": "boolean"
+              },
+              "avatarPool": {
+                "description": "Pool of avatar image URLs the user can pick from on the profile setup screen. When omitted, the app falls back to the platform's common defaults. Ignored when avatarsEnabled is false.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
             }
           },

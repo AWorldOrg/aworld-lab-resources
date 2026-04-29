@@ -4490,7 +4490,11 @@
                     "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
                   },
                   "profileImage": {
-                    "type": "string",
+                    "description": "Pass `null` to clear the profile image; omit the key to leave it unchanged.",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "format": "uri"
                   },
                   "lang": {
@@ -5533,6 +5537,163 @@
           },
           "409": {
             "description": "Conflict"
+          }
+        },
+        "tags": [
+          "VirtualTransactions"
+        ]
+      }
+    },
+    "/virtual-transactions/history/search": {
+      "post": {
+        "operationId": "virtualTransactions/history/search",
+        "summary": "Search virtual transactions history",
+        "description": "Search, filter, and sort the current user's virtual transactions using JSONLogic expressions. Supports filtering by virtualCurrencyId, state, direction, initiatorType, and more.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Virtual transactions matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchVirtualTransactionsHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "tags": [
@@ -7616,6 +7777,10 @@
                 "type": "string",
                 "format": "uri"
               },
+              "video": {
+                "type": "string",
+                "format": "uri"
+              },
               "description": {
                 "type": "string"
               },
@@ -7917,6 +8082,10 @@
             "minLength": 1
           },
           "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "video": {
             "type": "string",
             "format": "uri"
           },
@@ -10090,6 +10259,18 @@
               "stroke": {
                 "description": "Stroke width for UI elements.",
                 "type": "string"
+              },
+              "avatarsEnabled": {
+                "description": "When false, the profile setup screen only offers the user's initials — no image avatars at all. When true or omitted, the avatar pool (custom or platform defaults) is shown.",
+                "type": "boolean"
+              },
+              "avatarPool": {
+                "description": "Pool of avatar image URLs the user can pick from on the profile setup screen. When omitted, the app falls back to the platform's common defaults. Ignored when avatarsEnabled is false.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
             }
           },
@@ -13326,6 +13507,10 @@
                       "type": "string",
                       "format": "uri"
                     },
+                    "video": {
+                      "type": "string",
+                      "format": "uri"
+                    },
                     "description": {
                       "type": "string"
                     },
@@ -15687,6 +15872,133 @@
           "updatedAt"
         ]
       },
+      "SearchVirtualTransactionsHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "virtualCurrencyId": {
+                  "type": "string"
+                },
+                "virtualTransactionId": {
+                  "type": "string"
+                },
+                "virtualTransactionGroupId": {
+                  "type": "string"
+                },
+                "redemptionGroupId": {
+                  "type": "string"
+                },
+                "redemptionMode": {
+                  "type": "string",
+                  "enum": [
+                    "AUTO",
+                    "MANUAL"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "COMPLETED",
+                    "EXPIRED",
+                    "REJECTED"
+                  ]
+                },
+                "direction": {
+                  "type": "string",
+                  "enum": [
+                    "CREDIT",
+                    "DEBIT"
+                  ]
+                },
+                "initiatorType": {
+                  "type": "string",
+                  "enum": [
+                    "USER",
+                    "REWARD_RULE",
+                    "STREAK_RULE",
+                    "SYSTEM",
+                    "ADMIN"
+                  ]
+                },
+                "initiator": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "counterpartType": {
+                  "type": "string",
+                  "enum": [
+                    "USER",
+                    "SYSTEM"
+                  ]
+                },
+                "counterpart": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "additionalData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "redeemedAt": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "userId",
+                "virtualCurrencyId",
+                "virtualTransactionId",
+                "virtualTransactionGroupId",
+                "redemptionMode",
+                "state",
+                "direction",
+                "initiatorType",
+                "initiator",
+                "counterpartType",
+                "counterpart",
+                "amount",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "SignedUrlResponse": {
         "type": "object",
         "properties": {
@@ -16474,6 +16786,11 @@
             "type": "string",
             "format": "date-time"
           },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
           "updatedAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -16481,7 +16798,10 @@
           }
         },
         "required": [
-          "userId"
+          "userId",
+          "principalId",
+          "createdAt",
+          "updatedAt"
         ]
       }
     },
