@@ -917,6 +917,31 @@
         ]
       }
     },
+    "/extensions/profile-card": {
+      "get": {
+        "operationId": "extensions/profileCard",
+        "summary": "Get the workspace-specific profile card content",
+        "description": "Returns a templated card payload (title, description, value, cta, activityId) to render on the consumer app's profile page, or null if the workspace has no profile card configured for this user. Backend templates live alongside the workspace logic so the frontend stays workspace-agnostic.",
+        "responses": {
+          "200": {
+            "description": "Profile card data (or null if not available)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileCardResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Extensions"
+        ]
+      }
+    },
     "/extensions/signed-url": {
       "get": {
         "operationId": "extensions/signedUrl",
@@ -5675,6 +5700,16 @@
                       "string",
                       "null"
                     ]
+                  },
+                  "fields": {
+                    "description": "Additional fields to resolve and include on each item. Currently supports `rewardRule` (rule snapshot at the moment of the reward).",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "rewardRule"
+                      ]
+                    }
                   }
                 }
               }
@@ -15591,6 +15626,43 @@
           "items"
         ]
       },
+      "ProfileCardResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "cta": {
+                "type": "string"
+              },
+              "activityId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "description",
+              "cta",
+              "activityId"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "PublicOnboardingUrlResponse": {
         "type": "object",
         "properties": {
@@ -15966,6 +16038,9 @@
                   "description": "Creation date in ISO format (UTC Timezone)",
                   "type": "string",
                   "format": "date-time"
+                },
+                "rewardRule": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryRewardRule"
                 }
               },
               "required": [
@@ -16802,6 +16877,33 @@
           "principalId",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "VirtualTransactionHistoryRewardRule": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "rewardRuleId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "rewardRuleId",
+          "name",
+          "version",
+          "archived"
         ]
       }
     },
