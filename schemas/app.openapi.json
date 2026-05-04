@@ -6478,6 +6478,9 @@
           },
           "workspaceConfiguration.update": {
             "type": "boolean"
+          },
+          "self.update": {
+            "type": "boolean"
           }
         }
       },
@@ -6946,6 +6949,9 @@
                 "type": "boolean"
               },
               "workspaceConfiguration.update": {
+                "type": "boolean"
+              },
+              "self.update": {
                 "type": "boolean"
               }
             }

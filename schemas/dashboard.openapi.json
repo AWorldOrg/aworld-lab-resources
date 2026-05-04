@@ -29,6 +29,18 @@
                   "originalImageUrl": {
                     "type": "string",
                     "format": "uri"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "localize": {
+                    "type": "boolean"
+                  },
+                  "sourceLanguage": {
+                    "type": "string"
+                  },
+                  "targetLanguage": {
+                    "type": "string"
                   }
                 }
               }
@@ -252,6 +264,11 @@
                     },
                     "maxItems": 9,
                     "minItems": 1
+                  },
+                  "translateImages": {
+                    "description": "Whether to translate visible text in images",
+                    "type": "boolean",
+                    "default": false
                   }
                 },
                 "required": [
@@ -53408,6 +53425,9 @@
           },
           "workspaceConfiguration.update": {
             "type": "boolean"
+          },
+          "self.update": {
+            "type": "boolean"
           }
         }
       },
@@ -53927,6 +53947,9 @@
                 "type": "boolean"
               },
               "workspaceConfiguration.update": {
+                "type": "boolean"
+              },
+              "self.update": {
                 "type": "boolean"
               }
             }
@@ -56350,6 +56373,51 @@
             "description": "CDN URL",
             "type": "string",
             "format": "uri"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "prompt": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "style": {
+                "type": "string"
+              },
+              "grounding": {
+                "type": "object",
+                "properties": {
+                  "searchEntryPoint": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "uri": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "uri"
+                      ]
+                    }
+                  },
+                  "searchQueries": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "accountId": {
             "type": "string",
@@ -62092,6 +62160,9 @@
               },
               "workspaceConfiguration.update": {
                 "type": "boolean"
+              },
+              "self.update": {
+                "type": "boolean"
               }
             }
           }
@@ -64048,6 +64119,13 @@
             ],
             "format": "uri"
           },
+          "sourceUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
           "prompt": {
             "type": [
               "string",
@@ -64059,6 +64137,40 @@
               "string",
               "null"
             ]
+          },
+          "grounding": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "searchEntryPoint": {
+                "type": "string"
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "uri": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "uri"
+                  ]
+                }
+              },
+              "searchQueries": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "required": [
@@ -75883,6 +75995,51 @@
             "type": "string",
             "format": "uri"
           },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "prompt": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "style": {
+                "type": "string"
+              },
+              "grounding": {
+                "type": "object",
+                "properties": {
+                  "searchEntryPoint": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "uri": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "uri"
+                      ]
+                    }
+                  },
+                  "searchQueries": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -82722,6 +82879,51 @@
                   "description": "CDN URL",
                   "type": "string",
                   "format": "uri"
+                },
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "prompt": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "style": {
+                      "type": "string"
+                    },
+                    "grounding": {
+                      "type": "object",
+                      "properties": {
+                        "searchEntryPoint": {
+                          "type": "string"
+                        },
+                        "sources": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "uri": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "uri"
+                            ]
+                          }
+                        },
+                        "searchQueries": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
                 },
                 "accountId": {
                   "type": "string",
@@ -89977,6 +90179,51 @@
             "description": "CDN URL",
             "type": "string",
             "format": "uri"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "prompt": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "style": {
+                "type": "string"
+              },
+              "grounding": {
+                "type": "object",
+                "properties": {
+                  "searchEntryPoint": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "uri": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "uri"
+                      ]
+                    }
+                  },
+                  "searchQueries": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "accountId": {
             "type": "string",
