@@ -5702,12 +5702,15 @@
                     ]
                   },
                   "fields": {
-                    "description": "Additional fields to resolve and include on each item. Currently supports `rewardRule` (rule snapshot at the moment of the reward).",
+                    "description": "Additional fields to resolve and include on each item. Supports `rewardRule`, `sourceEntity`, `virtualCurrency`, and `streakRule` (snapshot of the streak rule that produced the freeze cost).",
                     "type": "array",
                     "items": {
                       "type": "string",
                       "enum": [
-                        "rewardRule"
+                        "rewardRule",
+                        "sourceEntity",
+                        "virtualCurrency",
+                        "streakRule"
                       ]
                     }
                   }
@@ -7208,8 +7211,7 @@
                 "$ref": "#/components/schemas/Lang"
               },
               "title": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "image": {
                 "type": "string",
@@ -7468,8 +7470,7 @@
             "$ref": "#/components/schemas/Lang"
           },
           "title": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "image": {
             "type": "string",
@@ -7811,8 +7812,7 @@
                 "$ref": "#/components/schemas/Lang"
               },
               "title": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "image": {
                 "type": "string",
@@ -8119,8 +8119,7 @@
             "$ref": "#/components/schemas/Lang"
           },
           "title": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "image": {
             "type": "string",
@@ -8557,24 +8556,19 @@
                 "$ref": "#/components/schemas/Lang"
               },
               "question": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "opt1": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "opt2": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "opt3": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "opt4": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "createdAt": {
                 "description": "Creation date in ISO format (UTC Timezone)",
@@ -8632,6 +8626,9 @@
                   "opt3",
                   "opt4"
                 ]
+              },
+              "explanation": {
+                "type": "string"
               },
               "startedAt": {
                 "type": "string"
@@ -8808,24 +8805,19 @@
             "$ref": "#/components/schemas/Lang"
           },
           "question": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "opt1": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "opt2": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "opt3": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "opt4": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -9244,8 +9236,7 @@
                 "$ref": "#/components/schemas/Lang"
               },
               "title": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "image": {
                 "type": "string",
@@ -9523,8 +9514,7 @@
             "$ref": "#/components/schemas/Lang"
           },
           "title": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "image": {
             "type": "string",
@@ -11268,6 +11258,30 @@
                 "description": "URL to the workspace privacy policy document.",
                 "type": "string",
                 "format": "uri"
+              },
+              "cookieBanner": {
+                "description": "Cookie consent banner toggle. When omitted or true, the banner is shown to end users. Set enabled=false to hide it across consumer apps (app, evolve, lab).",
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "posthog": {
+                "description": "PostHog product analytics toggle. When omitted or true, PostHog is initialized (still gated by user consent if the cookie banner is enabled). Set enabled=false to disable analytics entirely for this workspace.",
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
               }
             }
           },
@@ -13024,8 +13038,7 @@
                       "$ref": "#/components/schemas/Lang"
                     },
                     "title": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "image": {
                       "type": "string",
@@ -13541,8 +13554,7 @@
                       "$ref": "#/components/schemas/Lang"
                     },
                     "title": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "image": {
                       "type": "string",
@@ -14360,24 +14372,19 @@
                       "$ref": "#/components/schemas/Lang"
                     },
                     "question": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "opt1": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "opt2": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "opt3": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "opt4": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "createdAt": {
                       "description": "Creation date in ISO format (UTC Timezone)",
@@ -14831,8 +14838,7 @@
                       "$ref": "#/components/schemas/Lang"
                     },
                     "title": {
-                      "type": "string",
-                      "minLength": 1
+                      "type": "string"
                     },
                     "image": {
                       "type": "string",
@@ -16047,6 +16053,15 @@
                 },
                 "rewardRule": {
                   "$ref": "#/components/schemas/VirtualTransactionHistoryRewardRule"
+                },
+                "sourceEntity": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistorySourceEntity"
+                },
+                "virtualCurrency": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryVirtualCurrency"
+                },
+                "streakRule": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryStreakRule"
                 }
               },
               "required": [
@@ -16892,7 +16907,8 @@
         ],
         "properties": {
           "rewardRuleId": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "name": {
             "type": "string"
@@ -16910,6 +16926,115 @@
           "name",
           "version",
           "archived"
+        ]
+      },
+      "VirtualTransactionHistorySourceEntity": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "sourceType": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPath",
+              "LearningGroup",
+              "Slide"
+            ]
+          },
+          "sourceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          }
+        },
+        "required": [
+          "sourceType",
+          "sourceId",
+          "version",
+          "archived",
+          "defaultLang"
+        ]
+      },
+      "VirtualTransactionHistoryStreakRule": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "streakRuleId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "REGULAR",
+              "FREEZE",
+              "ANY"
+            ]
+          }
+        },
+        "required": [
+          "streakRuleId",
+          "name",
+          "version",
+          "archived"
+        ]
+      },
+      "VirtualTransactionHistoryVirtualCurrency": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "virtualCurrencyId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          }
+        },
+        "required": [
+          "virtualCurrencyId",
+          "name",
+          "archived",
+          "defaultLang"
         ]
       }
     },
