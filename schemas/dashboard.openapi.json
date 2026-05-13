@@ -23124,6 +23124,1061 @@
         ]
       }
     },
+    "/notification-rules/{notificationRuleId}/translations": {
+      "get": {
+        "operationId": "notificationRules/listTranslations",
+        "summary": "List notification rule translations",
+        "description": "List translations for a specific notification rule.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Translations retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNotificationRuleTranslationsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "NotificationRuleTranslations"
+        ]
+      }
+    },
+    "/notification-rules": {
+      "get": {
+        "operationId": "notificationRules/list",
+        "summary": "List notification rules",
+        "description": "List notification rules with optional translations and pagination.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translations"
+                ]
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification rules retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNotificationRulesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      },
+      "post": {
+        "operationId": "notificationRules/create",
+        "summary": "Create notification rule",
+        "description": "Creates a new notification rule with translations. Rules define which workspace events trigger which emails to which users.",
+        "parameters": [
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "defaultLang": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "assignmentMode": {
+                    "type": "string",
+                    "enum": [
+                      "EVENT",
+                      "SCHEDULED_PUSH",
+                      "DISABLED"
+                    ]
+                  },
+                  "eventMatchEntity": {
+                    "type": "string",
+                    "enum": [
+                      "Activity",
+                      "Quiz",
+                      "LearningPathLog",
+                      "Mission",
+                      "User",
+                      "Tag",
+                      "LearningPathAssigned"
+                    ]
+                  },
+                  "eventMatchCondition": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/JsonLogicExpression"
+                      },
+                      {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    ]
+                  },
+                  "usersMatchCondition": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/JsonLogicExpression"
+                      },
+                      {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    ]
+                  },
+                  "scheduleCron": {
+                    "type": "string"
+                  },
+                  "recurrence": {
+                    "type": "string",
+                    "enum": [
+                      "DAILY",
+                      "WEEKLY",
+                      "MONTHLY",
+                      "CUSTOM"
+                    ]
+                  },
+                  "timeframeType": {
+                    "type": "string",
+                    "enum": [
+                      "PERMANENT",
+                      "RANGE",
+                      "RECURRING"
+                    ]
+                  },
+                  "timeframeTimezoneType": {
+                    "type": "string",
+                    "enum": [
+                      "FIXED",
+                      "USER"
+                    ]
+                  },
+                  "timeframeTimezone": {
+                    "$ref": "#/components/schemas/Timezone"
+                  },
+                  "timeframeStartsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "timeframeEndsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "templateAction": {
+                    "type": "string",
+                    "enum": [
+                      "WELCOME",
+                      "VERIFY_EMAIL",
+                      "PASSWORD_RESET",
+                      "LOGIN_OTP",
+                      "WORKSPACE_INVITATION",
+                      "ALERT",
+                      "LEARNING_PATH_ASSIGNED"
+                    ]
+                  },
+                  "notificationRuleId": {
+                    "description": "The unique ID of the notification rule",
+                    "type": "string"
+                  },
+                  "translations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "lang": {
+                          "$ref": "#/components/schemas/Lang"
+                        },
+                        "description": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "lang"
+                      ]
+                    },
+                    "maxItems": 10,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "name",
+                  "defaultLang",
+                  "assignmentMode",
+                  "usersMatchCondition",
+                  "timeframeType",
+                  "timeframeTimezoneType",
+                  "timeframeStartsAt",
+                  "templateAction",
+                  "translations"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification rule created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationRuleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Notification rule already exists"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/{notificationRuleId}": {
+      "get": {
+        "operationId": "notificationRules/get",
+        "summary": "Get notification rule",
+        "description": "Retrieve a specific notification rule by ID, with optional translations.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translations"
+                ]
+              }
+            }
+          },
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification rule retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNotificationRuleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification rule not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      },
+      "put": {
+        "operationId": "notificationRules/update",
+        "summary": "Update notification rule",
+        "description": "Updates a notification rule with new configuration and translations. Creates a DRAFT version that must be published separately.",
+        "parameters": [
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "defaultLang": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "assignmentMode": {
+                    "type": "string",
+                    "enum": [
+                      "EVENT",
+                      "SCHEDULED_PUSH",
+                      "DISABLED"
+                    ]
+                  },
+                  "eventMatchEntity": {
+                    "type": "string",
+                    "enum": [
+                      "Activity",
+                      "Quiz",
+                      "LearningPathLog",
+                      "Mission",
+                      "User",
+                      "Tag",
+                      "LearningPathAssigned"
+                    ]
+                  },
+                  "eventMatchCondition": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/JsonLogicExpression"
+                      },
+                      {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    ]
+                  },
+                  "usersMatchCondition": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/JsonLogicExpression"
+                      },
+                      {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    ]
+                  },
+                  "scheduleCron": {
+                    "type": "string"
+                  },
+                  "recurrence": {
+                    "type": "string",
+                    "enum": [
+                      "DAILY",
+                      "WEEKLY",
+                      "MONTHLY",
+                      "CUSTOM"
+                    ]
+                  },
+                  "timeframeType": {
+                    "type": "string",
+                    "enum": [
+                      "PERMANENT",
+                      "RANGE",
+                      "RECURRING"
+                    ]
+                  },
+                  "timeframeTimezoneType": {
+                    "type": "string",
+                    "enum": [
+                      "FIXED",
+                      "USER"
+                    ]
+                  },
+                  "timeframeTimezone": {
+                    "$ref": "#/components/schemas/Timezone"
+                  },
+                  "timeframeStartsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "timeframeEndsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "templateAction": {
+                    "type": "string",
+                    "enum": [
+                      "WELCOME",
+                      "VERIFY_EMAIL",
+                      "PASSWORD_RESET",
+                      "LOGIN_OTP",
+                      "WORKSPACE_INVITATION",
+                      "ALERT",
+                      "LEARNING_PATH_ASSIGNED"
+                    ]
+                  },
+                  "translations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "lang": {
+                          "$ref": "#/components/schemas/Lang"
+                        },
+                        "description": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "lang"
+                      ]
+                    },
+                    "maxItems": 10,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "name",
+                  "defaultLang",
+                  "assignmentMode",
+                  "usersMatchCondition",
+                  "timeframeType",
+                  "timeframeTimezoneType",
+                  "timeframeStartsAt",
+                  "templateAction",
+                  "translations"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification rule updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateNotificationRuleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification rule not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/history": {
+      "get": {
+        "operationId": "notificationRules/listHistory",
+        "summary": "List latest notificationRule history across the workspace",
+        "description": "Returns the current state (version=0) of every non-archived notificationRule in the workspace, newest-edited first. Includes drafts and published entries. Archived rules are not listed.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translations"
+                ]
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "NotificationRule history listed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNotificationRuleHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/{notificationRuleId}/archive": {
+      "post": {
+        "operationId": "notificationRules/archive",
+        "summary": "Archive notification rule",
+        "description": "Archives a notification rule, removing it from active use.",
+        "parameters": [
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification rule archived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArchiveNotificationRuleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification rule not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/{notificationRuleId}/history": {
+      "get": {
+        "operationId": "notificationRules/listHistoryVersions",
+        "summary": "List all history versions of a notificationRule",
+        "description": "Returns every historical version (v>=1) of a notificationRule, newest-first. The LATEST_VERSION pointer row (v=0) is excluded.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translations"
+                ]
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "NotificationRule history versions listed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNotificationRuleHistoryVersionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "NotificationRule not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/{notificationRuleId}/publish": {
+      "post": {
+        "operationId": "notificationRules/publish",
+        "summary": "Publish notification rule",
+        "description": "Publishes a notification rule, transitioning it from DRAFT to PUBLISHED stage and copying the latest draft to the main table.",
+        "parameters": [
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification rule published successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishNotificationRuleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification rule not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/{notificationRuleId}/unarchive": {
+      "post": {
+        "operationId": "notificationRules/unarchive",
+        "summary": "Unarchive notification rule",
+        "description": "Unarchives a notification rule, restoring it to active use.",
+        "parameters": [
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification rule unarchived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnarchiveNotificationRuleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification rule not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/{notificationRuleId}/history/{version}": {
+      "get": {
+        "operationId": "notificationRules/getHistoryVersion",
+        "summary": "Get a notification rule history version",
+        "description": "Returns the notification rule at a specific historical version. Pass `latest` (or `0`) for the current state regardless of stage. Pass a positive integer for an immutable historical snapshot.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "translations"
+                ]
+              }
+            }
+          },
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^(latest|\\d+)$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification rule history version retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNotificationRuleHistoryVersionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification rule or version not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
+    "/notification-rules/{notificationRuleId}/translations/history/{version}": {
+      "get": {
+        "operationId": "notificationRules/getTranslationsHistoryVersion",
+        "summary": "Get notificationRule translations at a history version",
+        "description": "Returns every notificationRule translation at the specified history version, resolving langs from the notificationRule row at that version.",
+        "parameters": [
+          {
+            "name": "notificationRuleId",
+            "in": "path",
+            "description": "The unique ID of the notification rule",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the notification rule",
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Translations retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNotificationRuleTranslationsHistoryVersionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "NotificationRule or version not found"
+          }
+        },
+        "tags": [
+          "NotificationRules"
+        ]
+      }
+    },
     "/quizzes/{quizId}/tags": {
       "post": {
         "operationId": "quizzes/createTags",
@@ -42848,6 +43903,192 @@
           "updatedAt"
         ]
       },
+      "ArchiveNotificationRuleResponse": {
+        "type": "object",
+        "properties": {
+          "notificationRuleId": {
+            "description": "The unique ID of the notification rule",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "assignmentMode": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "SCHEDULED_PUSH",
+              "DISABLED"
+            ]
+          },
+          "eventMatchEntity": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPathLog",
+              "Mission",
+              "User",
+              "Tag",
+              "LearningPathAssigned"
+            ]
+          },
+          "eventMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "scheduleCron": {
+            "type": "string"
+          },
+          "recurrence": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "CUSTOM"
+            ]
+          },
+          "usersMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "timeframeTimezoneType": {
+            "type": "string",
+            "enum": [
+              "FIXED",
+              "USER"
+            ]
+          },
+          "timeframeTimezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "timeframeStartsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeframeEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateAction": {
+            "type": "string",
+            "enum": [
+              "WELCOME",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "WORKSPACE_INVITATION",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogNotificationRuleId": {
+            "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+            "type": "string"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "notificationRuleId",
+          "name",
+          "assignmentMode",
+          "usersMatchCondition",
+          "timeframeType",
+          "timeframeTimezoneType",
+          "timeframeStartsAt",
+          "templateAction",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "ArchiveQuizResponse": {
         "type": "object",
         "properties": {
@@ -50733,6 +51974,192 @@
           "provider",
           "userId",
           "sub",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateNotificationRuleResponse": {
+        "type": "object",
+        "properties": {
+          "notificationRuleId": {
+            "description": "The unique ID of the notification rule",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "assignmentMode": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "SCHEDULED_PUSH",
+              "DISABLED"
+            ]
+          },
+          "eventMatchEntity": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPathLog",
+              "Mission",
+              "User",
+              "Tag",
+              "LearningPathAssigned"
+            ]
+          },
+          "eventMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "scheduleCron": {
+            "type": "string"
+          },
+          "recurrence": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "CUSTOM"
+            ]
+          },
+          "usersMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "timeframeTimezoneType": {
+            "type": "string",
+            "enum": [
+              "FIXED",
+              "USER"
+            ]
+          },
+          "timeframeTimezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "timeframeStartsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeframeEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateAction": {
+            "type": "string",
+            "enum": [
+              "WELCOME",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "WORKSPACE_INVITATION",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogNotificationRuleId": {
+            "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+            "type": "string"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "notificationRuleId",
+          "name",
+          "assignmentMode",
+          "usersMatchCondition",
+          "timeframeType",
+          "timeframeTimezoneType",
+          "timeframeStartsAt",
+          "templateAction",
+          "origin",
+          "defaultLang",
+          "langs",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -69166,6 +70593,644 @@
             ]
           }
         }
+      },
+      "GetNotificationRuleHistoryVersionResponse": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "PUBLISHED",
+              "ARCHIVED"
+            ]
+          },
+          "actorId": {
+            "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+            "type": "string",
+            "minLength": 1
+          },
+          "actorType": {
+            "type": "string",
+            "enum": [
+              "user",
+              "principal",
+              "m2m",
+              "streakRule",
+              "rewardRule",
+              "scheduler",
+              "system"
+            ]
+          },
+          "notificationRuleId": {
+            "description": "The unique ID of the notification rule",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "assignmentMode": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "SCHEDULED_PUSH",
+              "DISABLED"
+            ]
+          },
+          "eventMatchEntity": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPathLog",
+              "Mission",
+              "User",
+              "Tag",
+              "LearningPathAssigned"
+            ]
+          },
+          "eventMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "scheduleCron": {
+            "type": "string"
+          },
+          "recurrence": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "CUSTOM"
+            ]
+          },
+          "usersMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "timeframeTimezoneType": {
+            "type": "string",
+            "enum": [
+              "FIXED",
+              "USER"
+            ]
+          },
+          "timeframeTimezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "timeframeStartsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeframeEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateAction": {
+            "type": "string",
+            "enum": [
+              "WELCOME",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "WORKSPACE_INVITATION",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogNotificationRuleId": {
+            "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+            "type": "string"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "translations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "DRAFT",
+                    "PUBLISHED",
+                    "ARCHIVED"
+                  ]
+                },
+                "actorId": {
+                  "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "actorType": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "principal",
+                    "m2m",
+                    "streakRule",
+                    "rewardRule",
+                    "scheduler",
+                    "system"
+                  ]
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "notificationRuleId": {
+                  "description": "The unique ID of the notification rule",
+                  "type": "string"
+                },
+                "lang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "version",
+                "stage",
+                "actorId",
+                "actorType",
+                "workspaceId",
+                "notificationRuleId",
+                "lang",
+                "accountId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "version",
+          "stage",
+          "actorId",
+          "actorType",
+          "notificationRuleId",
+          "name",
+          "assignmentMode",
+          "usersMatchCondition",
+          "timeframeType",
+          "timeframeTimezoneType",
+          "timeframeStartsAt",
+          "templateAction",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetNotificationRuleResponse": {
+        "type": "object",
+        "properties": {
+          "notificationRuleId": {
+            "description": "The unique ID of the notification rule",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "assignmentMode": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "SCHEDULED_PUSH",
+              "DISABLED"
+            ]
+          },
+          "eventMatchEntity": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPathLog",
+              "Mission",
+              "User",
+              "Tag",
+              "LearningPathAssigned"
+            ]
+          },
+          "eventMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "scheduleCron": {
+            "type": "string"
+          },
+          "recurrence": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "CUSTOM"
+            ]
+          },
+          "usersMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "timeframeTimezoneType": {
+            "type": "string",
+            "enum": [
+              "FIXED",
+              "USER"
+            ]
+          },
+          "timeframeTimezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "timeframeStartsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeframeEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateAction": {
+            "type": "string",
+            "enum": [
+              "WELCOME",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "WORKSPACE_INVITATION",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogNotificationRuleId": {
+            "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+            "type": "string"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "translations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "notificationRuleId": {
+                  "description": "The unique ID of the notification rule",
+                  "type": "string"
+                },
+                "lang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "workspaceId",
+                "notificationRuleId",
+                "lang",
+                "accountId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "notificationRuleId",
+          "name",
+          "assignmentMode",
+          "usersMatchCondition",
+          "timeframeType",
+          "timeframeTimezoneType",
+          "timeframeStartsAt",
+          "templateAction",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetNotificationRuleTranslationsHistoryVersionResponse": {
+        "type": "object",
+        "properties": {
+          "translations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "DRAFT",
+                    "PUBLISHED",
+                    "ARCHIVED"
+                  ]
+                },
+                "actorId": {
+                  "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "actorType": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "principal",
+                    "m2m",
+                    "streakRule",
+                    "rewardRule",
+                    "scheduler",
+                    "system"
+                  ]
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "notificationRuleId": {
+                  "description": "The unique ID of the notification rule",
+                  "type": "string"
+                },
+                "lang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "version",
+                "stage",
+                "actorId",
+                "actorType",
+                "workspaceId",
+                "notificationRuleId",
+                "lang",
+                "accountId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "translations"
+        ]
       },
       "GetQuizHistoryVersionResponse": {
         "type": "object",
@@ -94554,6 +96619,986 @@
           "items"
         ]
       },
+      "ListNotificationRuleHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "DRAFT",
+                    "PUBLISHED",
+                    "ARCHIVED"
+                  ]
+                },
+                "actorId": {
+                  "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "actorType": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "principal",
+                    "m2m",
+                    "streakRule",
+                    "rewardRule",
+                    "scheduler",
+                    "system"
+                  ]
+                },
+                "notificationRuleId": {
+                  "description": "The unique ID of the notification rule",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "state": {
+                  "type": "string",
+                  "default": "PENDING",
+                  "enum": [
+                    "PENDING",
+                    "ACTIVE",
+                    "ENDED"
+                  ]
+                },
+                "assignmentMode": {
+                  "type": "string",
+                  "enum": [
+                    "EVENT",
+                    "SCHEDULED_PUSH",
+                    "DISABLED"
+                  ]
+                },
+                "eventMatchEntity": {
+                  "type": "string",
+                  "enum": [
+                    "Activity",
+                    "Quiz",
+                    "LearningPathLog",
+                    "Mission",
+                    "User",
+                    "Tag",
+                    "LearningPathAssigned"
+                  ]
+                },
+                "eventMatchCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "scheduleCron": {
+                  "type": "string"
+                },
+                "recurrence": {
+                  "type": "string",
+                  "enum": [
+                    "DAILY",
+                    "WEEKLY",
+                    "MONTHLY",
+                    "CUSTOM"
+                  ]
+                },
+                "usersMatchCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "timeframeType": {
+                  "type": "string",
+                  "enum": [
+                    "PERMANENT",
+                    "RANGE",
+                    "RECURRING"
+                  ]
+                },
+                "timeframeTimezoneType": {
+                  "type": "string",
+                  "enum": [
+                    "FIXED",
+                    "USER"
+                  ]
+                },
+                "timeframeTimezone": {
+                  "$ref": "#/components/schemas/Timezone"
+                },
+                "timeframeStartsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "timeframeEndsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "templateAction": {
+                  "type": "string",
+                  "enum": [
+                    "WELCOME",
+                    "VERIFY_EMAIL",
+                    "PASSWORD_RESET",
+                    "LOGIN_OTP",
+                    "WORKSPACE_INVITATION",
+                    "ALERT",
+                    "LEARNING_PATH_ASSIGNED"
+                  ]
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "CATALOG",
+                    "CUSTOM"
+                  ]
+                },
+                "catalogNotificationRuleId": {
+                  "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+                  "type": "string"
+                },
+                "syncWithCatalog": {
+                  "type": "boolean"
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "maxItems": 10,
+                  "minItems": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "latestVersion": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "stage": {
+                        "type": "string",
+                        "enum": [
+                          "DRAFT",
+                          "PUBLISHED",
+                          "ARCHIVED"
+                        ]
+                      },
+                      "actorId": {
+                        "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "actorType": {
+                        "type": "string",
+                        "enum": [
+                          "user",
+                          "principal",
+                          "m2m",
+                          "streakRule",
+                          "rewardRule",
+                          "scheduler",
+                          "system"
+                        ]
+                      },
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "notificationRuleId": {
+                        "description": "The unique ID of the notification rule",
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "stage",
+                      "actorId",
+                      "actorType",
+                      "workspaceId",
+                      "notificationRuleId",
+                      "lang",
+                      "accountId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "version",
+                "stage",
+                "actorId",
+                "actorType",
+                "notificationRuleId",
+                "name",
+                "assignmentMode",
+                "usersMatchCondition",
+                "timeframeType",
+                "timeframeTimezoneType",
+                "timeframeStartsAt",
+                "templateAction",
+                "origin",
+                "defaultLang",
+                "langs",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt",
+                "latestVersion"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListNotificationRuleHistoryVersionsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "DRAFT",
+                    "PUBLISHED",
+                    "ARCHIVED"
+                  ]
+                },
+                "actorId": {
+                  "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "actorType": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "principal",
+                    "m2m",
+                    "streakRule",
+                    "rewardRule",
+                    "scheduler",
+                    "system"
+                  ]
+                },
+                "notificationRuleId": {
+                  "description": "The unique ID of the notification rule",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "state": {
+                  "type": "string",
+                  "default": "PENDING",
+                  "enum": [
+                    "PENDING",
+                    "ACTIVE",
+                    "ENDED"
+                  ]
+                },
+                "assignmentMode": {
+                  "type": "string",
+                  "enum": [
+                    "EVENT",
+                    "SCHEDULED_PUSH",
+                    "DISABLED"
+                  ]
+                },
+                "eventMatchEntity": {
+                  "type": "string",
+                  "enum": [
+                    "Activity",
+                    "Quiz",
+                    "LearningPathLog",
+                    "Mission",
+                    "User",
+                    "Tag",
+                    "LearningPathAssigned"
+                  ]
+                },
+                "eventMatchCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "scheduleCron": {
+                  "type": "string"
+                },
+                "recurrence": {
+                  "type": "string",
+                  "enum": [
+                    "DAILY",
+                    "WEEKLY",
+                    "MONTHLY",
+                    "CUSTOM"
+                  ]
+                },
+                "usersMatchCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "timeframeType": {
+                  "type": "string",
+                  "enum": [
+                    "PERMANENT",
+                    "RANGE",
+                    "RECURRING"
+                  ]
+                },
+                "timeframeTimezoneType": {
+                  "type": "string",
+                  "enum": [
+                    "FIXED",
+                    "USER"
+                  ]
+                },
+                "timeframeTimezone": {
+                  "$ref": "#/components/schemas/Timezone"
+                },
+                "timeframeStartsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "timeframeEndsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "templateAction": {
+                  "type": "string",
+                  "enum": [
+                    "WELCOME",
+                    "VERIFY_EMAIL",
+                    "PASSWORD_RESET",
+                    "LOGIN_OTP",
+                    "WORKSPACE_INVITATION",
+                    "ALERT",
+                    "LEARNING_PATH_ASSIGNED"
+                  ]
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "CATALOG",
+                    "CUSTOM"
+                  ]
+                },
+                "catalogNotificationRuleId": {
+                  "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+                  "type": "string"
+                },
+                "syncWithCatalog": {
+                  "type": "boolean"
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "maxItems": 10,
+                  "minItems": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "stage": {
+                        "type": "string",
+                        "enum": [
+                          "DRAFT",
+                          "PUBLISHED",
+                          "ARCHIVED"
+                        ]
+                      },
+                      "actorId": {
+                        "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "actorType": {
+                        "type": "string",
+                        "enum": [
+                          "user",
+                          "principal",
+                          "m2m",
+                          "streakRule",
+                          "rewardRule",
+                          "scheduler",
+                          "system"
+                        ]
+                      },
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "notificationRuleId": {
+                        "description": "The unique ID of the notification rule",
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "stage",
+                      "actorId",
+                      "actorType",
+                      "workspaceId",
+                      "notificationRuleId",
+                      "lang",
+                      "accountId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "version",
+                "stage",
+                "actorId",
+                "actorType",
+                "notificationRuleId",
+                "name",
+                "assignmentMode",
+                "usersMatchCondition",
+                "timeframeType",
+                "timeframeTimezoneType",
+                "timeframeStartsAt",
+                "templateAction",
+                "origin",
+                "defaultLang",
+                "langs",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListNotificationRulesResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "notificationRuleId": {
+                  "description": "The unique ID of the notification rule",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "state": {
+                  "type": "string",
+                  "default": "PENDING",
+                  "enum": [
+                    "PENDING",
+                    "ACTIVE",
+                    "ENDED"
+                  ]
+                },
+                "assignmentMode": {
+                  "type": "string",
+                  "enum": [
+                    "EVENT",
+                    "SCHEDULED_PUSH",
+                    "DISABLED"
+                  ]
+                },
+                "eventMatchEntity": {
+                  "type": "string",
+                  "enum": [
+                    "Activity",
+                    "Quiz",
+                    "LearningPathLog",
+                    "Mission",
+                    "User",
+                    "Tag",
+                    "LearningPathAssigned"
+                  ]
+                },
+                "eventMatchCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "scheduleCron": {
+                  "type": "string"
+                },
+                "recurrence": {
+                  "type": "string",
+                  "enum": [
+                    "DAILY",
+                    "WEEKLY",
+                    "MONTHLY",
+                    "CUSTOM"
+                  ]
+                },
+                "usersMatchCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "timeframeType": {
+                  "type": "string",
+                  "enum": [
+                    "PERMANENT",
+                    "RANGE",
+                    "RECURRING"
+                  ]
+                },
+                "timeframeTimezoneType": {
+                  "type": "string",
+                  "enum": [
+                    "FIXED",
+                    "USER"
+                  ]
+                },
+                "timeframeTimezone": {
+                  "$ref": "#/components/schemas/Timezone"
+                },
+                "timeframeStartsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "timeframeEndsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "templateAction": {
+                  "type": "string",
+                  "enum": [
+                    "WELCOME",
+                    "VERIFY_EMAIL",
+                    "PASSWORD_RESET",
+                    "LOGIN_OTP",
+                    "WORKSPACE_INVITATION",
+                    "ALERT",
+                    "LEARNING_PATH_ASSIGNED"
+                  ]
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "CATALOG",
+                    "CUSTOM"
+                  ]
+                },
+                "catalogNotificationRuleId": {
+                  "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+                  "type": "string"
+                },
+                "syncWithCatalog": {
+                  "type": "boolean"
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "maxItems": 10,
+                  "minItems": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "notificationRuleId": {
+                        "description": "The unique ID of the notification rule",
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "workspaceId",
+                      "notificationRuleId",
+                      "lang",
+                      "accountId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "notificationRuleId",
+                "name",
+                "assignmentMode",
+                "usersMatchCondition",
+                "timeframeType",
+                "timeframeTimezoneType",
+                "timeframeStartsAt",
+                "templateAction",
+                "origin",
+                "defaultLang",
+                "langs",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListNotificationRuleTranslationsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "notificationRuleId": {
+                  "description": "The unique ID of the notification rule",
+                  "type": "string"
+                },
+                "lang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "workspaceId",
+                "notificationRuleId",
+                "lang",
+                "accountId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "ListQuizHistoryResponse": {
         "type": "object",
         "properties": {
@@ -108160,6 +111205,201 @@
           "stage"
         ]
       },
+      "PublishNotificationRuleResponse": {
+        "type": "object",
+        "properties": {
+          "notificationRuleId": {
+            "description": "The unique ID of the notification rule",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "assignmentMode": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "SCHEDULED_PUSH",
+              "DISABLED"
+            ]
+          },
+          "eventMatchEntity": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPathLog",
+              "Mission",
+              "User",
+              "Tag",
+              "LearningPathAssigned"
+            ]
+          },
+          "eventMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "scheduleCron": {
+            "type": "string"
+          },
+          "recurrence": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "CUSTOM"
+            ]
+          },
+          "usersMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "timeframeTimezoneType": {
+            "type": "string",
+            "enum": [
+              "FIXED",
+              "USER"
+            ]
+          },
+          "timeframeTimezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "timeframeStartsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeframeEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateAction": {
+            "type": "string",
+            "enum": [
+              "WELCOME",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "WORKSPACE_INVITATION",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogNotificationRuleId": {
+            "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+            "type": "string"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "PUBLISHED",
+              "ARCHIVED"
+            ]
+          }
+        },
+        "required": [
+          "notificationRuleId",
+          "name",
+          "assignmentMode",
+          "usersMatchCondition",
+          "timeframeType",
+          "timeframeTimezoneType",
+          "timeframeStartsAt",
+          "templateAction",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt",
+          "stage"
+        ]
+      },
       "PublishQuizResponse": {
         "type": "object",
         "properties": {
@@ -115504,6 +118744,192 @@
           "updatedAt"
         ]
       },
+      "UnarchiveNotificationRuleResponse": {
+        "type": "object",
+        "properties": {
+          "notificationRuleId": {
+            "description": "The unique ID of the notification rule",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "assignmentMode": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "SCHEDULED_PUSH",
+              "DISABLED"
+            ]
+          },
+          "eventMatchEntity": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPathLog",
+              "Mission",
+              "User",
+              "Tag",
+              "LearningPathAssigned"
+            ]
+          },
+          "eventMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "scheduleCron": {
+            "type": "string"
+          },
+          "recurrence": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "CUSTOM"
+            ]
+          },
+          "usersMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "timeframeTimezoneType": {
+            "type": "string",
+            "enum": [
+              "FIXED",
+              "USER"
+            ]
+          },
+          "timeframeTimezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "timeframeStartsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeframeEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateAction": {
+            "type": "string",
+            "enum": [
+              "WELCOME",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "WORKSPACE_INVITATION",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogNotificationRuleId": {
+            "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+            "type": "string"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "notificationRuleId",
+          "name",
+          "assignmentMode",
+          "usersMatchCondition",
+          "timeframeType",
+          "timeframeTimezoneType",
+          "timeframeStartsAt",
+          "templateAction",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "UnarchiveQuizResponse": {
         "type": "object",
         "properties": {
@@ -121354,6 +124780,201 @@
         },
         "required": [
           "assignments"
+        ]
+      },
+      "UpdateNotificationRuleResponse": {
+        "type": "object",
+        "properties": {
+          "notificationRuleId": {
+            "description": "The unique ID of the notification rule",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "default": "PENDING",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "assignmentMode": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "SCHEDULED_PUSH",
+              "DISABLED"
+            ]
+          },
+          "eventMatchEntity": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPathLog",
+              "Mission",
+              "User",
+              "Tag",
+              "LearningPathAssigned"
+            ]
+          },
+          "eventMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "scheduleCron": {
+            "type": "string"
+          },
+          "recurrence": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "CUSTOM"
+            ]
+          },
+          "usersMatchCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "timeframeTimezoneType": {
+            "type": "string",
+            "enum": [
+              "FIXED",
+              "USER"
+            ]
+          },
+          "timeframeTimezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "timeframeStartsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeframeEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "templateAction": {
+            "type": "string",
+            "enum": [
+              "WELCOME",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "WORKSPACE_INVITATION",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "catalogNotificationRuleId": {
+            "description": "The unique ID of the parent catalog notification rule (when origin = CATALOG)",
+            "type": "string"
+          },
+          "syncWithCatalog": {
+            "type": "boolean"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            },
+            "maxItems": 10,
+            "minItems": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "PUBLISHED",
+              "ARCHIVED"
+            ]
+          }
+        },
+        "required": [
+          "notificationRuleId",
+          "name",
+          "assignmentMode",
+          "usersMatchCondition",
+          "timeframeType",
+          "timeframeTimezoneType",
+          "timeframeStartsAt",
+          "templateAction",
+          "origin",
+          "defaultLang",
+          "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt",
+          "stage"
         ]
       },
       "UpdateQuizResponse": {
@@ -128151,6 +131772,12 @@
     },
     {
       "name": "Mobility"
+    },
+    {
+      "name": "NotificationRuleTranslations"
+    },
+    {
+      "name": "NotificationRules"
     },
     {
       "name": "QuizTagAssignments"
