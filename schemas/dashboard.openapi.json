@@ -50698,6 +50698,10 @@
           "userId": {
             "type": "string"
           },
+          "sub": {
+            "type": "string",
+            "format": "uuid"
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -50728,6 +50732,7 @@
           "status",
           "provider",
           "userId",
+          "sub",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -69025,6 +69030,10 @@
           "userId": {
             "type": "string"
           },
+          "sub": {
+            "type": "string",
+            "format": "uuid"
+          },
           "userTimezone": {
             "type": "string"
           },
@@ -69121,6 +69130,7 @@
           "mobilityMilestoneId",
           "date",
           "userId",
+          "sub",
           "userTimezone",
           "metric",
           "target",
@@ -94204,6 +94214,10 @@
                 "userId": {
                   "type": "string"
                 },
+                "sub": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "accountId": {
                   "type": "string",
                   "maxLength": 10,
@@ -94234,6 +94248,7 @@
                 "status",
                 "provider",
                 "userId",
+                "sub",
                 "accountId",
                 "workspaceId",
                 "sourceRegion",
@@ -94270,6 +94285,10 @@
                 },
                 "userId": {
                   "type": "string"
+                },
+                "sub": {
+                  "type": "string",
+                  "format": "uuid"
                 },
                 "userTimezone": {
                   "type": "string"
@@ -94367,6 +94386,7 @@
                 "mobilityMilestoneId",
                 "date",
                 "userId",
+                "sub",
                 "userTimezone",
                 "metric",
                 "target",
@@ -94410,6 +94430,10 @@
                 },
                 "userId": {
                   "type": "string"
+                },
+                "sub": {
+                  "type": "string",
+                  "format": "uuid"
                 },
                 "userTimezone": {
                   "type": "string"
@@ -94500,6 +94524,7 @@
                 "mobilityTrackingId",
                 "date",
                 "userId",
+                "sub",
                 "userTimezone",
                 "provider",
                 "status",
@@ -111357,6 +111382,10 @@
           "userId": {
             "type": "string"
           },
+          "sub": {
+            "type": "string",
+            "format": "uuid"
+          },
           "userTimezone": {
             "type": "string"
           },
@@ -111453,6 +111482,7 @@
           "mobilityMilestoneId",
           "date",
           "userId",
+          "sub",
           "userTimezone",
           "metric",
           "target",
