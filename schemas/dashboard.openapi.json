@@ -45229,13 +45229,11 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "variant": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "origin": {
             "type": "string",
@@ -55511,13 +55509,11 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "variant": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "origin": {
             "type": "string",
@@ -78537,13 +78533,11 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "variant": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "origin": {
             "type": "string",
@@ -78722,13 +78716,11 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "variant": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "origin": {
             "type": "string",
@@ -107470,13 +107462,11 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "origin": {
                   "type": "string",
@@ -107708,13 +107698,11 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "origin": {
                   "type": "string",
@@ -108954,13 +108942,11 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "origin": {
                   "type": "string",
@@ -114753,13 +114739,11 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "variant": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "origin": {
             "type": "string",
@@ -117721,13 +117705,11 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1,
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+                  "minLength": 1
                 },
                 "origin": {
                   "type": "string",
@@ -121739,13 +121721,11 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "variant": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "origin": {
             "type": "string",
@@ -129670,13 +129650,11 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "variant": {
             "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+            "minLength": 1
           },
           "origin": {
             "type": "string",
