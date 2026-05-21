@@ -2537,6 +2537,45 @@
         ]
       }
     },
+    "/notification-preferences/unsubscribe/{token}": {
+      "post": {
+        "operationId": "notificationPreference/unsubscribe",
+        "summary": "One-click unsubscribe (RFC 8058)",
+        "description": "Public endpoint hit by an email client when the recipient activates the List-Unsubscribe header. The token is HMAC-signed and carries accountId, workspaceId, userId, and topic. Transactional emails never produce a signed token (they carry no topic) and therefore cannot be unsubscribed from this endpoint by design.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "HMAC-signed opaque unsubscribe token from the email's List-Unsubscribe header.",
+            "required": true,
+            "schema": {
+              "description": "HMAC-signed opaque unsubscribe token from the email's List-Unsubscribe header.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unsubscribed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnsubscribeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or malformed token"
+          }
+        },
+        "security": [],
+        "tags": [
+          "NotificationPreferences"
+        ]
+      }
+    },
     "/quizzes": {
       "get": {
         "operationId": "quizzes/list",
@@ -4181,8 +4220,33 @@
       "get": {
         "operationId": "surveys/get",
         "summary": "Get survey",
-        "description": "Retrieve a published survey by ID.",
+        "description": "Retrieve a published survey by ID, with optional additional fields (tags, progress, computedStyle, rewardsPreview).",
         "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "progress",
+                  "computedStyle",
+                  "rewardsPreview"
+                ]
+              }
+            }
+          },
           {
             "name": "surveyId",
             "in": "path",
@@ -4303,7 +4367,7 @@
       }
     },
     "/surveys/{surveyId}/submit": {
-      "put": {
+      "post": {
         "operationId": "surveys/submit",
         "summary": "Submit survey answers",
         "description": "Submit or auto-save survey answers. Upserts a single record per user/survey/context.",
@@ -4352,6 +4416,7 @@
                   "progress": {
                     "type": "string",
                     "enum": [
+                      "START",
                       "IN_PROGRESS",
                       "COMPLETE"
                     ]
@@ -6225,6 +6290,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -6248,6 +6355,193 @@
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
             "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "progress": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "NOT_STARTED",
+                  "IN_PROGRESS",
+                  "COMPLETED"
+                ]
+              },
+              "outcome": {
+                "type": "string",
+                "default": "SUCCESS",
+                "enum": [
+                  "SUCCESS"
+                ]
+              },
+              "attempt": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "answers": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "currentPageNo": {
+                "type": "number"
+              },
+              "startedAt": {
+                "type": "string"
+              },
+              "completedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "computedStyle": {
+            "type": "object",
+            "properties": {
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              }
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -6832,6 +7126,7 @@
                               "game",
                               "quiz",
                               "slide",
+                              "survey",
                               "learningGroup",
                               "story",
                               "test",
@@ -6871,6 +7166,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup",
                         "story",
                         "test",
@@ -7304,6 +7600,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -7340,6 +7637,7 @@
                   "game",
                   "quiz",
                   "slide",
+                  "survey",
                   "learningGroup"
                 ]
               },
@@ -7554,6 +7852,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -7582,6 +7881,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -7915,6 +8215,7 @@
                         "quiz",
                         "story",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -7978,6 +8279,7 @@
                   "quiz",
                   "story",
                   "slide",
+                  "survey",
                   "learningGroup"
                 ]
               },
@@ -9721,7 +10023,11 @@
                   "Mission",
                   "Activity",
                   "Quiz",
-                  "Tag"
+                  "Tag",
+                  "LearningPath",
+                  "LearningGroup",
+                  "Slide",
+                  "Survey"
                 ]
               },
               "matchEntityId": {
@@ -9826,28 +10132,26 @@
         ]
       },
       "GetSurveyProgressResponse": {
-        "type": [
-          "object",
-          "null"
-        ],
+        "type": "object",
         "properties": {
-          "surveyId": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "context": {
-            "type": "string",
-            "default": "default",
-            "minLength": 1
-          },
-          "progress": {
+          "status": {
             "type": "string",
             "enum": [
+              "NOT_STARTED",
               "IN_PROGRESS",
-              "COMPLETE"
+              "COMPLETED"
             ]
+          },
+          "outcome": {
+            "type": "string",
+            "default": "SUCCESS",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "attempt": {
+            "type": "integer",
+            "minimum": 1
           },
           "answers": {
             "type": "object",
@@ -9856,58 +10160,15 @@
           "currentPageNo": {
             "type": "number"
           },
-          "parentId": {
-            "type": "string"
-          },
-          "parentType": {
-            "type": "string",
-            "enum": [
-              "learningPath",
-              "learningGroup"
-            ]
-          },
           "startedAt": {
             "type": "string"
           },
           "completedAt": {
             "type": "string"
-          },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "workspaceId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
-          "sourceRegion": {
-            "$ref": "#/components/schemas/SourceRegion"
-          },
-          "createdAt": {
-            "description": "Creation date in ISO format (UTC Timezone)",
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "description": "Creation date in ISO format (UTC Timezone)",
-            "type": "string",
-            "format": "date-time"
           }
         },
         "required": [
-          "surveyId",
-          "userId",
-          "progress",
-          "answers",
-          "accountId",
-          "workspaceId",
-          "sourceRegion",
-          "createdAt",
-          "updatedAt"
+          "status"
         ]
       },
       "GetVirtualBalanceResponse": {
@@ -12644,6 +12905,7 @@
                           "game",
                           "quiz",
                           "slide",
+                          "survey",
                           "learningGroup",
                           "story",
                           "test",
@@ -12683,6 +12945,7 @@
                     "game",
                     "quiz",
                     "slide",
+                    "survey",
                     "learningGroup",
                     "story",
                     "test",
@@ -12800,6 +13063,7 @@
                     "game",
                     "quiz",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -13296,6 +13560,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -13324,6 +13589,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -13657,6 +13923,7 @@
                               "quiz",
                               "story",
                               "slide",
+                              "survey",
                               "learningGroup"
                             ]
                           },
@@ -13720,6 +13987,7 @@
                         "quiz",
                         "story",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -15248,7 +15516,11 @@
                         "Mission",
                         "Activity",
                         "Quiz",
-                        "Tag"
+                        "Tag",
+                        "LearningPath",
+                        "LearningGroup",
+                        "Slide",
+                        "Survey"
                       ]
                     },
                     "matchEntityId": {
@@ -16322,8 +16594,16 @@
           "progress": {
             "type": "string",
             "enum": [
+              "START",
               "IN_PROGRESS",
               "COMPLETE"
+            ]
+          },
+          "outcome": {
+            "type": "string",
+            "default": "SUCCESS",
+            "enum": [
+              "SUCCESS"
             ]
           },
           "answers": {
@@ -16342,6 +16622,11 @@
               "learningPath",
               "learningGroup"
             ]
+          },
+          "attempt": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
           },
           "startedAt": {
             "type": "string"
@@ -16363,16 +16648,6 @@
           },
           "sourceRegion": {
             "$ref": "#/components/schemas/SourceRegion"
-          },
-          "createdAt": {
-            "description": "Creation date in ISO format (UTC Timezone)",
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "description": "Creation date in ISO format (UTC Timezone)",
-            "type": "string",
-            "format": "date-time"
           }
         },
         "required": [
@@ -16382,9 +16657,7 @@
           "answers",
           "accountId",
           "workspaceId",
-          "sourceRegion",
-          "createdAt",
-          "updatedAt"
+          "sourceRegion"
         ]
       },
       "Timezone": {
@@ -16812,6 +17085,20 @@
           "UTC"
         ]
       },
+      "UnsubscribeResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
       "UpdateCurrentUserResponse": {
         "type": "object",
         "properties": {
@@ -17079,6 +17366,9 @@
     },
     {
       "name": "Missions"
+    },
+    {
+      "name": "NotificationPreferences"
     },
     {
       "name": "Quizzes"

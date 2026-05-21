@@ -7524,7 +7524,9 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translations"
+                  "translations",
+                  "tags",
+                  "layouts"
                 ]
               }
             }
@@ -8127,13 +8129,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "category": {
-                    "description": "Email category for SES routing and reputation isolation",
+                  "topic": {
+                    "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
                     "type": "string",
                     "enum": [
-                      "TRANSACTIONAL",
-                      "NOTIFICATION",
-                      "MARKETING"
+                      "LEARNING_UPDATES",
+                      "LEARNING_DIGEST",
+                      "WORKSPACE_ANNOUNCEMENTS",
+                      "MARKETING_GENERAL"
                     ]
                   },
                   "action": {
@@ -8146,7 +8149,8 @@
                       "LOGIN_OTP",
                       "WORKSPACE_INVITATION",
                       "ALERT",
-                      "LEARNING_PATH_ASSIGNED"
+                      "LEARNING_PATH_ASSIGNED",
+                      "LEARNING_PATH_WEEKLY_DIGEST"
                     ]
                   },
                   "name": {
@@ -8218,7 +8222,6 @@
                   }
                 },
                 "required": [
-                  "category",
                   "name",
                   "defaultLang",
                   "htmlContent",
@@ -8329,15 +8332,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "category": {
-                    "description": "Email category for SES routing and reputation isolation",
-                    "type": "string",
-                    "enum": [
-                      "TRANSACTIONAL",
-                      "NOTIFICATION",
-                      "MARKETING"
-                    ]
-                  },
                   "name": {
                     "description": "Human-readable name of the email template",
                     "type": "string",
@@ -10210,6 +10204,7 @@
                                 "game",
                                 "quiz",
                                 "slide",
+                                "survey",
                                 "learningGroup"
                               ]
                             },
@@ -10779,6 +10774,7 @@
                                           "game",
                                           "quiz",
                                           "slide",
+                                          "survey",
                                           "learningGroup"
                                         ]
                                       },
@@ -11336,6 +11332,7 @@
                             "game",
                             "quiz",
                             "slide",
+                            "survey",
                             "learningGroup"
                           ]
                         },
@@ -12028,7 +12025,10 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translations"
+                  "translations",
+                  "items",
+                  "tags",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -13075,7 +13075,8 @@
                         }
                       },
                       "required": [
-                        "lang"
+                        "lang",
+                        "description"
                       ]
                     },
                     "maxItems": 10,
@@ -13378,7 +13379,8 @@
                         }
                       },
                       "required": [
-                        "lang"
+                        "lang",
+                        "description"
                       ]
                     },
                     "maxItems": 10,
@@ -14551,6 +14553,7 @@
                                 "quiz",
                                 "story",
                                 "slide",
+                                "survey",
                                 "learningGroup"
                               ]
                             },
@@ -14767,6 +14770,7 @@
                                           "game",
                                           "quiz",
                                           "slide",
+                                          "survey",
                                           "learningGroup"
                                         ]
                                       },
@@ -15336,6 +15340,7 @@
                                                     "game",
                                                     "quiz",
                                                     "slide",
+                                                    "survey",
                                                     "learningGroup"
                                                   ]
                                                 },
@@ -16341,6 +16346,7 @@
                             "quiz",
                             "story",
                             "slide",
+                            "survey",
                             "learningGroup"
                           ]
                         },
@@ -16486,7 +16492,11 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translations"
+                  "translations",
+                  "tags",
+                  "items",
+                  "assignments",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -17137,7 +17147,11 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translations"
+                  "translations",
+                  "items",
+                  "tags",
+                  "assignments",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -23435,7 +23449,8 @@
                       "LOGIN_OTP",
                       "WORKSPACE_INVITATION",
                       "ALERT",
-                      "LEARNING_PATH_ASSIGNED"
+                      "LEARNING_PATH_ASSIGNED",
+                      "LEARNING_PATH_WEEKLY_DIGEST"
                     ]
                   },
                   "notificationRuleId": {
@@ -23677,7 +23692,8 @@
                       "LOGIN_OTP",
                       "WORKSPACE_INVITATION",
                       "ALERT",
-                      "LEARNING_PATH_ASSIGNED"
+                      "LEARNING_PATH_ASSIGNED",
+                      "LEARNING_PATH_WEEKLY_DIGEST"
                     ]
                   },
                   "translations": {
@@ -25754,7 +25770,10 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translations"
+                  "translations",
+                  "tags",
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -30606,7 +30625,10 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "translations"
+                  "translations",
+                  "tags",
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -31338,7 +31360,11 @@
                       "Mission",
                       "Activity",
                       "Quiz",
-                      "Tag"
+                      "Tag",
+                      "LearningPath",
+                      "LearningGroup",
+                      "Slide",
+                      "Survey"
                     ]
                   },
                   "matchEntityId": {
@@ -31620,7 +31646,11 @@
                       "Mission",
                       "Activity",
                       "Quiz",
-                      "Tag"
+                      "Tag",
+                      "LearningPath",
+                      "LearningGroup",
+                      "Slide",
+                      "Survey"
                     ]
                   },
                   "matchEntityId": {
@@ -34289,6 +34319,48 @@
                       "CUSTOM"
                     ]
                   },
+                  "background": {
+                    "type": "string"
+                  },
+                  "textColor": {
+                    "type": "string"
+                  },
+                  "boxColor": {
+                    "type": "string"
+                  },
+                  "backgroundImage": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "backgroundSize": {
+                    "type": "string",
+                    "enum": [
+                      "cover",
+                      "contain"
+                    ]
+                  },
+                  "backgroundPosition": {
+                    "type": "string",
+                    "enum": [
+                      "center",
+                      "top",
+                      "bottom",
+                      "left",
+                      "right"
+                    ]
+                  },
+                  "fontFamily": {
+                    "type": "string"
+                  },
+                  "contentJustify": {
+                    "type": "string",
+                    "enum": [
+                      "start",
+                      "center",
+                      "end",
+                      "space-between"
+                    ]
+                  },
                   "parentId": {
                     "type": "string"
                   },
@@ -34341,8 +34413,22 @@
       "get": {
         "operationId": "surveys/list",
         "summary": "List surveys",
-        "description": "List surveys with pagination. Definition field is omitted for performance.",
+        "description": "List surveys with pagination. Definition is omitted by default for performance; opt in via fields=definition.",
         "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "definition"
+                ]
+              }
+            }
+          },
           {
             "name": "limit",
             "in": "query",
@@ -34424,6 +34510,17 @@
         "description": "Retrieve a specific survey by ID, with optional tags.",
         "parameters": [
           {
+            "name": "catalogWorkspaceId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "minLength": 10,
+              "pattern": "^[A-Za-z0-9_-]{10}$"
+            }
+          },
+          {
             "name": "fields",
             "in": "query",
             "required": false,
@@ -34432,7 +34529,9 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "tags"
+                  "tags",
+                  "computedStyle",
+                  "rewardsPreview"
                 ]
               }
             }
@@ -34501,6 +34600,48 @@
                     "enum": [
                       "CATALOG",
                       "CUSTOM"
+                    ]
+                  },
+                  "background": {
+                    "type": "string"
+                  },
+                  "textColor": {
+                    "type": "string"
+                  },
+                  "boxColor": {
+                    "type": "string"
+                  },
+                  "backgroundImage": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "backgroundSize": {
+                    "type": "string",
+                    "enum": [
+                      "cover",
+                      "contain"
+                    ]
+                  },
+                  "backgroundPosition": {
+                    "type": "string",
+                    "enum": [
+                      "center",
+                      "top",
+                      "bottom",
+                      "left",
+                      "right"
+                    ]
+                  },
+                  "fontFamily": {
+                    "type": "string"
+                  },
+                  "contentJustify": {
+                    "type": "string",
+                    "enum": [
+                      "start",
+                      "center",
+                      "end",
+                      "space-between"
                     ]
                   },
                   "parentId": {
@@ -34670,6 +34811,80 @@
         ]
       }
     },
+    "/surveys/{surveyId}/clone": {
+      "post": {
+        "operationId": "surveys/clone",
+        "summary": "Clone survey",
+        "description": "Clones a survey, optionally from a catalog workspace into the requesting workspace.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "in": "header",
+            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "required": false,
+            "schema": {
+              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "catalogWorkspaceId": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "minLength": 10,
+                    "pattern": "^[A-Za-z0-9_-]{10}$"
+                  },
+                  "publish": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Survey cloned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "No access to catalog workspace"
+          },
+          "404": {
+            "description": "Survey not found"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
     "/surveys/{surveyId}/history": {
       "get": {
         "operationId": "surveys/listHistoryVersions",
@@ -34763,47 +34978,9 @@
         ]
       }
     },
-    "/surveys/{surveyId}/publish": {
-      "post": {
-        "operationId": "surveys/publish",
-        "summary": "Publish survey",
-        "description": "Publishes a survey, transitioning it from DRAFT to PUBLISHED state.",
-        "parameters": [
-          {
-            "name": "surveyId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Survey published successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PublishSurveyResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Survey not found"
-          }
-        },
-        "tags": [
-          "Surveys"
-        ]
-      }
-    },
-    "/surveys/{surveyId}/survey-logs": {
+    "/surveys/{surveyId}/logs": {
       "get": {
-        "operationId": "surveys/survey-logs/list",
+        "operationId": "surveys/logs/list",
         "summary": "List survey logs",
         "description": "List all survey log entries for a specific survey (dashboard analytics).",
         "parameters": [
@@ -34884,6 +35061,44 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Surveys"
+        ]
+      }
+    },
+    "/surveys/{surveyId}/publish": {
+      "post": {
+        "operationId": "surveys/publish",
+        "summary": "Publish survey",
+        "description": "Publishes a survey, transitioning it from DRAFT to PUBLISHED state.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Survey published successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishSurveyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Survey not found"
           }
         },
         "tags": [
@@ -34976,9 +35191,9 @@
         ]
       }
     },
-    "/surveys/{surveyId}/survey-logs/{userId}": {
+    "/surveys/{surveyId}/logs/{userId}": {
       "get": {
-        "operationId": "surveys/survey-logs/get",
+        "operationId": "surveys/logs/get",
         "summary": "Get survey log",
         "description": "Retrieve a specific user's survey log entry (dashboard analytics).",
         "parameters": [
@@ -36200,11 +36415,13 @@
                 "properties": {
                   "namespace": {
                     "type": "string",
-                    "minLength": 1
+                    "minLength": 1,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                   },
                   "variant": {
                     "type": "string",
-                    "minLength": 1
+                    "minLength": 1,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                   },
                   "catalogWorkspaceId": {
                     "type": "string",
@@ -36354,11 +36571,13 @@
                 "properties": {
                   "namespace": {
                     "type": "string",
-                    "minLength": 1
+                    "minLength": 1,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                   },
                   "variant": {
                     "type": "string",
-                    "minLength": 1
+                    "minLength": 1,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                   },
                   "defaultLang": {
                     "$ref": "#/components/schemas/Lang"
@@ -42721,6 +42940,7 @@
                     "game",
                     "quiz",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -42928,6 +43148,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -42961,6 +43182,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -44016,7 +44238,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "origin": {
@@ -44597,7 +44820,11 @@
               "Mission",
               "Activity",
               "Quiz",
-              "Tag"
+              "Tag",
+              "LearningPath",
+              "LearningGroup",
+              "Slide",
+              "Survey"
             ]
           },
           "matchEntityId": {
@@ -44897,6 +45124,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -44960,11 +45229,13 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "variant": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "origin": {
             "type": "string",
@@ -45664,6 +45935,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -45875,6 +46147,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -46092,6 +46365,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -46125,6 +46399,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -46543,6 +46818,127 @@
           "slideId",
           "defaultLang",
           "langs",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CloneSurveyResponse": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lang"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "CATALOG",
+              "CUSTOM"
+            ]
+          },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "parentType": {
+            "type": "string",
+            "enum": [
+              "learningPath",
+              "learningGroup"
+            ]
+          },
+          "definition": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "surveyId",
+          "title",
+          "defaultLang",
+          "langs",
+          "definition",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -48368,13 +48764,14 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
-          "category": {
-            "description": "Email category for SES routing and reputation isolation",
+          "topic": {
+            "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
             "type": "string",
             "enum": [
-              "TRANSACTIONAL",
-              "NOTIFICATION",
-              "MARKETING"
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
             ]
           },
           "action": {
@@ -48387,7 +48784,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "name": {
@@ -48454,7 +48852,6 @@
         },
         "required": [
           "emailTemplateId",
-          "category",
           "name",
           "defaultLang",
           "langs",
@@ -48659,6 +49056,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -48870,6 +49268,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -49462,6 +49861,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -49495,6 +49895,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -52094,7 +52495,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "origin": {
@@ -53923,7 +54325,11 @@
               "Mission",
               "Activity",
               "Quiz",
-              "Tag"
+              "Tag",
+              "LearningPath",
+              "LearningGroup",
+              "Slide",
+              "Survey"
             ]
           },
           "matchEntityId": {
@@ -54741,6 +55147,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -55063,11 +55511,13 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "variant": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "origin": {
             "type": "string",
@@ -59340,13 +59790,14 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
-          "category": {
-            "description": "Email category for SES routing and reputation isolation",
+          "topic": {
+            "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
             "type": "string",
             "enum": [
-              "TRANSACTIONAL",
-              "NOTIFICATION",
-              "MARKETING"
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
             ]
           },
           "action": {
@@ -59359,7 +59810,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "name": {
@@ -59426,7 +59878,6 @@
         },
         "required": [
           "emailTemplateId",
-          "category",
           "name",
           "defaultLang",
           "langs",
@@ -63479,6 +63930,7 @@
                               "game",
                               "quiz",
                               "slide",
+                              "survey",
                               "learningGroup",
                               "story",
                               "test",
@@ -63518,6 +63970,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup",
                         "story",
                         "test",
@@ -63653,13 +64106,14 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
-          "category": {
-            "description": "Email category for SES routing and reputation isolation",
+          "topic": {
+            "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
             "type": "string",
             "enum": [
-              "TRANSACTIONAL",
-              "NOTIFICATION",
-              "MARKETING"
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
             ]
           },
           "action": {
@@ -63672,7 +64126,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "name": {
@@ -63845,7 +64300,6 @@
           "actorId",
           "actorType",
           "emailTemplateId",
-          "category",
           "name",
           "defaultLang",
           "langs",
@@ -63865,13 +64319,14 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
-          "category": {
-            "description": "Email category for SES routing and reputation isolation",
+          "topic": {
+            "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
             "type": "string",
             "enum": [
-              "TRANSACTIONAL",
-              "NOTIFICATION",
-              "MARKETING"
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
             ]
           },
           "action": {
@@ -63884,7 +64339,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "name": {
@@ -63957,7 +64413,6 @@
         },
         "required": [
           "emailTemplateId",
-          "category",
           "name",
           "defaultLang",
           "langs",
@@ -64413,35 +64868,7 @@
           },
           "items": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "itemId": {
-                  "type": "string"
-                },
-                "itemType": {
-                  "type": "string",
-                  "enum": [
-                    "activity",
-                    "game",
-                    "quiz",
-                    "slide",
-                    "learningGroup"
-                  ]
-                },
-                "languages": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Lang"
-                  }
-                }
-              },
-              "required": [
-                "itemId",
-                "itemType"
-              ]
-            },
-            "default": []
+            "items": {}
           },
           "defaultLayoutId": {
             "type": "string"
@@ -64654,6 +65081,106 @@
                 "sourceRegion",
                 "createdAt",
                 "updatedAt"
+              ]
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
               ]
             }
           }
@@ -65299,6 +65826,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -65327,6 +65855,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -65675,6 +66204,7 @@
                         "quiz",
                         "story",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -65738,6 +66268,7 @@
                   "quiz",
                   "story",
                   "slide",
+                  "survey",
                   "learningGroup"
                 ]
               },
@@ -65913,36 +66444,7 @@
           },
           "items": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "itemId": {
-                  "type": "string"
-                },
-                "itemType": {
-                  "type": "string",
-                  "enum": [
-                    "activity",
-                    "game",
-                    "quiz",
-                    "story",
-                    "slide",
-                    "learningGroup"
-                  ]
-                },
-                "languages": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Lang"
-                  }
-                }
-              },
-              "required": [
-                "itemId",
-                "itemType"
-              ]
-            },
-            "default": []
+            "items": {}
           },
           "activities": {
             "type": "array",
@@ -65960,6 +66462,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -66183,6 +66686,250 @@
                 "updatedAt"
               ]
             }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "assignments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "learningPathAssignmentId": {
+                  "type": "string"
+                },
+                "learningPathId": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "learningPathRuleId": {
+                  "type": "string"
+                },
+                "groupId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "periodId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "timeframeType": {
+                  "type": "string",
+                  "enum": [
+                    "PERMANENT",
+                    "RANGE",
+                    "RECURRING"
+                  ]
+                },
+                "startsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "ACTIVE",
+                    "ENDED"
+                  ]
+                },
+                "visibility": {
+                  "type": "string",
+                  "enum": [
+                    "LOCKED",
+                    "UNLOCKED"
+                  ]
+                },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
+                  ]
+                },
+                "unlockedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "unlockedByRuleId": {
+                  "type": "string"
+                },
+                "currentAttempt": {
+                  "type": "integer",
+                  "default": 1,
+                  "minimum": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "maxLength": 40,
+                      "minLength": 2,
+                      "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
+                    },
+                    "profileImage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uri"
+                    }
+                  },
+                  "required": [
+                    "userId"
+                  ]
+                }
+              },
+              "required": [
+                "learningPathAssignmentId",
+                "learningPathId",
+                "userId",
+                "periodId",
+                "timeframeType",
+                "startsAt",
+                "state",
+                "visibility",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt",
+                "user"
+              ]
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -66262,6 +67009,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -67049,6 +67797,7 @@
                 "workspaceId",
                 "learningPathRuleId",
                 "lang",
+                "description",
                 "accountId",
                 "sourceRegion",
                 "createdAt",
@@ -67355,6 +68104,7 @@
                 "workspaceId",
                 "learningPathRuleId",
                 "lang",
+                "description",
                 "accountId",
                 "sourceRegion",
                 "createdAt",
@@ -67462,6 +68212,7 @@
                 "workspaceId",
                 "learningPathRuleId",
                 "lang",
+                "description",
                 "accountId",
                 "sourceRegion",
                 "createdAt",
@@ -70736,7 +71487,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "origin": {
@@ -71012,7 +71764,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "origin": {
@@ -71505,6 +72258,153 @@
                 "sourceRegion",
                 "createdAt",
                 "updatedAt"
+              ]
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "computedStyle": {
+            "type": "object",
+            "properties": {
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              }
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
               ]
             }
           }
@@ -74653,6 +75553,153 @@
                 "updatedAt"
               ]
             }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "computedStyle": {
+            "type": "object",
+            "properties": {
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              }
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
           }
         },
         "required": [
@@ -75392,7 +76439,11 @@
               "Mission",
               "Activity",
               "Quiz",
-              "Tag"
+              "Tag",
+              "LearningPath",
+              "LearningGroup",
+              "Slide",
+              "Survey"
             ]
           },
           "matchEntityId": {
@@ -75602,7 +76653,11 @@
               "Mission",
               "Activity",
               "Quiz",
-              "Tag"
+              "Tag",
+              "LearningPath",
+              "LearningGroup",
+              "Slide",
+              "Survey"
             ]
           },
           "matchEntityId": {
@@ -76857,6 +77912,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -76931,8 +78028,16 @@
           "progress": {
             "type": "string",
             "enum": [
+              "START",
               "IN_PROGRESS",
               "COMPLETE"
+            ]
+          },
+          "outcome": {
+            "type": "string",
+            "default": "SUCCESS",
+            "enum": [
+              "SUCCESS"
             ]
           },
           "answers": {
@@ -76951,6 +78056,11 @@
               "learningPath",
               "learningGroup"
             ]
+          },
+          "attempt": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
           },
           "startedAt": {
             "type": "string"
@@ -77022,6 +78132,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -77091,6 +78243,120 @@
                 "tagId",
                 "createdAt",
                 "updatedAt"
+              ]
+            }
+          },
+          "computedStyle": {
+            "type": "object",
+            "properties": {
+              "background": {
+                "type": "string"
+              },
+              "textColor": {
+                "type": "string"
+              },
+              "boxColor": {
+                "type": "string"
+              },
+              "backgroundImage": {
+                "type": "string",
+                "format": "uri"
+              },
+              "backgroundSize": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain"
+                ]
+              },
+              "backgroundPosition": {
+                "type": "string",
+                "enum": [
+                  "center",
+                  "top",
+                  "bottom",
+                  "left",
+                  "right"
+                ]
+              },
+              "fontFamily": {
+                "type": "string"
+              },
+              "contentJustify": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "center",
+                  "end",
+                  "space-between"
+                ]
+              }
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
               ]
             }
           }
@@ -77271,11 +78537,13 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "variant": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "origin": {
             "type": "string",
@@ -77454,11 +78722,13 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "variant": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "origin": {
             "type": "string",
@@ -78918,6 +80188,7 @@
                               "game",
                               "quiz",
                               "slide",
+                              "survey",
                               "learningGroup",
                               "story",
                               "test",
@@ -78957,6 +80228,7 @@
                         "game",
                         "quiz",
                         "slide",
+                        "survey",
                         "learningGroup",
                         "story",
                         "test",
@@ -86333,6 +87605,170 @@
                       "updatedAt"
                     ]
                   }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "priority": {
+                        "type": "integer",
+                        "default": 0,
+                        "minimum": 0
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "tagId",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "layouts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "contentLayoutId": {
+                        "type": "string"
+                      },
+                      "contentThemeId": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "background": {
+                        "type": "string"
+                      },
+                      "textColor": {
+                        "type": "string"
+                      },
+                      "boxColor": {
+                        "type": "string"
+                      },
+                      "backgroundImage": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "backgroundSize": {
+                        "type": "string",
+                        "enum": [
+                          "cover",
+                          "contain"
+                        ]
+                      },
+                      "backgroundPosition": {
+                        "type": "string",
+                        "enum": [
+                          "center",
+                          "top",
+                          "bottom",
+                          "left",
+                          "right"
+                        ]
+                      },
+                      "fontFamily": {
+                        "type": "string"
+                      },
+                      "contentJustify": {
+                        "type": "string",
+                        "enum": [
+                          "start",
+                          "center",
+                          "end",
+                          "space-between"
+                        ]
+                      },
+                      "defaultLang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "langs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Lang"
+                        },
+                        "maxItems": 10,
+                        "minItems": 1
+                      },
+                      "sortOrder": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "origin": {
+                        "type": "string",
+                        "enum": [
+                          "CATALOG",
+                          "CUSTOM"
+                        ]
+                      },
+                      "catalogWorkspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "catalogContentLayoutId": {
+                        "type": "string"
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "contentLayoutId",
+                      "contentThemeId",
+                      "name",
+                      "defaultLang",
+                      "langs",
+                      "accountId",
+                      "workspaceId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
                 }
               },
               "required": [
@@ -87154,13 +88590,14 @@
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
-                "category": {
-                  "description": "Email category for SES routing and reputation isolation",
+                "topic": {
+                  "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
                   "type": "string",
                   "enum": [
-                    "TRANSACTIONAL",
-                    "NOTIFICATION",
-                    "MARKETING"
+                    "LEARNING_UPDATES",
+                    "LEARNING_DIGEST",
+                    "WORKSPACE_ANNOUNCEMENTS",
+                    "MARKETING_GENERAL"
                   ]
                 },
                 "action": {
@@ -87173,7 +88610,8 @@
                     "LOGIN_OTP",
                     "WORKSPACE_INVITATION",
                     "ALERT",
-                    "LEARNING_PATH_ASSIGNED"
+                    "LEARNING_PATH_ASSIGNED",
+                    "LEARNING_PATH_WEEKLY_DIGEST"
                   ]
                 },
                 "name": {
@@ -87350,7 +88788,6 @@
                 "actorId",
                 "actorType",
                 "emailTemplateId",
-                "category",
                 "name",
                 "defaultLang",
                 "langs",
@@ -87419,13 +88856,14 @@
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
-                "category": {
-                  "description": "Email category for SES routing and reputation isolation",
+                "topic": {
+                  "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
                   "type": "string",
                   "enum": [
-                    "TRANSACTIONAL",
-                    "NOTIFICATION",
-                    "MARKETING"
+                    "LEARNING_UPDATES",
+                    "LEARNING_DIGEST",
+                    "WORKSPACE_ANNOUNCEMENTS",
+                    "MARKETING_GENERAL"
                   ]
                 },
                 "action": {
@@ -87438,7 +88876,8 @@
                     "LOGIN_OTP",
                     "WORKSPACE_INVITATION",
                     "ALERT",
-                    "LEARNING_PATH_ASSIGNED"
+                    "LEARNING_PATH_ASSIGNED",
+                    "LEARNING_PATH_WEEKLY_DIGEST"
                   ]
                 },
                 "name": {
@@ -87611,7 +89050,6 @@
                 "actorId",
                 "actorType",
                 "emailTemplateId",
-                "category",
                 "name",
                 "defaultLang",
                 "langs",
@@ -87779,6 +89217,7 @@
                           "game",
                           "quiz",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -88143,6 +89582,7 @@
                           "game",
                           "quiz",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -88422,6 +89862,7 @@
                     "game",
                     "quiz",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -89240,6 +90681,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -89268,6 +90710,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -89616,6 +91059,7 @@
                               "quiz",
                               "story",
                               "slide",
+                              "survey",
                               "learningGroup"
                             ]
                           },
@@ -89679,6 +91123,7 @@
                         "quiz",
                         "story",
                         "slide",
+                        "survey",
                         "learningGroup"
                       ]
                     },
@@ -89873,36 +91318,7 @@
                 },
                 "items": {
                   "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "itemId": {
-                        "type": "string"
-                      },
-                      "itemType": {
-                        "type": "string",
-                        "enum": [
-                          "activity",
-                          "game",
-                          "quiz",
-                          "story",
-                          "slide",
-                          "learningGroup"
-                        ]
-                      },
-                      "languages": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/Lang"
-                        }
-                      }
-                    },
-                    "required": [
-                      "itemId",
-                      "itemType"
-                    ]
-                  },
-                  "default": []
+                  "items": {}
                 },
                 "activities": {
                   "type": "array",
@@ -89920,6 +91336,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -90147,6 +91564,250 @@
                       "updatedAt"
                     ]
                   }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "priority": {
+                        "type": "integer",
+                        "default": 0,
+                        "minimum": 0
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "tagId",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "assignments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "learningPathAssignmentId": {
+                        "type": "string"
+                      },
+                      "learningPathId": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "learningPathRuleId": {
+                        "type": "string"
+                      },
+                      "groupId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "periodId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "timeframeType": {
+                        "type": "string",
+                        "enum": [
+                          "PERMANENT",
+                          "RANGE",
+                          "RECURRING"
+                        ]
+                      },
+                      "startsAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "endsAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "state": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "ACTIVE",
+                          "ENDED"
+                        ]
+                      },
+                      "visibility": {
+                        "type": "string",
+                        "enum": [
+                          "LOCKED",
+                          "UNLOCKED"
+                        ]
+                      },
+                      "assignmentType": {
+                        "type": "string",
+                        "default": "REQUIRED",
+                        "enum": [
+                          "REQUIRED",
+                          "OPTIONAL"
+                        ]
+                      },
+                      "unlockedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "unlockedByRuleId": {
+                        "type": "string"
+                      },
+                      "currentAttempt": {
+                        "type": "integer",
+                        "default": 1,
+                        "minimum": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "nickname": {
+                            "type": "string",
+                            "maxLength": 40,
+                            "minLength": 2,
+                            "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
+                          },
+                          "profileImage": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "format": "uri"
+                          }
+                        },
+                        "required": [
+                          "userId"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "learningPathAssignmentId",
+                      "learningPathId",
+                      "userId",
+                      "periodId",
+                      "timeframeType",
+                      "startsAt",
+                      "state",
+                      "visibility",
+                      "accountId",
+                      "workspaceId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt",
+                      "user"
+                    ]
+                  }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
                 }
               },
               "required": [
@@ -90271,6 +91932,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -90304,6 +91966,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -90579,6 +92242,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -90950,6 +92614,7 @@
                       "workspaceId",
                       "learningPathRuleId",
                       "lang",
+                      "description",
                       "accountId",
                       "sourceRegion",
                       "createdAt",
@@ -91338,6 +93003,7 @@
                       "workspaceId",
                       "learningPathRuleId",
                       "lang",
+                      "description",
                       "accountId",
                       "sourceRegion",
                       "createdAt",
@@ -91663,6 +93329,7 @@
                       "workspaceId",
                       "learningPathRuleId",
                       "lang",
+                      "description",
                       "accountId",
                       "sourceRegion",
                       "createdAt",
@@ -91768,6 +93435,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -96766,7 +98434,8 @@
                     "LOGIN_OTP",
                     "WORKSPACE_INVITATION",
                     "ALERT",
-                    "LEARNING_PATH_ASSIGNED"
+                    "LEARNING_PATH_ASSIGNED",
+                    "LEARNING_PATH_WEEKLY_DIGEST"
                   ]
                 },
                 "origin": {
@@ -97095,7 +98764,8 @@
                     "LOGIN_OTP",
                     "WORKSPACE_INVITATION",
                     "ALERT",
-                    "LEARNING_PATH_ASSIGNED"
+                    "LEARNING_PATH_ASSIGNED",
+                    "LEARNING_PATH_WEEKLY_DIGEST"
                   ]
                 },
                 "origin": {
@@ -97390,7 +99060,8 @@
                     "LOGIN_OTP",
                     "WORKSPACE_INVITATION",
                     "ALERT",
-                    "LEARNING_PATH_ASSIGNED"
+                    "LEARNING_PATH_ASSIGNED",
+                    "LEARNING_PATH_WEEKLY_DIGEST"
                   ]
                 },
                 "origin": {
@@ -103191,7 +104862,11 @@
                     "Mission",
                     "Activity",
                     "Quiz",
-                    "Tag"
+                    "Tag",
+                    "LearningPath",
+                    "LearningGroup",
+                    "Slide",
+                    "Survey"
                   ]
                 },
                 "matchEntityId": {
@@ -103454,7 +105129,11 @@
                     "Mission",
                     "Activity",
                     "Quiz",
-                    "Tag"
+                    "Tag",
+                    "LearningPath",
+                    "LearningGroup",
+                    "Slide",
+                    "Survey"
                   ]
                 },
                 "matchEntityId": {
@@ -103683,7 +105362,11 @@
                     "Mission",
                     "Activity",
                     "Quiz",
-                    "Tag"
+                    "Tag",
+                    "LearningPath",
+                    "LearningGroup",
+                    "Slide",
+                    "Survey"
                   ]
                 },
                 "matchEntityId": {
@@ -105056,6 +106739,48 @@
                     "CUSTOM"
                   ]
                 },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
+                },
                 "parentId": {
                   "type": "string"
                 },
@@ -105192,6 +106917,48 @@
                     "CUSTOM"
                   ]
                 },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
+                },
                 "parentId": {
                   "type": "string"
                 },
@@ -105285,8 +107052,16 @@
                 "progress": {
                   "type": "string",
                   "enum": [
+                    "START",
                     "IN_PROGRESS",
                     "COMPLETE"
+                  ]
+                },
+                "outcome": {
+                  "type": "string",
+                  "default": "SUCCESS",
+                  "enum": [
+                    "SUCCESS"
                   ]
                 },
                 "answers": {
@@ -105305,6 +107080,11 @@
                     "learningPath",
                     "learningGroup"
                   ]
+                },
+                "attempt": {
+                  "type": "integer",
+                  "default": 1,
+                  "minimum": 1
                 },
                 "startedAt": {
                   "type": "string"
@@ -105395,6 +107175,48 @@
                     "CUSTOM"
                   ]
                 },
+                "background": {
+                  "type": "string"
+                },
+                "textColor": {
+                  "type": "string"
+                },
+                "boxColor": {
+                  "type": "string"
+                },
+                "backgroundImage": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "backgroundSize": {
+                  "type": "string",
+                  "enum": [
+                    "cover",
+                    "contain"
+                  ]
+                },
+                "backgroundPosition": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom",
+                    "left",
+                    "right"
+                  ]
+                },
+                "fontFamily": {
+                  "type": "string"
+                },
+                "contentJustify": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end",
+                    "space-between"
+                  ]
+                },
                 "parentId": {
                   "type": "string"
                 },
@@ -105429,6 +107251,10 @@
                   "description": "Creation date in ISO format (UTC Timezone)",
                   "type": "string",
                   "format": "date-time"
+                },
+                "definition": {
+                  "type": "object",
+                  "additionalProperties": {}
                 }
               },
               "required": [
@@ -105644,11 +107470,13 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "origin": {
                   "type": "string",
@@ -105880,11 +107708,13 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "origin": {
                   "type": "string",
@@ -107124,11 +108954,13 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "origin": {
                   "type": "string",
@@ -109558,13 +111390,14 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
-          "category": {
-            "description": "Email category for SES routing and reputation isolation",
+          "topic": {
+            "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
             "type": "string",
             "enum": [
-              "TRANSACTIONAL",
-              "NOTIFICATION",
-              "MARKETING"
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
             ]
           },
           "action": {
@@ -109577,7 +111410,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "name": {
@@ -109652,7 +111486,6 @@
         },
         "required": [
           "emailTemplateId",
-          "category",
           "name",
           "defaultLang",
           "langs",
@@ -109729,6 +111562,7 @@
                     "game",
                     "quiz",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -109945,6 +111779,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -109978,6 +111813,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -111318,7 +113154,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "origin": {
@@ -112480,7 +114317,11 @@
               "Mission",
               "Activity",
               "Quiz",
-              "Tag"
+              "Tag",
+              "LearningPath",
+              "LearningGroup",
+              "Slide",
+              "Survey"
             ]
           },
           "matchEntityId": {
@@ -112798,6 +114639,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -112870,11 +114753,13 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "variant": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "origin": {
             "type": "string",
@@ -115221,6 +117106,7 @@
                           "quiz",
                           "story",
                           "slide",
+                          "survey",
                           "learningGroup"
                         ]
                       },
@@ -115835,11 +117721,13 @@
                 },
                 "namespace": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "variant": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
                 },
                 "origin": {
                   "type": "string",
@@ -117562,6 +119450,7 @@
                     "game",
                     "quiz",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -117769,6 +119658,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -117802,6 +119692,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -118857,7 +120748,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "origin": {
@@ -119438,7 +121330,11 @@
               "Mission",
               "Activity",
               "Quiz",
-              "Tag"
+              "Tag",
+              "LearningPath",
+              "LearningGroup",
+              "Slide",
+              "Survey"
             ]
           },
           "matchEntityId": {
@@ -119738,6 +121634,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -119801,11 +121739,13 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "variant": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "origin": {
             "type": "string",
@@ -121843,13 +123783,14 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
-          "category": {
-            "description": "Email category for SES routing and reputation isolation",
+          "topic": {
+            "description": "Notification topic this template belongs to — the unsubscribable bucket and the single routing primitive. Absent for transactional templates (OTP, password reset, invitation, etc.), which are always sent and never carry unsubscribe headers. Topic also drives SES configuration-set + from-address selection.",
             "type": "string",
             "enum": [
-              "TRANSACTIONAL",
-              "NOTIFICATION",
-              "MARKETING"
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
             ]
           },
           "action": {
@@ -121862,7 +123803,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "name": {
@@ -121929,7 +123871,6 @@
         },
         "required": [
           "emailTemplateId",
-          "category",
           "name",
           "defaultLang",
           "langs",
@@ -122005,6 +123946,7 @@
                     "game",
                     "quiz",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -122448,6 +124390,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -122481,6 +124424,7 @@
                     "quiz",
                     "story",
                     "slide",
+                    "survey",
                     "learningGroup"
                   ]
                 },
@@ -124895,7 +126839,8 @@
               "LOGIN_OTP",
               "WORKSPACE_INVITATION",
               "ALERT",
-              "LEARNING_PATH_ASSIGNED"
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
             ]
           },
           "origin": {
@@ -126608,7 +128553,11 @@
               "Mission",
               "Activity",
               "Quiz",
-              "Tag"
+              "Tag",
+              "LearningPath",
+              "LearningGroup",
+              "Slide",
+              "Survey"
             ]
           },
           "matchEntityId": {
@@ -127380,6 +129329,48 @@
               "CUSTOM"
             ]
           },
+          "background": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "boxColor": {
+            "type": "string"
+          },
+          "backgroundImage": {
+            "type": "string",
+            "format": "uri"
+          },
+          "backgroundSize": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          },
+          "backgroundPosition": {
+            "type": "string",
+            "enum": [
+              "center",
+              "top",
+              "bottom",
+              "left",
+              "right"
+            ]
+          },
+          "fontFamily": {
+            "type": "string"
+          },
+          "contentJustify": {
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "space-between"
+            ]
+          },
           "parentId": {
             "type": "string"
           },
@@ -127679,11 +129670,13 @@
           },
           "namespace": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "variant": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
           },
           "origin": {
             "type": "string",
