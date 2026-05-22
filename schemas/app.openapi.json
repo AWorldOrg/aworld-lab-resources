@@ -3130,6 +3130,17 @@
             }
           },
           {
+            "name": "includeArchived",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          },
+          {
             "name": "limit",
             "in": "query",
             "description": "Size of the page",
@@ -9338,6 +9349,10 @@
               "CUSTOM"
             ]
           },
+          "isArchived": {
+            "type": "boolean",
+            "default": false
+          },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -14876,6 +14891,10 @@
                     "MONTHLY",
                     "CUSTOM"
                   ]
+                },
+                "isArchived": {
+                  "type": "boolean",
+                  "default": false
                 },
                 "createdAt": {
                   "description": "Creation date in ISO format (UTC Timezone)",
