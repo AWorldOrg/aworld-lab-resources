@@ -9350,8 +9350,7 @@
             ]
           },
           "isArchived": {
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -14893,8 +14892,7 @@
                   ]
                 },
                 "isArchived": {
-                  "type": "boolean",
-                  "default": false
+                  "type": "boolean"
                 },
                 "createdAt": {
                   "description": "Creation date in ISO format (UTC Timezone)",
