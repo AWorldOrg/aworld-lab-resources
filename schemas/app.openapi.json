@@ -4486,7 +4486,7 @@
       "get": {
         "operationId": "users/getMe",
         "summary": "Get current user",
-        "description": "Retrieve the current authenticated user profile, with optional additional fields (tags, stats, learningGroupLogs, principal, permissions).",
+        "description": "Retrieve the current authenticated user profile, with optional additional fields (tags, stats, learningGroupLogs, principal, permissions, notificationPreferences).",
         "parameters": [
           {
             "name": "fields",
@@ -4501,7 +4501,8 @@
                   "principal",
                   "stats",
                   "learningGroupLogs",
-                  "permissions"
+                  "permissions",
+                  "notificationPreferences"
                 ]
               }
             }
@@ -4736,6 +4737,54 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ListCurrentUserLearningGroupLogsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/me/notification-preferences": {
+      "get": {
+        "operationId": "users/listMyNotificationPreferences",
+        "summary": "List notification preferences for the current user",
+        "description": "Returns one entry per supported notification topic, with platform defaults applied. Topics the user has never explicitly toggled appear as `subscribed: true, isDefault: true`.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification preferences retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListMyNotificationPreferencesResponse"
                 }
               }
             }
@@ -5040,6 +5089,153 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/me/notification-preferences/{topic}": {
+      "patch": {
+        "operationId": "users/updateMyNotificationPreference",
+        "summary": "Update a notification preference for the current user",
+        "description": "Sets the current user's subscription state for the given topic. Subscribing again after a previous opt-out writes a fresh explicit row — to fully reset to the platform default use DELETE.",
+        "parameters": [
+          {
+            "name": "topic",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LEARNING_UPDATES",
+                "LEARNING_DIGEST",
+                "WORKSPACE_ANNOUNCEMENTS",
+                "MARKETING_GENERAL"
+              ]
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subscribed": {
+                    "description": "Desired subscription state for this topic. `false` opts the user out; `true` re-subscribes after a previous opt-out.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "subscribed"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification preference updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateMyNotificationPreferenceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "users/deleteMyNotificationPreference",
+        "summary": "Reset a notification preference for the current user",
+        "description": "Removes the explicit preference row for the given topic, restoring the platform default (subscribed). The audit log preserves the change.",
+        "parameters": [
+          {
+            "name": "topic",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LEARNING_UPDATES",
+                "LEARNING_DIGEST",
+                "WORKSPACE_ANNOUNCEMENTS",
+                "MARKETING_GENERAL"
+              ]
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification preference reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteMyNotificationPreferenceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
           },
           "401": {
             "description": "Unauthorized"
@@ -6206,6 +6402,39 @@
           "deleted"
         ]
       },
+      "DeleteMyNotificationPreferenceResponse": {
+        "description": "Per-topic view of a user's notification preferences with platform defaults applied.",
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "enum": [
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
+            ]
+          },
+          "subscribed": {
+            "description": "Effective subscription state for this topic. `true` by default when the user has never explicitly opted out.",
+            "type": "boolean"
+          },
+          "isDefault": {
+            "description": "`true` when no explicit row exists for this topic — the value reported is the platform default. `false` when the user (or an admin) has explicitly set the preference.",
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "description": "When the explicit preference was last written. Absent when `isDefault` is `true`.",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "topic",
+          "subscribed",
+          "isDefault"
+        ]
+      },
       "GetActivityLogResponse": {
         "type": "object",
         "properties": {
@@ -7265,6 +7494,20 @@
                 "type": "boolean"
               }
             }
+          },
+          "notificationPreferences": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResolvedNotificationPreference"
+                }
+              }
+            },
+            "required": [
+              "items"
+            ]
           }
         },
         "required": [
@@ -14436,6 +14679,20 @@
           "items"
         ]
       },
+      "ListMyNotificationPreferencesResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResolvedNotificationPreference"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "ListQuizTagAssignmentsResponse": {
         "type": "object",
         "properties": {
@@ -16129,6 +16386,39 @@
           "workspaceCodeId"
         ]
       },
+      "ResolvedNotificationPreference": {
+        "description": "Per-topic view of a user's notification preferences with platform defaults applied.",
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "enum": [
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
+            ]
+          },
+          "subscribed": {
+            "description": "Effective subscription state for this topic. `true` by default when the user has never explicitly opted out.",
+            "type": "boolean"
+          },
+          "isDefault": {
+            "description": "`true` when no explicit row exists for this topic — the value reported is the platform default. `false` when the user (or an admin) has explicitly set the preference.",
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "description": "When the explicit preference was last written. Absent when `isDefault` is `true`.",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "topic",
+          "subscribed",
+          "isDefault"
+        ]
+      },
       "RetryLearningPathAssignmentResponse": {
         "type": "object",
         "properties": {
@@ -17202,6 +17492,39 @@
           "principalId",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "UpdateMyNotificationPreferenceResponse": {
+        "description": "Per-topic view of a user's notification preferences with platform defaults applied.",
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "enum": [
+              "LEARNING_UPDATES",
+              "LEARNING_DIGEST",
+              "WORKSPACE_ANNOUNCEMENTS",
+              "MARKETING_GENERAL"
+            ]
+          },
+          "subscribed": {
+            "description": "Effective subscription state for this topic. `true` by default when the user has never explicitly opted out.",
+            "type": "boolean"
+          },
+          "isDefault": {
+            "description": "`true` when no explicit row exists for this topic — the value reported is the platform default. `false` when the user (or an admin) has explicitly set the preference.",
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "description": "When the explicit preference was last written. Absent when `isDefault` is `true`.",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "topic",
+          "subscribed",
+          "isDefault"
         ]
       },
       "VirtualTransactionHistoryRewardRule": {
