@@ -7216,6 +7216,20 @@
                     "type": "string",
                     "format": "email"
                   },
+                  "emailDeliverabilityStatus": {
+                    "type": "string",
+                    "enum": [
+                      "OK",
+                      "BLOCKED_MALFORMED",
+                      "BLOCKED_NO_DNS",
+                      "BLOCKED_DISPOSABLE",
+                      "BLOCKED_RANDOM"
+                    ]
+                  },
+                  "emailDeliverabilityValidatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
                   "firstName": {
                     "type": "string",
                     "maxLength": 50,
@@ -7274,6 +7288,20 @@
                     "maxLength": 50,
                     "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
+                  },
+                  "emailDeliverabilityStatus": {
+                    "type": "string",
+                    "enum": [
+                      "OK",
+                      "BLOCKED_MALFORMED",
+                      "BLOCKED_NO_DNS",
+                      "BLOCKED_DISPOSABLE",
+                      "BLOCKED_RANDOM"
+                    ]
+                  },
+                  "emailDeliverabilityValidatedAt": {
+                    "type": "string",
+                    "format": "date-time"
                   }
                 },
                 "required": [
