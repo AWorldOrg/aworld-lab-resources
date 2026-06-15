@@ -8274,7 +8274,15 @@
             "type": "string"
           },
           "learningPathRuleId": {
+            "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
             "type": "string"
+          },
+          "contributingRuleIds": {
+            "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the learning path anymore. Mutually exclusive with learningPathRuleId.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "groupId": {
             "type": "string",
@@ -14153,7 +14161,15 @@
                   "type": "string"
                 },
                 "learningPathRuleId": {
+                  "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
                   "type": "string"
+                },
+                "contributingRuleIds": {
+                  "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the learning path anymore. Mutually exclusive with learningPathRuleId.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "groupId": {
                   "type": "string",
@@ -16712,7 +16728,15 @@
             "type": "string"
           },
           "learningPathRuleId": {
+            "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
             "type": "string"
+          },
+          "contributingRuleIds": {
+            "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the learning path anymore. Mutually exclusive with learningPathRuleId.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "groupId": {
             "type": "string",
