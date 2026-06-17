@@ -10881,8 +10881,12 @@
             "type": "object",
             "default": {},
             "properties": {
+              "displayName": {
+                "description": "Public-facing display name for the workspace, intended as the user-visible name.",
+                "type": "string"
+              },
               "name": {
-                "description": "Display name override for the workspace.",
+                "description": "Workspace name. Used as the displayed name in some clients (auth screens, certificates, emails) and as a fallback; prefer displayName for the public-facing name.",
                 "type": "string"
               },
               "description": {
