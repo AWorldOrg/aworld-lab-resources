@@ -8331,6 +8331,10 @@
               "OPTIONAL"
             ]
           },
+          "priority": {
+            "type": "number",
+            "default": 0
+          },
           "unlockedAt": {
             "type": "string",
             "format": "date-time"
@@ -14222,6 +14226,10 @@
                     "OPTIONAL"
                   ]
                 },
+                "priority": {
+                  "type": "number",
+                  "default": 0
+                },
                 "unlockedAt": {
                   "type": "string",
                   "format": "date-time"
@@ -16788,6 +16796,10 @@
               "REQUIRED",
               "OPTIONAL"
             ]
+          },
+          "priority": {
+            "type": "number",
+            "default": 0
           },
           "unlockedAt": {
             "type": "string",
