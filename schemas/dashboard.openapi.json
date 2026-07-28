@@ -13976,7 +13976,8 @@
                       "type": "string",
                       "enum": [
                         "translation",
-                        "tags"
+                        "tags",
+                        "user"
                       ]
                     }
                   }
@@ -14071,31 +14072,6 @@
               "example": "updatedAt",
               "enum": [
                 "updatedAt"
-              ]
-            }
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "PENDING",
-                "ACTIVE",
-                "ENDED"
-              ]
-            }
-          },
-          {
-            "name": "visibility",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "LOCKED",
-                "UNLOCKED"
               ]
             }
           }
@@ -79455,6 +79431,9 @@
               "completedPaths": {
                 "type": "number"
               },
+              "successfulPaths": {
+                "type": "number"
+              },
               "quizSuccessRate": {
                 "type": "number"
               },
@@ -79467,6 +79446,7 @@
             },
             "required": [
               "completedPaths",
+              "successfulPaths",
               "quizSuccessRate",
               "learningMinutes",
               "totalActivities"
@@ -101871,6 +101851,9 @@
               "completedPaths": {
                 "type": "number"
               },
+              "successfulPaths": {
+                "type": "number"
+              },
               "quizSuccessRate": {
                 "type": "number"
               },
@@ -101883,6 +101866,7 @@
             },
             "required": [
               "completedPaths",
+              "successfulPaths",
               "quizSuccessRate",
               "learningMinutes",
               "totalActivities"
@@ -152349,6 +152333,30 @@
                       "updatedAt"
                     ]
                   }
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "maxLength": 40,
+                      "minLength": 2,
+                      "pattern": "^(?!.*[_.\\- ]{2,})[\\p{L}\\p{M}\\p{N}\\p{S}_ .-]{2,40}$/u"
+                    },
+                    "profileImage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uri"
+                    }
+                  },
+                  "required": [
+                    "userId"
+                  ]
                 }
               },
               "required": [

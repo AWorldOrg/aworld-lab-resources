@@ -2708,6 +2708,45 @@
         ]
       }
     },
+    "/notification-preferences/email-preferences/{token}": {
+      "get": {
+        "operationId": "notificationPreference/listByToken",
+        "summary": "List email preferences via a signed email token",
+        "description": "Public endpoint backing the token-bound email-preferences page linked from an email footer. The HMAC-signed token (the same one used by the unsubscribe endpoint) carries accountId, workspaceId, and userId; the page reads account/workspace/user from it and lists all topics. No login required.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "HMAC-signed opaque unsubscribe token from the email's List-Unsubscribe header.",
+            "required": true,
+            "schema": {
+              "description": "HMAC-signed opaque unsubscribe token from the email's List-Unsubscribe header.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email preferences retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListEmailPreferencesByTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or malformed token"
+          }
+        },
+        "security": [],
+        "tags": [
+          "NotificationPreferences"
+        ]
+      }
+    },
     "/notification-preferences/unsubscribe/{token}": {
       "post": {
         "operationId": "notificationPreference/unsubscribe",
@@ -2739,6 +2778,78 @@
           },
           "400": {
             "description": "Invalid or malformed token"
+          }
+        },
+        "security": [],
+        "tags": [
+          "NotificationPreferences"
+        ]
+      }
+    },
+    "/notification-preferences/email-preferences/{token}/{topic}": {
+      "patch": {
+        "operationId": "notificationPreference/updateByToken",
+        "summary": "Update an email preference via a signed email token",
+        "description": "Public endpoint backing the token-bound email-preferences page. Sets the recipient's subscription state for one topic. The HMAC-signed token (shared with the unsubscribe endpoint) supplies account/workspace/user; the change is attributed to the user in the audit log. No login required.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "HMAC-signed opaque unsubscribe token from the email's List-Unsubscribe header.",
+            "required": true,
+            "schema": {
+              "description": "HMAC-signed opaque unsubscribe token from the email's List-Unsubscribe header.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "topic",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LEARNING_UPDATES",
+                "LEARNING_DIGEST",
+                "WORKSPACE_ANNOUNCEMENTS",
+                "MARKETING_GENERAL"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subscribed": {
+                    "description": "Desired subscription state for this topic. `false` opts the user out; `true` re-subscribes after a previous opt-out.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "subscribed"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email preference updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateEmailPreferenceByTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or malformed token"
           }
         },
         "security": [],
@@ -7596,6 +7707,9 @@
               "completedPaths": {
                 "type": "number"
               },
+              "successfulPaths": {
+                "type": "number"
+              },
               "quizSuccessRate": {
                 "type": "number"
               },
@@ -7608,6 +7722,7 @@
             },
             "required": [
               "completedPaths",
+              "successfulPaths",
               "quizSuccessRate",
               "learningMinutes",
               "totalActivities"
@@ -7831,6 +7946,9 @@
           "completedPaths": {
             "type": "number"
           },
+          "successfulPaths": {
+            "type": "number"
+          },
           "quizSuccessRate": {
             "type": "number"
           },
@@ -7843,6 +7961,7 @@
         },
         "required": [
           "completedPaths",
+          "successfulPaths",
           "quizSuccessRate",
           "learningMinutes",
           "totalActivities"
@@ -13896,6 +14015,20 @@
           "items"
         ]
       },
+      "ListEmailPreferencesByTokenResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResolvedNotificationPreference"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "ListLearningGroupItemsResponse": {
         "type": "object",
         "properties": {
@@ -19027,6 +19160,20 @@
           "principalId",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "UpdateEmailPreferenceByTokenResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "success"
         ]
       },
       "UpdateMyNotificationPreferenceResponse": {
