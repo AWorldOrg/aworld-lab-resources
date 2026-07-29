@@ -104575,6 +104575,12 @@
                   "PORTAL_MANUAL"
                 ]
               },
+              "campaignSlug": {
+                "description": "Slug of the trial campaign this subscription was bootstrapped from — the recipe that bound the workspace's catalogs and imported its content. Only ever a slug that actually resolved, so its presence means the recipe was applied. Absent for organic self-serve trials and for every PORTAL_MANUAL subscription.",
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 1
+              },
               "plan": {
                 "description": "The single source of truth for the workspace's plan.",
                 "type": "string",
@@ -104718,6 +104724,12 @@
               "SELF_SERVE_TRIAL",
               "PORTAL_MANUAL"
             ]
+          },
+          "campaignSlug": {
+            "description": "Slug of the trial campaign this subscription was bootstrapped from — the recipe that bound the workspace's catalogs and imported its content. Only ever a slug that actually resolved, so its presence means the recipe was applied. Absent for organic self-serve trials and for every PORTAL_MANUAL subscription.",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "plan": {
             "description": "The single source of truth for the workspace's plan.",
