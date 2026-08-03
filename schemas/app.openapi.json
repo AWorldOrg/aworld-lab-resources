@@ -83,7 +83,9 @@
                     "additionalProperties": {}
                   },
                   "activityLogId": {
-                    "type": "string"
+                    "description": "Optional caller-supplied ID, stored verbatim; omit it for a generated one. Must be exactly 21 characters from the alphabet A-Za-z0-9_-, or the request is rejected with a 400. A deterministic value gives permanent once-per-content semantics: a reuse carrying different data is rejected with a 409 and writes nothing, while an immediate identical retry replays the original response instead of conflicting. Derive it from the userId as well as the content — IDs need only be unique per user here, but must be unique per workspace downstream, so two users must never produce the same one. A base64url SHA-256 truncated to 21 characters fits.",
+                    "type": "string",
+                    "example": "V1StGXR8Z5jdHi6BmyT8k"
                   },
                   "completedAt": {
                     "type": "string",
@@ -6536,7 +6538,9 @@
         "type": "object",
         "properties": {
           "activityLogId": {
-            "type": "string"
+            "description": "The unique ID of the activity log. Exactly 21 characters from the alphabet A-Za-z0-9_- (a nanoid).",
+            "type": "string",
+            "example": "V1StGXR8Z5jdHi6BmyT8k"
           },
           "activityId": {
             "description": "The unique ID of the activity. Should be a nanoid",
@@ -8581,6 +8585,14 @@
             "type": "string"
           },
           "defaultLayoutId": {
+            "type": "string"
+          },
+          "defaultVideoAvatarId": {
+            "description": "The unique ID of the videoAvatar",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "defaultVoiceId": {
             "type": "string"
           },
           "background": {
@@ -13022,7 +13034,9 @@
               "type": "object",
               "properties": {
                 "activityLogId": {
-                  "type": "string"
+                  "description": "The unique ID of the activity log. Exactly 21 characters from the alphabet A-Za-z0-9_- (a nanoid).",
+                  "type": "string",
+                  "example": "V1StGXR8Z5jdHi6BmyT8k"
                 },
                 "activityId": {
                   "description": "The unique ID of the activity. Should be a nanoid",
@@ -14594,6 +14608,14 @@
                   "type": "string"
                 },
                 "defaultLayoutId": {
+                  "type": "string"
+                },
+                "defaultVideoAvatarId": {
+                  "description": "The unique ID of the videoAvatar",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "defaultVoiceId": {
                   "type": "string"
                 },
                 "background": {
@@ -17698,6 +17720,14 @@
                   "type": "string"
                 },
                 "defaultLayoutId": {
+                  "type": "string"
+                },
+                "defaultVideoAvatarId": {
+                  "description": "The unique ID of the videoAvatar",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "defaultVoiceId": {
                   "type": "string"
                 },
                 "background": {
