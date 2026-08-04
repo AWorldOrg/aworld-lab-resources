@@ -44791,6 +44791,81 @@
         ]
       }
     },
+    "/support-tickets": {
+      "post": {
+        "operationId": "supportTickets/create",
+        "summary": "Open a support ticket",
+        "description": "Creates a ticket in AWorld Support on behalf of the authenticated user. The requester's email and name are derived server-side from the token, and workspace/page context is attached for triage. When an identical subject was submitted by the same user in the last few minutes, the existing ticket is returned with `duplicate: true` instead of opening a new one.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subject": {
+                    "description": "Short summary of the problem",
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 1
+                  },
+                  "description": {
+                    "description": "What the user was doing and what happened instead",
+                    "type": "string",
+                    "maxLength": 10000,
+                    "minLength": 10
+                  },
+                  "route": {
+                    "description": "Client-side route the request was raised from",
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "appVersion": {
+                    "description": "Build identifier of the calling client",
+                    "type": "string",
+                    "maxLength": 50
+                  }
+                },
+                "required": [
+                  "subject",
+                  "description"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ticket created, or an existing recent duplicate returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSupportTicketResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Support intake is rate limited — retry shortly"
+          },
+          "502": {
+            "description": "Support system returned an unexpected response"
+          },
+          "503": {
+            "description": "Support system is temporarily unreachable"
+          }
+        },
+        "tags": [
+          "Support Tickets"
+        ]
+      }
+    },
     "/surveys/{surveyId}/tags": {
       "post": {
         "operationId": "surveys/createTags",
@@ -55963,6 +56038,26 @@
                       },
                       "onboarding": {
                         "description": "Native onboarding flow. When enabled, new users see a 3-step welcome carousel before login. Defaults to disabled.",
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "enabled"
+                            ],
+                            "additionalProperties": {}
+                          }
+                        ]
+                      },
+                      "support": {
+                        "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Currently implemented in evolve only; if it later ships in the end-user app and the two need to be controlled separately, add an optional `surfaces: ('evolve'|'app')[]` to this object — the schema is a looseObject and storage is schemaless, so that needs no migration, and an absent `surfaces` must keep meaning 'every surface that implements it'.",
                         "anyOf": [
                           {
                             "type": "boolean"
@@ -78216,6 +78311,30 @@
         },
         "required": [
           "assignments"
+        ]
+      },
+      "CreateSupportTicketResponse": {
+        "type": "object",
+        "properties": {
+          "ticketNumber": {
+            "description": "The ticket number assigned by AWorld Support",
+            "type": "integer",
+            "example": 48213,
+            "exclusiveMinimum": 0
+          },
+          "portalUrl": {
+            "description": "Deep link to the ticket in the customer support portal",
+            "type": "string",
+            "format": "uri"
+          },
+          "duplicate": {
+            "description": "True when the request was folded into an existing recent ticket instead of opening a new one",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ticketNumber",
+          "duplicate"
         ]
       },
       "CreateSurveyResponse": {
@@ -117203,6 +117322,26 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "support": {
+                "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Currently implemented in evolve only; if it later ships in the end-user app and the two need to be controlled separately, add an optional `surfaces: ('evolve'|'app')[]` to this object — the schema is a looseObject and storage is schemaless, so that needs no migration, and an absent `surfaces` must keep meaning 'every surface that implements it'.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
               }
             }
           },
@@ -117586,6 +117725,11 @@
             "minimum": 0
           },
           "maxVanityDomains": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "maxM2mClients": {
+            "description": "Maximum number of *additional* M2M credential sets an operator may create for the workspace. The sets provisioned with the workspace itself do not count towards this limit, so `0` still leaves those usable and only blocks creating more. Omitted means unlimited.",
             "type": "integer",
             "minimum": 0
           },
@@ -120266,6 +120410,11 @@
                     "WORKSPACE_DELETED",
                     "WORKSPACE_CONFIG_CHANGED",
                     "ENTITLEMENT_CHANGED",
+                    "M2M_CLIENT_CREATED",
+                    "M2M_CLIENT_SECRET_ROTATED",
+                    "M2M_CLIENT_SECRET_RETIRED",
+                    "M2M_CLIENT_SECRET_REVEALED",
+                    "M2M_CLIENT_REVOKED",
                     "INVITATION_CREATED",
                     "INVITATION_ACCEPTED",
                     "INVITATION_REVOKED",
@@ -167033,6 +167182,26 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "support": {
+                "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Currently implemented in evolve only; if it later ships in the end-user app and the two need to be controlled separately, add an optional `surfaces: ('evolve'|'app')[]` to this object — the schema is a looseObject and storage is schemaless, so that needs no migration, and an absent `surfaces` must keep meaning 'every surface that implements it'.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
               }
             }
           },
@@ -193941,6 +194110,26 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "support": {
+                "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Currently implemented in evolve only; if it later ships in the end-user app and the two need to be controlled separately, add an optional `surfaces: ('evolve'|'app')[]` to this object — the schema is a looseObject and storage is schemaless, so that needs no migration, and an absent `surfaces` must keep meaning 'every surface that implements it'.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
               }
             }
           },
@@ -195988,6 +196177,26 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "support": {
+                "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Currently implemented in evolve only; if it later ships in the end-user app and the two need to be controlled separately, add an optional `surfaces: ('evolve'|'app')[]` to this object — the schema is a looseObject and storage is schemaless, so that needs no migration, and an absent `surfaces` must keep meaning 'every surface that implements it'.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
               }
             }
           },
@@ -196597,6 +196806,9 @@
     },
     {
       "name": "StreakRules"
+    },
+    {
+      "name": "Support Tickets"
     },
     {
       "name": "SurveyTagAssignments"

@@ -4873,6 +4873,149 @@
         ]
       }
     },
+    "/tags/search": {
+      "post": {
+        "operationId": "tags/search",
+        "summary": "Search tags",
+        "description": "Search, filter, and sort tags using JSONLogic expressions with optional field resolution.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "translations"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tags matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchAppTagsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Tags"
+        ]
+      }
+    },
     "/users/me": {
       "get": {
         "operationId": "users/getMe",
@@ -12440,6 +12583,26 @@
                     "additionalProperties": {}
                   }
                 ]
+              },
+              "support": {
+                "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Currently implemented in evolve only; if it later ships in the end-user app and the two need to be controlled separately, add an optional `surfaces: ('evolve'|'app')[]` to this object — the schema is a looseObject and storage is schemaless, so that needs no migration, and an absent `surfaces` must keep meaning 'every surface that implements it'.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
               }
             }
           },
@@ -17607,6 +17770,153 @@
           "sourceRegion",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "SearchAppTagsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "namespace": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "variant": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "CATALOG",
+                    "CUSTOM"
+                  ]
+                },
+                "catalogTagId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "catalogWorkspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "syncWithCatalog": {
+                  "type": "boolean"
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "maxItems": 10,
+                  "minItems": 1
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "workspaceId",
+                      "tagId",
+                      "lang",
+                      "label",
+                      "accountId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "tagId",
+                "namespace",
+                "variant",
+                "origin",
+                "defaultLang",
+                "langs",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
         ]
       },
       "SearchLearningPathAssignmentsResponse": {
