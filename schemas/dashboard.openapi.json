@@ -3983,6 +3983,41 @@
                     "description": "ID of the badge configuration in the catalog (if applicable).",
                     "type": "string"
                   },
+                  "levelKeys": {
+                    "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9_-]{1,32}$",
+                      "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                      "examples": [
+                        "bronze",
+                        "silver",
+                        "gold"
+                      ]
+                    },
+                    "examples": [
+                      [
+                        "bronze",
+                        "silver",
+                        "gold"
+                      ]
+                    ],
+                    "maxItems": 10
+                  },
+                  "levelImages": {
+                    "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "examples": [
+                      {
+                        "gold": "https://cdn.example.com/badges/gold.png"
+                      }
+                    ]
+                  },
                   "progressSourceEntityType": {
                     "description": "Entity type that provides progress data for this badge.",
                     "type": "string",
@@ -4332,6 +4367,20 @@
                         "description": {
                           "type": "string",
                           "minLength": 1
+                        },
+                        "levelLabels": {
+                          "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "examples": [
+                            {
+                              "bronze": "Novizio",
+                              "silver": "Esperto",
+                              "gold": ""
+                            }
+                          ]
                         }
                       },
                       "required": [
@@ -4578,6 +4627,41 @@
                     "description": "Whether the badge configuration should sync with catalog updates.",
                     "type": "boolean",
                     "x-status": "notImplemented"
+                  },
+                  "levelKeys": {
+                    "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9_-]{1,32}$",
+                      "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                      "examples": [
+                        "bronze",
+                        "silver",
+                        "gold"
+                      ]
+                    },
+                    "examples": [
+                      [
+                        "bronze",
+                        "silver",
+                        "gold"
+                      ]
+                    ],
+                    "maxItems": 10
+                  },
+                  "levelImages": {
+                    "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "examples": [
+                      {
+                        "gold": "https://cdn.example.com/badges/gold.png"
+                      }
+                    ]
                   },
                   "progressSourceEntityType": {
                     "description": "Entity type that provides progress data for this badge.",
@@ -4933,6 +5017,20 @@
                         "description": {
                           "type": "string",
                           "minLength": 1
+                        },
+                        "levelLabels": {
+                          "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "examples": [
+                            {
+                              "bronze": "Novizio",
+                              "silver": "Esperto",
+                              "gold": ""
+                            }
+                          ]
                         }
                       },
                       "required": [
@@ -25842,6 +25940,88 @@
                       "Consumers should validate semantics at runtime."
                     ]
                   },
+                  "intermediateLevels": {
+                    "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                          "type": "string",
+                          "examples": [
+                            "bronze",
+                            "silver",
+                            "gold"
+                          ],
+                          "pattern": "^[a-z0-9_-]{1,32}$"
+                        },
+                        "target": {
+                          "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                          "type": "object",
+                          "additionalProperties": true,
+                          "examples": [
+                            {
+                              "==": [
+                                1,
+                                1
+                              ]
+                            },
+                            {
+                              ">": [
+                                {
+                                  "var": "temperature"
+                                },
+                                100
+                              ]
+                            },
+                            {
+                              "and": [
+                                {
+                                  "==": [
+                                    {
+                                      "var": "country"
+                                    },
+                                    "IT"
+                                  ]
+                                },
+                                {
+                                  "<": [
+                                    {
+                                      "var": "age"
+                                    },
+                                    65
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "externalDocs": {
+                            "description": "JSON Logic documentation",
+                            "url": "https://jsonlogic.com/"
+                          },
+                          "notes": [
+                            "This schema ensures only that the value is valid JSON.",
+                            "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                            "Consumers should validate semantics at runtime."
+                          ]
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "target"
+                      ]
+                    },
+                    "maxItems": 9
+                  },
+                  "finalLevelKey": {
+                    "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+                    "type": "string",
+                    "examples": [
+                      "gold"
+                    ],
+                    "pattern": "^[a-z0-9_-]{1,32}$"
+                  },
                   "catalogMissionConfigurationId": {
                     "description": "ID of the mission configuration in the catalog (if applicable).",
                     "type": "string"
@@ -26498,6 +26678,88 @@
                       "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
                       "Consumers should validate semantics at runtime."
                     ]
+                  },
+                  "intermediateLevels": {
+                    "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                          "type": "string",
+                          "examples": [
+                            "bronze",
+                            "silver",
+                            "gold"
+                          ],
+                          "pattern": "^[a-z0-9_-]{1,32}$"
+                        },
+                        "target": {
+                          "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                          "type": "object",
+                          "additionalProperties": true,
+                          "examples": [
+                            {
+                              "==": [
+                                1,
+                                1
+                              ]
+                            },
+                            {
+                              ">": [
+                                {
+                                  "var": "temperature"
+                                },
+                                100
+                              ]
+                            },
+                            {
+                              "and": [
+                                {
+                                  "==": [
+                                    {
+                                      "var": "country"
+                                    },
+                                    "IT"
+                                  ]
+                                },
+                                {
+                                  "<": [
+                                    {
+                                      "var": "age"
+                                    },
+                                    65
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "externalDocs": {
+                            "description": "JSON Logic documentation",
+                            "url": "https://jsonlogic.com/"
+                          },
+                          "notes": [
+                            "This schema ensures only that the value is valid JSON.",
+                            "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                            "Consumers should validate semantics at runtime."
+                          ]
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "target"
+                      ]
+                    },
+                    "maxItems": 9
+                  },
+                  "finalLevelKey": {
+                    "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+                    "type": "string",
+                    "examples": [
+                      "gold"
+                    ],
+                    "pattern": "^[a-z0-9_-]{1,32}$"
                   },
                   "origin": {
                     "description": "Indicates if the mission is from a catalog or custom-created.",
@@ -36776,6 +37038,590 @@
         ]
       }
     },
+    "/runtime-leaderboards/preview-rankings": {
+      "post": {
+        "operationId": "runtimeLeaderboards/previewRankings",
+        "summary": "Preview leaderboard rankings",
+        "description": "Executes a draft leaderboard query specification and returns the ranked rows, without persisting anything. Used by create/edit flows to preview a configuration before saving it.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "properties": {
+                      "from": {
+                        "type": "object",
+                        "properties": {
+                          "sources": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "table": {
+                                  "type": "string"
+                                },
+                                "alias": {
+                                  "type": "string"
+                                },
+                                "joins": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "INNER",
+                                          "LEFT",
+                                          "RIGHT"
+                                        ]
+                                      },
+                                      "toAlias": {
+                                        "type": "string"
+                                      },
+                                      "condition": {
+                                        "allOf": [
+                                          {
+                                            "$ref": "#/components/schemas/JsonLogicExpression"
+                                          },
+                                          {
+                                            "type": [
+                                              "object",
+                                              "null"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "toAlias",
+                                      "condition"
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "table",
+                                "alias"
+                              ]
+                            },
+                            "minItems": 1
+                          },
+                          "where": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/JsonLogicExpression"
+                              },
+                              {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sources"
+                        ]
+                      },
+                      "select": {
+                        "type": "object",
+                        "properties": {
+                          "fields": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "source": {
+                                  "type": "string"
+                                },
+                                "alias": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "source"
+                              ]
+                            },
+                            "minItems": 1
+                          },
+                          "expressions": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "expression": {
+                                  "allOf": [
+                                    {
+                                      "$ref": "#/components/schemas/JsonLogicExpression"
+                                    },
+                                    {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "expression"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "fields"
+                        ]
+                      },
+                      "with": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "query": {
+                              "properties": {
+                                "from": {
+                                  "type": "object",
+                                  "properties": {
+                                    "sources": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "table": {
+                                            "type": "string"
+                                          },
+                                          "alias": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "table",
+                                          "alias"
+                                        ]
+                                      },
+                                      "minItems": 1
+                                    },
+                                    "where": {
+                                      "allOf": [
+                                        {
+                                          "$ref": "#/components/schemas/JsonLogicExpression"
+                                        },
+                                        {
+                                          "type": [
+                                            "object",
+                                            "null"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "sources"
+                                  ]
+                                },
+                                "select": {
+                                  "type": "object",
+                                  "properties": {
+                                    "fields": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "source": {
+                                            "type": "string"
+                                          },
+                                          "alias": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "source"
+                                        ]
+                                      },
+                                      "minItems": 1
+                                    },
+                                    "expressions": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "name": {
+                                            "type": "string"
+                                          },
+                                          "expression": {
+                                            "allOf": [
+                                              {
+                                                "$ref": "#/components/schemas/JsonLogicExpression"
+                                              },
+                                              {
+                                                "type": [
+                                                  "object",
+                                                  "null"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "name",
+                                          "expression"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "fields"
+                                  ]
+                                },
+                                "groupBy": {
+                                  "type": "object",
+                                  "properties": {
+                                    "columns": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "minItems": 1
+                                    }
+                                  },
+                                  "required": [
+                                    "columns"
+                                  ]
+                                },
+                                "having": {
+                                  "allOf": [
+                                    {
+                                      "$ref": "#/components/schemas/JsonLogicExpression"
+                                    },
+                                    {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "orderBy": {
+                                  "type": "object",
+                                  "properties": {
+                                    "expressions": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "expression": {
+                                            "anyOf": [
+                                              {
+                                                "allOf": [
+                                                  {
+                                                    "$ref": "#/components/schemas/JsonLogicExpression"
+                                                  },
+                                                  {
+                                                    "type": [
+                                                      "object",
+                                                      "null"
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "direction": {
+                                            "type": "string",
+                                            "enum": [
+                                              "ASC",
+                                              "DESC"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "expression",
+                                          "direction"
+                                        ]
+                                      },
+                                      "minItems": 1
+                                    },
+                                    "window": {
+                                      "type": "object",
+                                      "properties": {
+                                        "function": {
+                                          "type": "string",
+                                          "enum": [
+                                            "ROW_NUMBER",
+                                            "DENSE_RANK",
+                                            "RANK"
+                                          ]
+                                        },
+                                        "alias": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "function",
+                                        "alias"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "expressions"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "from",
+                                "select"
+                              ],
+                              "type": "object"
+                            },
+                            "recursive": {
+                              "type": "object",
+                              "properties": {
+                                "table": {
+                                  "type": "string"
+                                },
+                                "keyColumn": {
+                                  "type": "string"
+                                },
+                                "parentColumn": {
+                                  "type": "string"
+                                },
+                                "startFrom": {
+                                  "allOf": [
+                                    {
+                                      "$ref": "#/components/schemas/JsonLogicExpression"
+                                    },
+                                    {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "maxDepth": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 50
+                                }
+                              },
+                              "required": [
+                                "table",
+                                "keyColumn",
+                                "parentColumn",
+                                "startFrom"
+                              ]
+                            },
+                            "join": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "INNER",
+                                    "LEFT"
+                                  ]
+                                },
+                                "on": {
+                                  "allOf": [
+                                    {
+                                      "$ref": "#/components/schemas/JsonLogicExpression"
+                                    },
+                                    {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "on"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "join"
+                          ]
+                        },
+                        "maxItems": 20
+                      },
+                      "groupBy": {
+                        "type": "object",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "columns"
+                        ]
+                      },
+                      "orderBy": {
+                        "type": "object",
+                        "properties": {
+                          "expressions": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "expression": {
+                                  "anyOf": [
+                                    {
+                                      "allOf": [
+                                        {
+                                          "$ref": "#/components/schemas/JsonLogicExpression"
+                                        },
+                                        {
+                                          "type": [
+                                            "object",
+                                            "null"
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "direction": {
+                                  "type": "string",
+                                  "enum": [
+                                    "ASC",
+                                    "DESC"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "expression",
+                                "direction"
+                              ]
+                            },
+                            "minItems": 1
+                          },
+                          "window": {
+                            "type": "object",
+                            "properties": {
+                              "function": {
+                                "type": "string",
+                                "enum": [
+                                  "ROW_NUMBER",
+                                  "DENSE_RANK",
+                                  "RANK"
+                                ]
+                              },
+                              "alias": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "function",
+                              "alias"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "expressions"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "from",
+                      "select"
+                    ],
+                    "type": "object"
+                  },
+                  "timeframeStartsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "timeframeEndsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "sampleAudienceVars": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 50,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Preview computed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewRuntimeLeaderboardRankingsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "D1 database not configured for workspace"
+          }
+        },
+        "tags": [
+          "Runtime Leaderboards"
+        ]
+      }
+    },
     "/runtime-leaderboards/{runtimeLeaderboardId}/archive": {
       "post": {
         "operationId": "runtimeLeaderboards/archive",
@@ -37565,6 +38411,126 @@
                     "type": "boolean",
                     "default": true
                   },
+                  "visibilityCondition": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/JsonLogicExpression"
+                      },
+                      {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    ]
+                  },
+                  "audience": {
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "tag.static"
+                              ]
+                            },
+                            "tagIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "tagIds"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "tag.dynamic"
+                              ]
+                            },
+                            "namespace": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[a-zA-Z0-9_.-]+$"
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "namespace"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "userColumn.static"
+                              ]
+                            },
+                            "column": {
+                              "type": "string",
+                              "enum": [
+                                "timezone",
+                                "lang",
+                                "accountId",
+                                "status"
+                              ]
+                            },
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "column",
+                            "values"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "userColumn.dynamic"
+                              ]
+                            },
+                            "column": {
+                              "type": "string",
+                              "enum": [
+                                "timezone",
+                                "lang",
+                                "accountId",
+                                "status"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "column"
+                          ]
+                        }
+                      ]
+                    }
+                  },
                   "defaultLang": {
                     "$ref": "#/components/schemas/Lang"
                   },
@@ -38237,6 +39203,126 @@
                   "showScore": {
                     "type": "boolean",
                     "default": true
+                  },
+                  "visibilityCondition": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/JsonLogicExpression"
+                      },
+                      {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    ]
+                  },
+                  "audience": {
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "tag.static"
+                              ]
+                            },
+                            "tagIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "tagIds"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "tag.dynamic"
+                              ]
+                            },
+                            "namespace": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[a-zA-Z0-9_.-]+$"
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "namespace"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "userColumn.static"
+                              ]
+                            },
+                            "column": {
+                              "type": "string",
+                              "enum": [
+                                "timezone",
+                                "lang",
+                                "accountId",
+                                "status"
+                              ]
+                            },
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "column",
+                            "values"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "userColumn.dynamic"
+                              ]
+                            },
+                            "column": {
+                              "type": "string",
+                              "enum": [
+                                "timezone",
+                                "lang",
+                                "accountId",
+                                "status"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "column"
+                          ]
+                        }
+                      ]
+                    }
                   },
                   "defaultLang": {
                     "$ref": "#/components/schemas/Lang"
@@ -56486,10 +57572,10 @@
             "description": "Unauthorized"
           },
           "403": {
-            "description": "Domain reserved by the platform, or email identity limit reached"
+            "description": "Forbidden — one of: the domain is the platform's own sending domain or a subdomain of it (code emailIdentity/domain_reserved), or the workspace has already used up its maxEmailIdentities entitlement (code emailIdentity/limit_reached)."
           },
           "409": {
-            "description": "Domain already registered"
+            "description": "The domain is already registered as a sending identity by some workspace (code emailIdentity/domain_taken)."
           }
         },
         "tags": [
@@ -57079,6 +58165,41 @@
             "description": "Whether the badge configuration should sync with catalog updates.",
             "type": "boolean",
             "x-status": "notImplemented"
+          },
+          "levelKeys": {
+            "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]{1,32}$",
+              "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+              "examples": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            },
+            "examples": [
+              [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            ],
+            "maxItems": 10
+          },
+          "levelImages": {
+            "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            },
+            "examples": [
+              {
+                "gold": "https://cdn.example.com/badges/gold.png"
+              }
+            ]
           },
           "progressSourceEntityType": {
             "description": "Entity type that provides progress data for this badge.",
@@ -59328,6 +60449,88 @@
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
               "Consumers should validate semantics at runtime."
             ]
+          },
+          "intermediateLevels": {
+            "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "examples": [
+                    {
+                      "==": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      ">": [
+                        {
+                          "var": "temperature"
+                        },
+                        100
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "var": "country"
+                            },
+                            "IT"
+                          ]
+                        },
+                        {
+                          "<": [
+                            {
+                              "var": "age"
+                            },
+                            65
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "externalDocs": {
+                    "description": "JSON Logic documentation",
+                    "url": "https://jsonlogic.com/"
+                  },
+                  "notes": [
+                    "This schema ensures only that the value is valid JSON.",
+                    "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                    "Consumers should validate semantics at runtime."
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            },
+            "maxItems": 9
+          },
+          "finalLevelKey": {
+            "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+            "type": "string",
+            "examples": [
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
           },
           "origin": {
             "description": "Indicates if the mission is from a catalog or custom-created.",
@@ -62144,6 +63347,126 @@
           "showScore": {
             "type": "boolean",
             "default": true
+          },
+          "visibilityCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.static"
+                      ]
+                    },
+                    "tagIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tagIds"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.dynamic"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "^[a-zA-Z0-9_.-]+$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "namespace"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.static"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column",
+                    "values"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.dynamic"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column"
+                  ]
+                }
+              ]
+            }
           },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
@@ -66791,6 +68114,41 @@
             "description": "Whether the badge configuration should sync with catalog updates.",
             "type": "boolean",
             "x-status": "notImplemented"
+          },
+          "levelKeys": {
+            "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]{1,32}$",
+              "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+              "examples": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            },
+            "examples": [
+              [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            ],
+            "maxItems": 10
+          },
+          "levelImages": {
+            "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            },
+            "examples": [
+              {
+                "gold": "https://cdn.example.com/badges/gold.png"
+              }
+            ]
           },
           "progressSourceEntityType": {
             "description": "Entity type that provides progress data for this badge.",
@@ -72004,6 +73362,88 @@
               "Consumers should validate semantics at runtime."
             ]
           },
+          "intermediateLevels": {
+            "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "examples": [
+                    {
+                      "==": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      ">": [
+                        {
+                          "var": "temperature"
+                        },
+                        100
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "var": "country"
+                            },
+                            "IT"
+                          ]
+                        },
+                        {
+                          "<": [
+                            {
+                              "var": "age"
+                            },
+                            65
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "externalDocs": {
+                    "description": "JSON Logic documentation",
+                    "url": "https://jsonlogic.com/"
+                  },
+                  "notes": [
+                    "This schema ensures only that the value is valid JSON.",
+                    "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                    "Consumers should validate semantics at runtime."
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            },
+            "maxItems": 9
+          },
+          "finalLevelKey": {
+            "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+            "type": "string",
+            "examples": [
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
+          },
           "origin": {
             "description": "Indicates if the mission is from a catalog or custom-created.",
             "type": "string",
@@ -72819,6 +74259,42 @@
           },
           "targetAmount": {
             "type": "number"
+          },
+          "levelTargets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            }
+          },
+          "currentLevel": {
+            "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+            "type": "string",
+            "examples": [
+              "bronze",
+              "silver",
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
           },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
@@ -76236,6 +77712,126 @@
           "showScore": {
             "type": "boolean",
             "default": true
+          },
+          "visibilityCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.static"
+                      ]
+                    },
+                    "tagIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tagIds"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.dynamic"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "^[a-zA-Z0-9_.-]+$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "namespace"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.static"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column",
+                    "values"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.dynamic"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column"
+                  ]
+                }
+              ]
+            }
           },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
@@ -86802,6 +88398,41 @@
             "type": "boolean",
             "x-status": "notImplemented"
           },
+          "levelKeys": {
+            "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]{1,32}$",
+              "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+              "examples": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            },
+            "examples": [
+              [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            ],
+            "maxItems": 10
+          },
+          "levelImages": {
+            "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            },
+            "examples": [
+              {
+                "gold": "https://cdn.example.com/badges/gold.png"
+              }
+            ]
+          },
           "progressSourceEntityType": {
             "description": "Entity type that provides progress data for this badge.",
             "type": "string",
@@ -87221,6 +88852,20 @@
                   "type": "string",
                   "minLength": 1
                 },
+                "levelLabels": {
+                  "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "examples": [
+                    {
+                      "bronze": "Novizio",
+                      "silver": "Esperto",
+                      "gold": ""
+                    }
+                  ]
+                },
                 "accountId": {
                   "type": "string",
                   "maxLength": 10,
@@ -87313,6 +88958,41 @@
             "description": "Whether the badge configuration should sync with catalog updates.",
             "type": "boolean",
             "x-status": "notImplemented"
+          },
+          "levelKeys": {
+            "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]{1,32}$",
+              "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+              "examples": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            },
+            "examples": [
+              [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            ],
+            "maxItems": 10
+          },
+          "levelImages": {
+            "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            },
+            "examples": [
+              {
+                "gold": "https://cdn.example.com/badges/gold.png"
+              }
+            ]
           },
           "progressSourceEntityType": {
             "description": "Entity type that provides progress data for this badge.",
@@ -87737,6 +89417,20 @@
                   "type": "string",
                   "minLength": 1
                 },
+                "levelLabels": {
+                  "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "examples": [
+                    {
+                      "bronze": "Novizio",
+                      "silver": "Esperto",
+                      "gold": ""
+                    }
+                  ]
+                },
                 "accountId": {
                   "type": "string",
                   "maxLength": 10,
@@ -87984,6 +89678,20 @@
                 "description": {
                   "type": "string",
                   "minLength": 1
+                },
+                "levelLabels": {
+                  "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "examples": [
+                    {
+                      "bronze": "Novizio",
+                      "silver": "Esperto",
+                      "gold": ""
+                    }
+                  ]
                 },
                 "accountId": {
                   "type": "string",
@@ -97747,6 +99455,88 @@
               "Consumers should validate semantics at runtime."
             ]
           },
+          "intermediateLevels": {
+            "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "examples": [
+                    {
+                      "==": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      ">": [
+                        {
+                          "var": "temperature"
+                        },
+                        100
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "var": "country"
+                            },
+                            "IT"
+                          ]
+                        },
+                        {
+                          "<": [
+                            {
+                              "var": "age"
+                            },
+                            65
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "externalDocs": {
+                    "description": "JSON Logic documentation",
+                    "url": "https://jsonlogic.com/"
+                  },
+                  "notes": [
+                    "This schema ensures only that the value is valid JSON.",
+                    "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                    "Consumers should validate semantics at runtime."
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            },
+            "maxItems": 9
+          },
+          "finalLevelKey": {
+            "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+            "type": "string",
+            "examples": [
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
+          },
           "origin": {
             "description": "Indicates if the mission is from a catalog or custom-created.",
             "type": "string",
@@ -98427,6 +100217,88 @@
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
               "Consumers should validate semantics at runtime."
             ]
+          },
+          "intermediateLevels": {
+            "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "examples": [
+                    {
+                      "==": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      ">": [
+                        {
+                          "var": "temperature"
+                        },
+                        100
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "var": "country"
+                            },
+                            "IT"
+                          ]
+                        },
+                        {
+                          "<": [
+                            {
+                              "var": "age"
+                            },
+                            65
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "externalDocs": {
+                    "description": "JSON Logic documentation",
+                    "url": "https://jsonlogic.com/"
+                  },
+                  "notes": [
+                    "This schema ensures only that the value is valid JSON.",
+                    "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                    "Consumers should validate semantics at runtime."
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            },
+            "maxItems": 9
+          },
+          "finalLevelKey": {
+            "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+            "type": "string",
+            "examples": [
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
           },
           "origin": {
             "description": "Indicates if the mission is from a catalog or custom-created.",
@@ -105955,6 +107827,126 @@
             "type": "boolean",
             "default": true
           },
+          "visibilityCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.static"
+                      ]
+                    },
+                    "tagIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tagIds"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.dynamic"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "^[a-zA-Z0-9_.-]+$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "namespace"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.static"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column",
+                    "values"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.dynamic"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column"
+                  ]
+                }
+              ]
+            }
+          },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
           },
@@ -106639,6 +108631,126 @@
           "showScore": {
             "type": "boolean",
             "default": true
+          },
+          "visibilityCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.static"
+                      ]
+                    },
+                    "tagIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tagIds"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.dynamic"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "^[a-zA-Z0-9_.-]+$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "namespace"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.static"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column",
+                    "values"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.dynamic"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column"
+                  ]
+                }
+              ]
+            }
           },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
@@ -120620,6 +122732,41 @@
                   "type": "boolean",
                   "x-status": "notImplemented"
                 },
+                "levelKeys": {
+                  "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9_-]{1,32}$",
+                    "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                    "examples": [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  },
+                  "examples": [
+                    [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  ],
+                  "maxItems": 10
+                },
+                "levelImages": {
+                  "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "examples": [
+                    {
+                      "gold": "https://cdn.example.com/badges/gold.png"
+                    }
+                  ]
+                },
                 "progressSourceEntityType": {
                   "description": "Entity type that provides progress data for this badge.",
                   "type": "string",
@@ -121043,6 +123190,20 @@
                         "type": "string",
                         "minLength": 1
                       },
+                      "levelLabels": {
+                        "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "examples": [
+                          {
+                            "bronze": "Novizio",
+                            "silver": "Esperto",
+                            "gold": ""
+                          }
+                        ]
+                      },
                       "accountId": {
                         "type": "string",
                         "maxLength": 10,
@@ -121184,6 +123345,41 @@
                   "description": "Whether the badge configuration should sync with catalog updates.",
                   "type": "boolean",
                   "x-status": "notImplemented"
+                },
+                "levelKeys": {
+                  "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9_-]{1,32}$",
+                    "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                    "examples": [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  },
+                  "examples": [
+                    [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  ],
+                  "maxItems": 10
+                },
+                "levelImages": {
+                  "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "examples": [
+                    {
+                      "gold": "https://cdn.example.com/badges/gold.png"
+                    }
+                  ]
                 },
                 "progressSourceEntityType": {
                   "description": "Entity type that provides progress data for this badge.",
@@ -121604,6 +123800,20 @@
                         "type": "string",
                         "minLength": 1
                       },
+                      "levelLabels": {
+                        "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "examples": [
+                          {
+                            "bronze": "Novizio",
+                            "silver": "Esperto",
+                            "gold": ""
+                          }
+                        ]
+                      },
                       "accountId": {
                         "type": "string",
                         "maxLength": 10,
@@ -121715,6 +123925,41 @@
                   "description": "Whether the badge configuration should sync with catalog updates.",
                   "type": "boolean",
                   "x-status": "notImplemented"
+                },
+                "levelKeys": {
+                  "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9_-]{1,32}$",
+                    "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                    "examples": [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  },
+                  "examples": [
+                    [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  ],
+                  "maxItems": 10
+                },
+                "levelImages": {
+                  "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "examples": [
+                    {
+                      "gold": "https://cdn.example.com/badges/gold.png"
+                    }
+                  ]
                 },
                 "progressSourceEntityType": {
                   "description": "Entity type that provides progress data for this badge.",
@@ -122139,6 +124384,20 @@
                         "type": "string",
                         "minLength": 1
                       },
+                      "levelLabels": {
+                        "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "examples": [
+                          {
+                            "bronze": "Novizio",
+                            "silver": "Esperto",
+                            "gold": ""
+                          }
+                        ]
+                      },
                       "accountId": {
                         "type": "string",
                         "maxLength": 10,
@@ -122390,6 +124649,20 @@
                 "description": {
                   "type": "string",
                   "minLength": 1
+                },
+                "levelLabels": {
+                  "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "examples": [
+                    {
+                      "bronze": "Novizio",
+                      "silver": "Esperto",
+                      "gold": ""
+                    }
+                  ]
                 },
                 "accountId": {
                   "type": "string",
@@ -133529,6 +135802,88 @@
                     "Consumers should validate semantics at runtime."
                   ]
                 },
+                "intermediateLevels": {
+                  "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                        "type": "string",
+                        "examples": [
+                          "bronze",
+                          "silver",
+                          "gold"
+                        ],
+                        "pattern": "^[a-z0-9_-]{1,32}$"
+                      },
+                      "target": {
+                        "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "examples": [
+                          {
+                            "==": [
+                              1,
+                              1
+                            ]
+                          },
+                          {
+                            ">": [
+                              {
+                                "var": "temperature"
+                              },
+                              100
+                            ]
+                          },
+                          {
+                            "and": [
+                              {
+                                "==": [
+                                  {
+                                    "var": "country"
+                                  },
+                                  "IT"
+                                ]
+                              },
+                              {
+                                "<": [
+                                  {
+                                    "var": "age"
+                                  },
+                                  65
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "externalDocs": {
+                          "description": "JSON Logic documentation",
+                          "url": "https://jsonlogic.com/"
+                        },
+                        "notes": [
+                          "This schema ensures only that the value is valid JSON.",
+                          "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                          "Consumers should validate semantics at runtime."
+                        ]
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "target"
+                    ]
+                  },
+                  "maxItems": 9
+                },
+                "finalLevelKey": {
+                  "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+                  "type": "string",
+                  "examples": [
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
                 "origin": {
                   "description": "Indicates if the mission is from a catalog or custom-created.",
                   "type": "string",
@@ -134263,6 +136618,88 @@
                     "Consumers should validate semantics at runtime."
                   ]
                 },
+                "intermediateLevels": {
+                  "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                        "type": "string",
+                        "examples": [
+                          "bronze",
+                          "silver",
+                          "gold"
+                        ],
+                        "pattern": "^[a-z0-9_-]{1,32}$"
+                      },
+                      "target": {
+                        "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "examples": [
+                          {
+                            "==": [
+                              1,
+                              1
+                            ]
+                          },
+                          {
+                            ">": [
+                              {
+                                "var": "temperature"
+                              },
+                              100
+                            ]
+                          },
+                          {
+                            "and": [
+                              {
+                                "==": [
+                                  {
+                                    "var": "country"
+                                  },
+                                  "IT"
+                                ]
+                              },
+                              {
+                                "<": [
+                                  {
+                                    "var": "age"
+                                  },
+                                  65
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "externalDocs": {
+                          "description": "JSON Logic documentation",
+                          "url": "https://jsonlogic.com/"
+                        },
+                        "notes": [
+                          "This schema ensures only that the value is valid JSON.",
+                          "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                          "Consumers should validate semantics at runtime."
+                        ]
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "target"
+                    ]
+                  },
+                  "maxItems": 9
+                },
+                "finalLevelKey": {
+                  "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+                  "type": "string",
+                  "examples": [
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
                 "origin": {
                   "description": "Indicates if the mission is from a catalog or custom-created.",
                   "type": "string",
@@ -134962,6 +137399,88 @@
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
                     "Consumers should validate semantics at runtime."
                   ]
+                },
+                "intermediateLevels": {
+                  "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                        "type": "string",
+                        "examples": [
+                          "bronze",
+                          "silver",
+                          "gold"
+                        ],
+                        "pattern": "^[a-z0-9_-]{1,32}$"
+                      },
+                      "target": {
+                        "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "examples": [
+                          {
+                            "==": [
+                              1,
+                              1
+                            ]
+                          },
+                          {
+                            ">": [
+                              {
+                                "var": "temperature"
+                              },
+                              100
+                            ]
+                          },
+                          {
+                            "and": [
+                              {
+                                "==": [
+                                  {
+                                    "var": "country"
+                                  },
+                                  "IT"
+                                ]
+                              },
+                              {
+                                "<": [
+                                  {
+                                    "var": "age"
+                                  },
+                                  65
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "externalDocs": {
+                          "description": "JSON Logic documentation",
+                          "url": "https://jsonlogic.com/"
+                        },
+                        "notes": [
+                          "This schema ensures only that the value is valid JSON.",
+                          "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                          "Consumers should validate semantics at runtime."
+                        ]
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "target"
+                    ]
+                  },
+                  "maxItems": 9
+                },
+                "finalLevelKey": {
+                  "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+                  "type": "string",
+                  "examples": [
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
                 },
                 "origin": {
                   "description": "Indicates if the mission is from a catalog or custom-created.",
@@ -144627,6 +147146,126 @@
                   "type": "boolean",
                   "default": true
                 },
+                "visibilityCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "audience": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "tag.static"
+                            ]
+                          },
+                          "tagIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tagIds"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "tag.dynamic"
+                            ]
+                          },
+                          "namespace": {
+                            "type": "string",
+                            "minLength": 1,
+                            "pattern": "^[a-zA-Z0-9_.-]+$"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "namespace"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "userColumn.static"
+                            ]
+                          },
+                          "column": {
+                            "type": "string",
+                            "enum": [
+                              "timezone",
+                              "lang",
+                              "accountId",
+                              "status"
+                            ]
+                          },
+                          "values": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "column",
+                          "values"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "userColumn.dynamic"
+                            ]
+                          },
+                          "column": {
+                            "type": "string",
+                            "enum": [
+                              "timezone",
+                              "lang",
+                              "accountId",
+                              "status"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "column"
+                        ]
+                      }
+                    ]
+                  }
+                },
                 "defaultLang": {
                   "$ref": "#/components/schemas/Lang"
                 },
@@ -145365,6 +148004,126 @@
                   "type": "boolean",
                   "default": true
                 },
+                "visibilityCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "audience": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "tag.static"
+                            ]
+                          },
+                          "tagIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tagIds"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "tag.dynamic"
+                            ]
+                          },
+                          "namespace": {
+                            "type": "string",
+                            "minLength": 1,
+                            "pattern": "^[a-zA-Z0-9_.-]+$"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "namespace"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "userColumn.static"
+                            ]
+                          },
+                          "column": {
+                            "type": "string",
+                            "enum": [
+                              "timezone",
+                              "lang",
+                              "accountId",
+                              "status"
+                            ]
+                          },
+                          "values": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "column",
+                          "values"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "userColumn.dynamic"
+                            ]
+                          },
+                          "column": {
+                            "type": "string",
+                            "enum": [
+                              "timezone",
+                              "lang",
+                              "accountId",
+                              "status"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "column"
+                        ]
+                      }
+                    ]
+                  }
+                },
                 "defaultLang": {
                   "$ref": "#/components/schemas/Lang"
                 },
@@ -146068,6 +148827,126 @@
                 "showScore": {
                   "type": "boolean",
                   "default": true
+                },
+                "visibilityCondition": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/JsonLogicExpression"
+                    },
+                    {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "audience": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "tag.static"
+                            ]
+                          },
+                          "tagIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tagIds"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "tag.dynamic"
+                            ]
+                          },
+                          "namespace": {
+                            "type": "string",
+                            "minLength": 1,
+                            "pattern": "^[a-zA-Z0-9_.-]+$"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "namespace"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "userColumn.static"
+                            ]
+                          },
+                          "column": {
+                            "type": "string",
+                            "enum": [
+                              "timezone",
+                              "lang",
+                              "accountId",
+                              "status"
+                            ]
+                          },
+                          "values": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "column",
+                          "values"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "userColumn.dynamic"
+                            ]
+                          },
+                          "column": {
+                            "type": "string",
+                            "enum": [
+                              "timezone",
+                              "lang",
+                              "accountId",
+                              "status"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "column"
+                        ]
+                      }
+                    ]
+                  }
                 },
                 "defaultLang": {
                   "$ref": "#/components/schemas/Lang"
@@ -158548,6 +161427,56 @@
           "truncated"
         ]
       },
+      "PreviewRuntimeLeaderboardRankingsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rank": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "entityId": {
+                  "type": "string"
+                },
+                "entityType": {
+                  "type": "string"
+                },
+                "primaryEntityName": {
+                  "type": "string"
+                },
+                "secondaryEntityName": {
+                  "type": "string"
+                },
+                "entityImageUrl": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "score": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "rank",
+                "entityId",
+                "entityType",
+                "score"
+              ]
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "items",
+          "totalCount"
+        ]
+      },
       "PublishActivityResponse": {
         "type": "object",
         "properties": {
@@ -158681,6 +161610,41 @@
             "description": "Whether the badge configuration should sync with catalog updates.",
             "type": "boolean",
             "x-status": "notImplemented"
+          },
+          "levelKeys": {
+            "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]{1,32}$",
+              "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+              "examples": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            },
+            "examples": [
+              [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            ],
+            "maxItems": 10
+          },
+          "levelImages": {
+            "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            },
+            "examples": [
+              {
+                "gold": "https://cdn.example.com/badges/gold.png"
+              }
+            ]
           },
           "progressSourceEntityType": {
             "description": "Entity type that provides progress data for this badge.",
@@ -161075,6 +164039,88 @@
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
               "Consumers should validate semantics at runtime."
             ]
+          },
+          "intermediateLevels": {
+            "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "examples": [
+                    {
+                      "==": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      ">": [
+                        {
+                          "var": "temperature"
+                        },
+                        100
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "var": "country"
+                            },
+                            "IT"
+                          ]
+                        },
+                        {
+                          "<": [
+                            {
+                              "var": "age"
+                            },
+                            65
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "externalDocs": {
+                    "description": "JSON Logic documentation",
+                    "url": "https://jsonlogic.com/"
+                  },
+                  "notes": [
+                    "This schema ensures only that the value is valid JSON.",
+                    "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                    "Consumers should validate semantics at runtime."
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            },
+            "maxItems": 9
+          },
+          "finalLevelKey": {
+            "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+            "type": "string",
+            "examples": [
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
           },
           "origin": {
             "description": "Indicates if the mission is from a catalog or custom-created.",
@@ -163936,6 +166982,126 @@
           "showScore": {
             "type": "boolean",
             "default": true
+          },
+          "visibilityCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.static"
+                      ]
+                    },
+                    "tagIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tagIds"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.dynamic"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "^[a-zA-Z0-9_.-]+$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "namespace"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.static"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column",
+                    "values"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.dynamic"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column"
+                  ]
+                }
+              ]
+            }
           },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
@@ -173596,6 +176762,41 @@
             "type": "boolean",
             "x-status": "notImplemented"
           },
+          "levelKeys": {
+            "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]{1,32}$",
+              "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+              "examples": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            },
+            "examples": [
+              [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            ],
+            "maxItems": 10
+          },
+          "levelImages": {
+            "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            },
+            "examples": [
+              {
+                "gold": "https://cdn.example.com/badges/gold.png"
+              }
+            ]
+          },
           "progressSourceEntityType": {
             "description": "Entity type that provides progress data for this badge.",
             "type": "string",
@@ -175049,6 +178250,88 @@
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
               "Consumers should validate semantics at runtime."
             ]
+          },
+          "intermediateLevels": {
+            "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "examples": [
+                    {
+                      "==": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      ">": [
+                        {
+                          "var": "temperature"
+                        },
+                        100
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "var": "country"
+                            },
+                            "IT"
+                          ]
+                        },
+                        {
+                          "<": [
+                            {
+                              "var": "age"
+                            },
+                            65
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "externalDocs": {
+                    "description": "JSON Logic documentation",
+                    "url": "https://jsonlogic.com/"
+                  },
+                  "notes": [
+                    "This schema ensures only that the value is valid JSON.",
+                    "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                    "Consumers should validate semantics at runtime."
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            },
+            "maxItems": 9
+          },
+          "finalLevelKey": {
+            "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+            "type": "string",
+            "examples": [
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
           },
           "origin": {
             "description": "Indicates if the mission is from a catalog or custom-created.",
@@ -177866,6 +181149,126 @@
             "type": "boolean",
             "default": true
           },
+          "visibilityCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.static"
+                      ]
+                    },
+                    "tagIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tagIds"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.dynamic"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "^[a-zA-Z0-9_.-]+$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "namespace"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.static"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column",
+                    "values"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.dynamic"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column"
+                  ]
+                }
+              ]
+            }
+          },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
           },
@@ -180482,6 +183885,41 @@
             "description": "Whether the badge configuration should sync with catalog updates.",
             "type": "boolean",
             "x-status": "notImplemented"
+          },
+          "levelKeys": {
+            "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]{1,32}$",
+              "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+              "examples": [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            },
+            "examples": [
+              [
+                "bronze",
+                "silver",
+                "gold"
+              ]
+            ],
+            "maxItems": 10
+          },
+          "levelImages": {
+            "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            },
+            "examples": [
+              {
+                "gold": "https://cdn.example.com/badges/gold.png"
+              }
+            ]
           },
           "progressSourceEntityType": {
             "description": "Entity type that provides progress data for this badge.",
@@ -184968,6 +188406,88 @@
               "Consumers should validate semantics at runtime."
             ]
           },
+          "intermediateLevels": {
+            "description": "Ordered tiers BELOW the final one, whose threshold is targetAmountExpression. Absent means a single-target mission, which is the same thing as a ladder with zero intermediate tiers. Every threshold is CUMULATIVE on the mission's single shared counter, so the final one is the whole ladder's cost and not the last leg of it: 1, 3, 6 asks for 1 event, then 2 more, then 3 more. Thresholds are evaluated per user and must come out strictly increasing and below the frozen targetAmount; a ladder that does not is never repaired by re-sorting or dropping a tier — the mission is frozen without a ladder and the failure is logged.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "description": "CUMULATIVE counter value that unlocks this tier — the total, NOT how many more than the tier below. One counter is shared by every tier (see Mission.currentAmount), so a ladder meant to ask for 1, then 2 more, then 3 more is authored as 1, 3, 6 — and authoring 1, 2, 3 asks for one event per tier. This is the single most misread field in the ladder: the constraint that each threshold sits above the previous one is satisfied by both readings, so nothing rejects the wrong one. JSON Logic expression, evaluated and frozen at activation against the same `{ mission, user? }` data as targetAmountExpression. A literal number is already valid JSON Logic, so a static threshold needs no special form. Must evaluate to a positive number; fractions are allowed, since a campaign rule that scales targets produces them.",
+                  "type": "object",
+                  "additionalProperties": true,
+                  "examples": [
+                    {
+                      "==": [
+                        1,
+                        1
+                      ]
+                    },
+                    {
+                      ">": [
+                        {
+                          "var": "temperature"
+                        },
+                        100
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "var": "country"
+                            },
+                            "IT"
+                          ]
+                        },
+                        {
+                          "<": [
+                            {
+                              "var": "age"
+                            },
+                            65
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "externalDocs": {
+                    "description": "JSON Logic documentation",
+                    "url": "https://jsonlogic.com/"
+                  },
+                  "notes": [
+                    "This schema ensures only that the value is valid JSON.",
+                    "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                    "Consumers should validate semantics at runtime."
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            },
+            "maxItems": 9
+          },
+          "finalLevelKey": {
+            "description": "Key of the top tier, whose threshold is targetAmountExpression. Required if and only if intermediateLevels is present. Enforced by assertLadderValid, not by a schema refine — a refined object cannot be .omit()ed, and the history schemas do exactly that.",
+            "type": "string",
+            "examples": [
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
+          },
           "origin": {
             "description": "Indicates if the mission is from a catalog or custom-created.",
             "type": "string",
@@ -188952,6 +192472,126 @@
           "showScore": {
             "type": "boolean",
             "default": true
+          },
+          "visibilityCondition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonLogicExpression"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.static"
+                      ]
+                    },
+                    "tagIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tagIds"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "tag.dynamic"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "^[a-zA-Z0-9_.-]+$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "namespace"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.static"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column",
+                    "values"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "userColumn.dynamic"
+                      ]
+                    },
+                    "column": {
+                      "type": "string",
+                      "enum": [
+                        "timezone",
+                        "lang",
+                        "accountId",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "column"
+                  ]
+                }
+              ]
+            }
           },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"

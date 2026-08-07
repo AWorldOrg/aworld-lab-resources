@@ -351,6 +351,7 @@
                 "enum": [
                   "progress",
                   "badge",
+                  "levels",
                   "translation",
                   "tags"
                 ]
@@ -7378,6 +7379,20 @@
             "type": "string",
             "minLength": 1
           },
+          "levelLabels": {
+            "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "examples": [
+              {
+                "bronze": "Novizio",
+                "silver": "Esperto",
+                "gold": ""
+              }
+            ]
+          },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -7445,6 +7460,20 @@
               "description": {
                 "type": "string",
                 "minLength": 1
+              },
+              "levelLabels": {
+                "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "examples": [
+                  {
+                    "bronze": "Novizio",
+                    "silver": "Esperto",
+                    "gold": ""
+                  }
+                ]
               }
             },
             "required": [
@@ -7482,6 +7511,16 @@
                 "assignedAt": {
                   "type": "string",
                   "format": "date-time"
+                },
+                "level": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
                 },
                 "createdAt": {
                   "description": "Creation date in ISO format (UTC Timezone)",
@@ -9428,6 +9467,42 @@
           },
           "targetAmount": {
             "type": "number"
+          },
+          "levelTargets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "target": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "key",
+                "target"
+              ]
+            }
+          },
+          "currentLevel": {
+            "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+            "type": "string",
+            "examples": [
+              "bronze",
+              "silver",
+              "gold"
+            ],
+            "pattern": "^[a-z0-9_-]{1,32}$"
           },
           "defaultLang": {
             "$ref": "#/components/schemas/Lang"
@@ -13309,6 +13384,41 @@
                   "type": "boolean",
                   "x-status": "notImplemented"
                 },
+                "levelKeys": {
+                  "description": "Ordered tier keys of the ladder this badge represents, final tier last. Display metadata: it supplies the order and the cardinality the resolved `levels` field needs, because BadgeLevel has no row at all for a tier not yet earned and so cannot describe an unearned pip. Absent means a single badge.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9_-]{1,32}$",
+                    "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                    "examples": [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  },
+                  "examples": [
+                    [
+                      "bronze",
+                      "silver",
+                      "gold"
+                    ]
+                  ],
+                  "maxItems": 10
+                },
+                "levelImages": {
+                  "description": "Per-tier artwork keyed by level key. Sparse: a tier with no entry falls back to `image`.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "examples": [
+                    {
+                      "gold": "https://cdn.example.com/badges/gold.png"
+                    }
+                  ]
+                },
                 "progressSourceEntityType": {
                   "description": "Entity type that provides progress data for this badge.",
                   "type": "string",
@@ -13665,15 +13775,51 @@
                   ],
                   "properties": {
                     "current": {
-                      "type": "integer",
+                      "type": "number",
                       "minimum": 0
                     },
                     "target": {
-                      "type": "integer",
+                      "type": "number",
                       "exclusiveMinimum": 0
                     },
                     "isCompleted": {
                       "type": "boolean"
+                    },
+                    "level": {
+                      "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                      "type": "string",
+                      "examples": [
+                        "bronze",
+                        "silver",
+                        "gold"
+                      ],
+                      "pattern": "^[a-z0-9_-]{1,32}$"
+                    },
+                    "levelTargets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                            "type": "string",
+                            "examples": [
+                              "bronze",
+                              "silver",
+                              "gold"
+                            ],
+                            "pattern": "^[a-z0-9_-]{1,32}$"
+                          },
+                          "target": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "target"
+                        ]
+                      }
                     }
                   },
                   "required": [
@@ -13707,6 +13853,43 @@
                     "lastAssignedAt"
                   ]
                 },
+                "levels": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "level": {
+                        "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                        "type": "string",
+                        "examples": [
+                          "bronze",
+                          "silver",
+                          "gold"
+                        ],
+                        "pattern": "^[a-z0-9_-]{1,32}$"
+                      },
+                      "earned": {
+                        "type": "boolean"
+                      },
+                      "earnedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "count": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "level",
+                      "earned",
+                      "count"
+                    ]
+                  }
+                },
                 "translation": {
                   "type": "object",
                   "properties": {
@@ -13724,6 +13907,20 @@
                     "description": {
                       "type": "string",
                       "minLength": 1
+                    },
+                    "levelLabels": {
+                      "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "examples": [
+                        {
+                          "bronze": "Novizio",
+                          "silver": "Esperto",
+                          "gold": ""
+                        }
+                      ]
                     },
                     "createdAt": {
                       "description": "Creation date in ISO format (UTC Timezone)",
@@ -13905,6 +14102,20 @@
                     "description": {
                       "type": "string",
                       "minLength": 1
+                    },
+                    "levelLabels": {
+                      "description": "Per-tier display label in this language, keyed by level key. Empty values are allowed and mean 'not translated yet'.",
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "examples": [
+                        {
+                          "bronze": "Novizio",
+                          "silver": "Esperto",
+                          "gold": ""
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -13942,6 +14153,16 @@
                       "assignedAt": {
                         "type": "string",
                         "format": "date-time"
+                      },
+                      "level": {
+                        "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                        "type": "string",
+                        "examples": [
+                          "bronze",
+                          "silver",
+                          "gold"
+                        ],
+                        "pattern": "^[a-z0-9_-]{1,32}$"
                       },
                       "createdAt": {
                         "description": "Creation date in ISO format (UTC Timezone)",
@@ -15467,6 +15688,42 @@
                 },
                 "targetAmount": {
                   "type": "number"
+                },
+                "levelTargets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                        "type": "string",
+                        "examples": [
+                          "bronze",
+                          "silver",
+                          "gold"
+                        ],
+                        "pattern": "^[a-z0-9_-]{1,32}$"
+                      },
+                      "target": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "target"
+                    ]
+                  }
+                },
+                "currentLevel": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
                 },
                 "defaultLang": {
                   "$ref": "#/components/schemas/Lang"
