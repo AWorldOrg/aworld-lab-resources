@@ -10268,6 +10268,9 @@
                 "type": "integer",
                 "exclusiveMinimum": 0
               },
+              "showRank": {
+                "type": "boolean"
+              },
               "showScore": {
                 "type": "boolean"
               }
@@ -10276,6 +10279,7 @@
               "runtimeLeaderboardId",
               "name",
               "displayTopN",
+              "showRank",
               "showScore"
             ]
           }
