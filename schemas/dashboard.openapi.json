@@ -3303,6 +3303,154 @@
         ]
       }
     },
+    "/audit-logs/search": {
+      "post": {
+        "operationId": "auditLogs/search",
+        "summary": "Search audit logs",
+        "description": "Search, filter, and sort workspace security audit events using JSONLogic expressions. Supports filtering by eventType, actorId, actorType, subjectUserId, appContext, platform, and a createdAt range, and optionally resolves actor and subject display names. Reads the D1 mirror, so results are eventually consistent with the DynamoDB source by a few seconds. Restricted to admin and owner.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "description": "Additional fields to resolve per item. `actor` resolves the acting identity's display name (workspace user, portal principal, or M2M client label); `subject` resolves the affected user's name. Both are batched — one query per identity kind per page, never one per row.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "actor",
+                        "subject"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Audit logs matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchAuditLogsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden — audit logs are restricted to admin and owner"
+          }
+        },
+        "tags": [
+          "AuditLogs"
+        ]
+      }
+    },
     "/badge-configurations/{badgeConfigurationId}/tags": {
       "post": {
         "operationId": "badgeConfigurations/createTags",
@@ -5514,6 +5662,140 @@
         },
         "tags": [
           "BadgeConfigurations"
+        ]
+      }
+    },
+    "/badge-logs/search": {
+      "post": {
+        "operationId": "badgeLogs/search",
+        "summary": "Search badge logs",
+        "description": "Search, filter, and sort a workspace's badge awards using JSONLogic expressions. Supports filtering by userId, badgeConfigurationId, rewardRuleId, source entity, level, and a date range. Reads the D1 mirror, so results are eventually consistent with the DynamoDB source by a few seconds.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Badge logs matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchBadgeLogsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "BadgeLogs"
         ]
       }
     },
@@ -59794,12 +60076,15 @@
                     "type": "object",
                     "properties": {
                       "allowedOrigins": {
-                        "description": "Additional CORS origins beyond auto-computed platform defaults and client domains.",
+                        "description": "Additional browser origins allowed to call this workspace's API, beyond the platform and vanity-domain origins. Bare https origins only — no path, query, port or credentials.",
                         "type": "array",
                         "items": {
                           "type": "string",
-                          "format": "uri"
-                        }
+                          "format": "uri",
+                          "description": "An additional browser origin allowed to call this workspace's API. Bare https origin only.",
+                          "example": "https://learn.acme.com"
+                        },
+                        "maxItems": 10
                       }
                     }
                   },
@@ -60012,7 +60297,7 @@
       "delete": {
         "operationId": "workspaceConfiguration/delete",
         "summary": "Delete workspace configuration",
-        "description": "Deletes the workspace configuration. This is a hard delete — after deletion, GET will return default values.",
+        "description": "Archives the workspace configuration: the version in use is kept in the configuration history and the active configuration is removed. After this, GET returns default values.",
         "responses": {
           "200": {
             "description": "Workspace configuration deleted successfully",
@@ -68893,6 +69178,80 @@
         },
         "required": [
           "results"
+        ]
+      },
+      "AuditLogActor": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "actorId": {
+            "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+            "type": "string",
+            "minLength": 1
+          },
+          "actorType": {
+            "type": "string",
+            "enum": [
+              "user",
+              "principal",
+              "m2m",
+              "streakRule",
+              "rewardRule",
+              "scheduler",
+              "system"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "user",
+              "principal",
+              "m2mClient",
+              "system",
+              "unresolved"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actorId",
+          "actorType",
+          "kind",
+          "name"
+        ]
+      },
+      "AuditLogSubject": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string"
+          },
+          "unresolved": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "userId",
+          "name",
+          "unresolved"
         ]
       },
       "BatchTranslationResponse": {
@@ -124178,12 +124537,15 @@
             "default": {},
             "properties": {
               "allowedOrigins": {
-                "description": "Additional CORS origins beyond auto-computed platform defaults and client domains.",
+                "description": "Additional browser origins allowed to call this workspace's API, beyond the platform and vanity-domain origins. Bare https origins only — no path, query, port or credentials.",
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "format": "uri"
-                }
+                  "format": "uri",
+                  "description": "An additional browser origin allowed to call this workspace's API. Bare https origin only.",
+                  "example": "https://learn.acme.com"
+                },
+                "maxItems": 10
               }
             }
           },
@@ -177060,12 +177422,15 @@
             "default": {},
             "properties": {
               "allowedOrigins": {
-                "description": "Additional CORS origins beyond auto-computed platform defaults and client domains.",
+                "description": "Additional browser origins allowed to call this workspace's API, beyond the platform and vanity-domain origins. Bare https origins only — no path, query, port or credentials.",
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "format": "uri"
-                }
+                  "format": "uri",
+                  "description": "An additional browser origin allowed to call this workspace's API. Bare https origin only.",
+                  "example": "https://learn.acme.com"
+                },
+                "maxItems": 10
               }
             }
           },
@@ -178611,6 +178976,245 @@
           "sourceRegion",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "SearchAuditLogsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "auditLogId": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string",
+                  "enum": [
+                    "SIGN_IN_SUCCESS",
+                    "SIGN_OUT",
+                    "SIGN_UP_COMPLETED",
+                    "SIGN_IN_FAILURE",
+                    "PASSWORD_RESET_REQUESTED",
+                    "USER_CREATED",
+                    "USER_ROLE_CHANGED",
+                    "USER_SUSPENDED",
+                    "USER_REACTIVATED",
+                    "USER_DELETED",
+                    "WORKSPACE_CREATED",
+                    "WORKSPACE_DELETED",
+                    "WORKSPACE_CONFIG_CHANGED",
+                    "ENTITLEMENT_CHANGED",
+                    "M2M_CLIENT_CREATED",
+                    "M2M_CLIENT_SECRET_ROTATED",
+                    "M2M_CLIENT_SECRET_RETIRED",
+                    "M2M_CLIENT_SECRET_REVEALED",
+                    "M2M_CLIENT_REVOKED",
+                    "INVITATION_CREATED",
+                    "INVITATION_ACCEPTED",
+                    "INVITATION_REVOKED",
+                    "SUBSCRIPTION_CREATED",
+                    "SUBSCRIPTION_TRANSITIONED",
+                    "SUBSCRIPTION_PLAN_CHANGED",
+                    "SUBSCRIPTION_ACTIVATED",
+                    "TRIAL_PROVISIONING_FAILED"
+                  ]
+                },
+                "actorId": {
+                  "description": "Who performed the action — userId, principalId, ruleId, or logical name for system singletons",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "actorType": {
+                  "description": "Type of the actor: user (workspace-scoped), principal (portal-level), m2m (machine-to-machine), or a specific system actor type (streakRule, rewardRule, scheduler)",
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "principal",
+                    "m2m",
+                    "streakRule",
+                    "rewardRule",
+                    "scheduler",
+                    "system"
+                  ]
+                },
+                "subjectUserId": {
+                  "description": "The user affected by the action. Null for workspace/account-level events (invitation created, config changed)",
+                  "type": "string"
+                },
+                "appContext": {
+                  "description": "Which application context the event originated from",
+                  "type": "string",
+                  "enum": [
+                    "administration",
+                    "portal",
+                    "dashboard",
+                    "app",
+                    "edu",
+                    "eduBackoffice",
+                    "hsbc"
+                  ]
+                },
+                "ipAddress": {
+                  "description": "GDPR-sensitive — subject to retention/anonymization",
+                  "type": "string"
+                },
+                "userAgent": {
+                  "description": "GDPR-sensitive — subject to retention/anonymization",
+                  "type": "string"
+                },
+                "platform": {
+                  "description": "Client platform (future-proofing for mobile apps)",
+                  "type": "string",
+                  "enum": [
+                    "web",
+                    "mobile",
+                    "m2m"
+                  ]
+                },
+                "details": {
+                  "description": "Event-specific payload (e.g., old/new role, changed fields, invitation email)",
+                  "type": "object",
+                  "additionalProperties": {}
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "actor": {
+                  "$ref": "#/components/schemas/AuditLogActor"
+                },
+                "subject": {
+                  "$ref": "#/components/schemas/AuditLogSubject"
+                }
+              },
+              "required": [
+                "auditLogId",
+                "eventType",
+                "actorId",
+                "actorType",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SearchBadgeLogsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "badgeLogId": {
+                  "type": "string"
+                },
+                "badgeConfigurationId": {
+                  "description": "Unique identifier for the badge configuration (NanoID).",
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "sourceEntityType": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sourceEntityId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "rewardRuleId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "assignedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "level": {
+                  "description": "Stable slug identifying one tier of a threshold ladder. Lowercase alphanumeric with hyphen and underscore, max 32 characters. Immutable once published — renaming a key orphans every badge already awarded at that tier.",
+                  "type": "string",
+                  "examples": [
+                    "bronze",
+                    "silver",
+                    "gold"
+                  ],
+                  "pattern": "^[a-z0-9_-]{1,32}$"
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "badgeLogId",
+                "badgeConfigurationId",
+                "userId",
+                "sourceEntityType",
+                "sourceEntityId",
+                "rewardRuleId",
+                "assignedAt",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
         ]
       },
       "SearchContentPresetsHistoryResponse": {
@@ -205488,12 +206092,15 @@
             "default": {},
             "properties": {
               "allowedOrigins": {
-                "description": "Additional CORS origins beyond auto-computed platform defaults and client domains.",
+                "description": "Additional browser origins allowed to call this workspace's API, beyond the platform and vanity-domain origins. Bare https origins only — no path, query, port or credentials.",
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "format": "uri"
-                }
+                  "format": "uri",
+                  "description": "An additional browser origin allowed to call this workspace's API. Bare https origin only.",
+                  "example": "https://learn.acme.com"
+                },
+                "maxItems": 10
               }
             }
           },
@@ -207555,12 +208162,15 @@
             "default": {},
             "properties": {
               "allowedOrigins": {
-                "description": "Additional CORS origins beyond auto-computed platform defaults and client domains.",
+                "description": "Additional browser origins allowed to call this workspace's API, beyond the platform and vanity-domain origins. Bare https origins only — no path, query, port or credentials.",
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "format": "uri"
-                }
+                  "format": "uri",
+                  "description": "An additional browser origin allowed to call this workspace's API. Bare https origin only.",
+                  "example": "https://learn.acme.com"
+                },
+                "maxItems": 10
               }
             }
           },
@@ -207962,6 +208572,9 @@
     },
     {
       "name": "BadgeConfigurations"
+    },
+    {
+      "name": "BadgeLogs"
     },
     {
       "name": "ContentLayoutTagAssignments"

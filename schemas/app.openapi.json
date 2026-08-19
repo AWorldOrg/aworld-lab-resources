@@ -12725,12 +12725,15 @@
             "default": {},
             "properties": {
               "allowedOrigins": {
-                "description": "Additional CORS origins beyond auto-computed platform defaults and client domains.",
+                "description": "Additional browser origins allowed to call this workspace's API, beyond the platform and vanity-domain origins. Bare https origins only — no path, query, port or credentials.",
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "format": "uri"
-                }
+                  "format": "uri",
+                  "description": "An additional browser origin allowed to call this workspace's API. Bare https origin only.",
+                  "example": "https://learn.acme.com"
+                },
+                "maxItems": 10
               }
             }
           },
