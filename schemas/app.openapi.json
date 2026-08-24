@@ -26,10 +26,10 @@
           {
             "name": "x-idempotency-key",
             "in": "header",
-            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid). Send a value that is unique per real-world event, and repeat it verbatim when retrying that same event.\n\nRetries to this endpoint are not de-duplicated: every accepted request is recorded as a separate activity log, including one that repeats an earlier request exactly. Submit each event once.\n\nFor a once-per-event guarantee that does not depend on timing, send `activityLogId` instead: a reuse carrying different data is rejected with a 409 and writes nothing.",
             "required": false,
             "schema": {
-              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid). Send a value that is unique per real-world event, and repeat it verbatim when retrying that same event.\n\nRetries to this endpoint are not de-duplicated: every accepted request is recorded as a separate activity log, including one that repeats an earlier request exactly. Submit each event once.\n\nFor a once-per-event guarantee that does not depend on timing, send `activityLogId` instead: a reuse carrying different data is rejected with a 409 and writes nothing.",
               "type": "string",
               "minLength": 1
             }
@@ -83,13 +83,15 @@
                     "additionalProperties": {}
                   },
                   "activityLogId": {
-                    "description": "Optional caller-supplied ID, stored verbatim; omit it for a generated one. Must be exactly 21 characters from the alphabet A-Za-z0-9_-, or the request is rejected with a 400. A deterministic value gives permanent once-per-content semantics: a reuse carrying different data is rejected with a 409 and writes nothing, while an immediate identical retry replays the original response instead of conflicting. Derive it from the userId as well as the content — IDs need only be unique per user here, but must be unique per workspace downstream, so two users must never produce the same one. A base64url SHA-256 truncated to 21 characters fits.",
+                    "description": "Optional caller-supplied ID, stored verbatim; omit it for a generated one. Must be exactly 21 characters from the alphabet A-Za-z0-9_-, or the request is rejected with a 400. A deterministic value gives permanent once-per-content semantics, with no time limit: a reuse is rejected with a 409 and writes nothing, whether or not it carries the same data as the original. Derive it from the userId as well as the content — IDs need only be unique per user here, but must be unique per workspace downstream, so two users must never produce the same one. A base64url SHA-256 truncated to 21 characters fits.",
                     "type": "string",
                     "example": "V1StGXR8Z5jdHi6BmyT8k"
                   },
                   "completedAt": {
+                    "description": "When the activity was completed, as an ISO 8601 date-time. Optional: when omitted, the server records the time it processed the request.\n\nA server-filled value is applied after the request has already been identified for de-duplication purposes, so omitting this field can never make two otherwise-identical submissions distinct — only a value you send yourself can. If you send it for that reason, use full time-of-day precision: a date-only or hour-truncated value repeats across submissions and leaves them identical.",
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "example": "2026-01-31T14:35:12.482Z"
                   }
                 },
                 "required": [
@@ -3415,17 +3417,6 @@
             }
           },
           {
-            "name": "includeArchived",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": [
-                "boolean",
-                "null"
-              ]
-            }
-          },
-          {
             "name": "limit",
             "in": "query",
             "description": "Size of the page",
@@ -6153,10 +6144,10 @@
           {
             "name": "x-idempotency-key",
             "in": "header",
-            "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+            "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid).\n\nThe de-duplication key is always derived from the whole request: its validated body, path and query parameters, and declared headers. This header is one of those inputs — it is never the key on its own, and sending it does not change how the key is derived. It adds a value you control to the hash; omitting it leaves that value out.\n\nSend a value that is unique per real-world event, and repeat it unchanged when retrying that event. Two things follow from the key covering everything. A retry is recognised as a duplicate only if it repeats this header AND the rest of the request identically — reuse the key with any other field changed and it is a new request, which is processed and written separately. Conversely, with no header at all the request content is the only identity available, so two genuinely distinct events that happen to carry identical content are indistinguishable and the second is treated as a retry of the first.\n\nDe-duplication covers the first hour after a request is accepted. An identical request sent after that window is processed as a new one.\n\nA de-duplicated request is answered with the original response: HTTP 200 carrying the record the first request created, with its original identifier and timestamps. Nothing further is written and no error is returned. Neither the status code nor the response headers mark the response as a replay, so reconciling the returned identifier and timestamps against what was submitted is how a caller detects one.",
             "required": false,
             "schema": {
-              "description": "Optional (but recommended) idempotency key to prevent duplicate processing of the same request. Any string can be used (e.g., a UUID or a nanoid).",
+              "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid).\n\nThe de-duplication key is always derived from the whole request: its validated body, path and query parameters, and declared headers. This header is one of those inputs — it is never the key on its own, and sending it does not change how the key is derived. It adds a value you control to the hash; omitting it leaves that value out.\n\nSend a value that is unique per real-world event, and repeat it unchanged when retrying that event. Two things follow from the key covering everything. A retry is recognised as a duplicate only if it repeats this header AND the rest of the request identically — reuse the key with any other field changed and it is a new request, which is processed and written separately. Conversely, with no header at all the request content is the only identity available, so two genuinely distinct events that happen to carry identical content are indistinguishable and the second is treated as a retry of the first.\n\nDe-duplication covers the first hour after a request is accepted. An identical request sent after that window is processed as a new one.\n\nA de-duplicated request is answered with the original response: HTTP 200 carrying the record the first request created, with its original identifier and timestamps. Nothing further is written and no error is returned. Neither the status code nor the response headers mark the response as a replay, so reconciling the returned identifier and timestamps against what was submitted is how a caller detects one.",
               "type": "string",
               "minLength": 1
             }
@@ -10346,9 +10337,6 @@
               "MONTHLY",
               "CUSTOM"
             ]
-          },
-          "isArchived": {
-            "type": "boolean"
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -16377,9 +16365,6 @@
                     "MONTHLY",
                     "CUSTOM"
                   ]
-                },
-                "isArchived": {
-                  "type": "boolean"
                 },
                 "createdAt": {
                   "description": "Creation date in ISO format (UTC Timezone)",
