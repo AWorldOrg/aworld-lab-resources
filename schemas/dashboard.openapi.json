@@ -3322,25 +3322,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -3348,17 +3348,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -5684,25 +5687,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -5710,17 +5713,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -8820,25 +8826,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -8846,17 +8852,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -9269,25 +9278,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -9295,17 +9304,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -10710,25 +10722,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -10736,17 +10748,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -16188,25 +16203,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -16214,17 +16229,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -16918,25 +16936,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -16944,17 +16962,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -23142,25 +23163,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -23168,17 +23189,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -23804,25 +23828,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -23830,17 +23854,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -24586,25 +24613,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -24612,17 +24639,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -33844,25 +33874,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -33870,17 +33900,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -34290,25 +34323,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -34316,17 +34349,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -41972,6 +42008,153 @@
         ]
       }
     },
+    "/runtime-leaderboard-configurations/history/search": {
+      "post": {
+        "operationId": "runtimeLeaderboardConfigurations/historySearch",
+        "summary": "Search leaderboard configuration history (active, or archived)",
+        "description": "Search, filter, and sort the workspace's leaderboard configuration history at version=0 (the LATEST snapshot pointer). Unlike GET /runtime-leaderboard-configurations — which reads the main table and therefore only ever sees live configurations — this reads runtime_leaderboard_configuration_history, so with `archived: true` it surfaces ARCHIVED configurations, which no longer exist on the main table at all. GET /runtime-leaderboard-configurations/history cannot serve them either: archiving strips the DynamoDB `pk2`, so archived rows leave that partition by construction. That makes this the only way to list archived configurations and offer a restore action. Note: free-text `match` is not available here (there is no FTS virtual table for leaderboard configurations) — use `contains` (LIKE) on `name` or the joined translation label, plus structured filters and sort.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "role"
+                          },
+                          "admin"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "p.email"
+                          },
+                          "@aworld.org"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "tf"
+                          },
+                          "climate"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "tf"
+                              },
+                              "climate"
+                            ]
+                          },
+                          {
+                            "==": [
+                              {
+                                "var": "t.origin"
+                              },
+                              "CATALOG"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "translations"
+                      ]
+                    }
+                  },
+                  "archived": {
+                    "description": "When true, search ARCHIVED leaderboard configurations (stage = ARCHIVED) instead of the active history view (DRAFT + PUBLISHED). Defaults to false. Archived configurations no longer exist on the main table, so this is the only way to reach them.",
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Leaderboard configuration history matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchRuntimeLeaderboardConfigurationsHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "RuntimeLeaderboardConfigurations"
+        ]
+      }
+    },
     "/runtime-leaderboard-configurations/{runtimeLeaderboardConfigurationId}/history/{version}": {
       "get": {
         "operationId": "runtimeLeaderboardConfigurations/getHistoryVersion",
@@ -42192,25 +42375,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -42218,17 +42401,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -52751,25 +52937,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -52777,17 +52963,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -54932,25 +55121,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -54958,17 +55147,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -57175,25 +57367,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -57201,17 +57393,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -57621,25 +57816,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -57647,17 +57842,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
@@ -180620,32 +180818,32 @@
         ]
       },
       "SearchFilterExpression": {
-        "description": "A JSONLogic expression used to filter search results.\n\nSupports operators: ==, !=, >, >=, <, <=, contains, match, in, every, and, or.\n- contains: LIKE substring matching\n- match: FTS5 full-text search (requires virtual table join)\n- in: ANY semantics (at least one match)\n- every: ALL semantics (must match every value, uses GROUP BY + HAVING)\nField references use {\"var\": \"fieldName\"} for single-table queries\nor {\"var\": \"alias.fieldName\"} for multi-table queries with JOINs.",
+        "description": "A JSONLogic expression used to filter search results.\n\nSupports operators: ==, !=, >, >=, <, <=, contains, match, in, every, and, or.\n- contains: LIKE substring matching (the left operand must be a field reference)\n- match: FTS5 full-text search (requires virtual table join)\n- in: ANY semantics (at least one match)\n- every: ALL semantics (must match every value, uses GROUP BY + HAVING)\nField references use {\"var\": \"fieldName\"} for the endpoint's main table\nor {\"var\": \"alias.fieldName\"} for a joined one. The field and alias names\navailable are the ones this endpoint's search config declares — an unknown\none is rejected with 400, as is a $-prefixed runtime variable (server-side\nonly). Examples below show the shape; substitute this endpoint's own names.",
         "type": "object",
         "additionalProperties": true,
         "examples": [
           {
             "==": [
               {
-                "var": "role"
+                "var": "fieldName"
               },
-              "admin"
+              "value"
             ]
           },
           {
             "contains": [
               {
-                "var": "p.email"
+                "var": "joinAlias.fieldName"
               },
-              "@aworld.org"
+              "text"
             ]
           },
           {
             "match": [
               {
-                "table": "tf"
+                "table": "ftsAlias"
               },
-              "climate"
+              "search term"
             ]
           },
           {
@@ -180653,17 +180851,20 @@
               {
                 "match": [
                   {
-                    "table": "tf"
+                    "table": "ftsAlias"
                   },
-                  "climate"
+                  "search term"
                 ]
               },
               {
-                "==": [
+                "in": [
                   {
-                    "var": "t.origin"
+                    "var": "joinAlias.fieldName"
                   },
-                  "CATALOG"
+                  [
+                    "value1",
+                    "value2"
+                  ]
                 ]
               }
             ]
@@ -183071,6 +183272,828 @@
                 "sourceRegion",
                 "createdAt",
                 "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SearchRuntimeLeaderboardConfigurationsHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "DRAFT",
+                    "PUBLISHED",
+                    "ARCHIVED"
+                  ]
+                },
+                "actorId": {
+                  "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "actorType": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "principal",
+                    "m2m",
+                    "streakRule",
+                    "rewardRule",
+                    "scheduler",
+                    "system"
+                  ]
+                },
+                "runtimeLeaderboardConfigurationId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string"
+                },
+                "query": {
+                  "properties": {
+                    "from": {
+                      "type": "object",
+                      "properties": {
+                        "sources": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "table": {
+                                "type": "string"
+                              },
+                              "alias": {
+                                "type": "string"
+                              },
+                              "joins": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "INNER",
+                                        "LEFT",
+                                        "RIGHT"
+                                      ]
+                                    },
+                                    "toAlias": {
+                                      "type": "string"
+                                    },
+                                    "condition": {
+                                      "allOf": [
+                                        {
+                                          "$ref": "#/components/schemas/JsonLogicExpression"
+                                        },
+                                        {
+                                          "type": [
+                                            "object",
+                                            "null"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "toAlias",
+                                    "condition"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "table",
+                              "alias"
+                            ]
+                          },
+                          "minItems": 1
+                        },
+                        "where": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/JsonLogicExpression"
+                            },
+                            {
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "sources"
+                      ]
+                    },
+                    "select": {
+                      "type": "object",
+                      "properties": {
+                        "fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string"
+                              },
+                              "alias": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "source"
+                            ]
+                          },
+                          "minItems": 1
+                        },
+                        "expressions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "expression": {
+                                "allOf": [
+                                  {
+                                    "$ref": "#/components/schemas/JsonLogicExpression"
+                                  },
+                                  {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "expression"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "fields"
+                      ]
+                    },
+                    "with": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "query": {
+                            "properties": {
+                              "from": {
+                                "type": "object",
+                                "properties": {
+                                  "sources": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "table": {
+                                          "type": "string"
+                                        },
+                                        "alias": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "table",
+                                        "alias"
+                                      ]
+                                    },
+                                    "minItems": 1
+                                  },
+                                  "where": {
+                                    "allOf": [
+                                      {
+                                        "$ref": "#/components/schemas/JsonLogicExpression"
+                                      },
+                                      {
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "sources"
+                                ]
+                              },
+                              "select": {
+                                "type": "object",
+                                "properties": {
+                                  "fields": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "source": {
+                                          "type": "string"
+                                        },
+                                        "alias": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "source"
+                                      ]
+                                    },
+                                    "minItems": 1
+                                  },
+                                  "expressions": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string"
+                                        },
+                                        "expression": {
+                                          "allOf": [
+                                            {
+                                              "$ref": "#/components/schemas/JsonLogicExpression"
+                                            },
+                                            {
+                                              "type": [
+                                                "object",
+                                                "null"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "expression"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "fields"
+                                ]
+                              },
+                              "groupBy": {
+                                "type": "object",
+                                "properties": {
+                                  "columns": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "minItems": 1
+                                  }
+                                },
+                                "required": [
+                                  "columns"
+                                ]
+                              },
+                              "having": {
+                                "allOf": [
+                                  {
+                                    "$ref": "#/components/schemas/JsonLogicExpression"
+                                  },
+                                  {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "orderBy": {
+                                "type": "object",
+                                "properties": {
+                                  "expressions": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "expression": {
+                                          "anyOf": [
+                                            {
+                                              "allOf": [
+                                                {
+                                                  "$ref": "#/components/schemas/JsonLogicExpression"
+                                                },
+                                                {
+                                                  "type": [
+                                                    "object",
+                                                    "null"
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "string"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "direction": {
+                                          "type": "string",
+                                          "enum": [
+                                            "ASC",
+                                            "DESC"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "expression",
+                                        "direction"
+                                      ]
+                                    },
+                                    "minItems": 1
+                                  },
+                                  "window": {
+                                    "type": "object",
+                                    "properties": {
+                                      "function": {
+                                        "type": "string",
+                                        "enum": [
+                                          "ROW_NUMBER",
+                                          "DENSE_RANK",
+                                          "RANK"
+                                        ]
+                                      },
+                                      "alias": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "function",
+                                      "alias"
+                                    ]
+                                  },
+                                  "tieExpressions": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "expression": {
+                                          "anyOf": [
+                                            {
+                                              "allOf": [
+                                                {
+                                                  "$ref": "#/components/schemas/JsonLogicExpression"
+                                                },
+                                                {
+                                                  "type": [
+                                                    "object",
+                                                    "null"
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "string"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "direction": {
+                                          "type": "string",
+                                          "enum": [
+                                            "ASC",
+                                            "DESC"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "expression",
+                                        "direction"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "expressions"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "from",
+                              "select"
+                            ],
+                            "type": "object"
+                          },
+                          "recursive": {
+                            "type": "object",
+                            "properties": {
+                              "table": {
+                                "type": "string"
+                              },
+                              "keyColumn": {
+                                "type": "string"
+                              },
+                              "parentColumn": {
+                                "type": "string"
+                              },
+                              "startFrom": {
+                                "allOf": [
+                                  {
+                                    "$ref": "#/components/schemas/JsonLogicExpression"
+                                  },
+                                  {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "maxDepth": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 50
+                              }
+                            },
+                            "required": [
+                              "table",
+                              "keyColumn",
+                              "parentColumn",
+                              "startFrom"
+                            ]
+                          },
+                          "join": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "INNER",
+                                  "LEFT"
+                                ]
+                              },
+                              "on": {
+                                "allOf": [
+                                  {
+                                    "$ref": "#/components/schemas/JsonLogicExpression"
+                                  },
+                                  {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "on"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "join"
+                        ]
+                      },
+                      "maxItems": 20
+                    },
+                    "groupBy": {
+                      "type": "object",
+                      "properties": {
+                        "columns": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "minItems": 1
+                        }
+                      },
+                      "required": [
+                        "columns"
+                      ]
+                    },
+                    "orderBy": {
+                      "type": "object",
+                      "properties": {
+                        "expressions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "expression": {
+                                "anyOf": [
+                                  {
+                                    "allOf": [
+                                      {
+                                        "$ref": "#/components/schemas/JsonLogicExpression"
+                                      },
+                                      {
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "direction": {
+                                "type": "string",
+                                "enum": [
+                                  "ASC",
+                                  "DESC"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "expression",
+                              "direction"
+                            ]
+                          },
+                          "minItems": 1
+                        },
+                        "window": {
+                          "type": "object",
+                          "properties": {
+                            "function": {
+                              "type": "string",
+                              "enum": [
+                                "ROW_NUMBER",
+                                "DENSE_RANK",
+                                "RANK"
+                              ]
+                            },
+                            "alias": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "function",
+                            "alias"
+                          ]
+                        },
+                        "tieExpressions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "expression": {
+                                "anyOf": [
+                                  {
+                                    "allOf": [
+                                      {
+                                        "$ref": "#/components/schemas/JsonLogicExpression"
+                                      },
+                                      {
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "direction": {
+                                "type": "string",
+                                "enum": [
+                                  "ASC",
+                                  "DESC"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "expression",
+                              "direction"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "expressions"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "from",
+                    "select"
+                  ],
+                  "type": "object"
+                },
+                "displayTopN": {
+                  "type": "integer",
+                  "default": 10,
+                  "exclusiveMinimum": 0,
+                  "maximum": 100
+                },
+                "showRank": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "showScore": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "defaultLang": {
+                  "$ref": "#/components/schemas/Lang"
+                },
+                "langs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "minItems": 1
+                },
+                "accountId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "pattern": "^[A-Za-z0-9_-]{10}$"
+                },
+                "sourceRegion": {
+                  "$ref": "#/components/schemas/SourceRegion"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "latestVersion": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "stage": {
+                        "type": "string",
+                        "enum": [
+                          "DRAFT",
+                          "PUBLISHED",
+                          "ARCHIVED"
+                        ]
+                      },
+                      "actorId": {
+                        "description": "ID of the actor who performed the action. userId, principalId, ruleId, or a logical name for system actors.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "actorType": {
+                        "type": "string",
+                        "enum": [
+                          "user",
+                          "principal",
+                          "m2m",
+                          "streakRule",
+                          "rewardRule",
+                          "scheduler",
+                          "system"
+                        ]
+                      },
+                      "workspaceId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "runtimeLeaderboardConfigurationId": {
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "scoreLabel": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 10,
+                        "pattern": "^[A-Za-z0-9_-]{10}$"
+                      },
+                      "sourceRegion": {
+                        "$ref": "#/components/schemas/SourceRegion"
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "stage",
+                      "actorId",
+                      "actorType",
+                      "workspaceId",
+                      "runtimeLeaderboardConfigurationId",
+                      "lang",
+                      "label",
+                      "accountId",
+                      "sourceRegion",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "version",
+                "stage",
+                "actorId",
+                "actorType",
+                "runtimeLeaderboardConfigurationId",
+                "name",
+                "query",
+                "defaultLang",
+                "langs",
+                "accountId",
+                "workspaceId",
+                "sourceRegion",
+                "createdAt",
+                "updatedAt",
+                "latestVersion"
               ]
             }
           },
