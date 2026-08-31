@@ -42027,25 +42027,25 @@
                       {
                         "==": [
                           {
-                            "var": "role"
+                            "var": "fieldName"
                           },
-                          "admin"
+                          "value"
                         ]
                       },
                       {
                         "contains": [
                           {
-                            "var": "p.email"
+                            "var": "joinAlias.fieldName"
                           },
-                          "@aworld.org"
+                          "text"
                         ]
                       },
                       {
                         "match": [
                           {
-                            "table": "tf"
+                            "table": "ftsAlias"
                           },
-                          "climate"
+                          "search term"
                         ]
                       },
                       {
@@ -42053,17 +42053,20 @@
                           {
                             "match": [
                               {
-                                "table": "tf"
+                                "table": "ftsAlias"
                               },
-                              "climate"
+                              "search term"
                             ]
                           },
                           {
-                            "==": [
+                            "in": [
                               {
-                                "var": "t.origin"
+                                "var": "joinAlias.fieldName"
                               },
-                              "CATALOG"
+                              [
+                                "value1",
+                                "value2"
+                              ]
                             ]
                           }
                         ]
