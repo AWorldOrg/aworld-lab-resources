@@ -336,6 +336,735 @@
         ]
       }
     },
+    "/assignments": {
+      "get": {
+        "operationId": "assignments/list",
+        "summary": "List assignments",
+        "description": "List assignments with optional additional fields and pagination.",
+        "parameters": [
+          {
+            "name": "assignmentType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "REQUIRED",
+                "OPTIONAL"
+              ]
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "progress",
+                  "translation",
+                  "items",
+                  "rewardsPreview"
+                ]
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Size of the page",
+            "required": false,
+            "schema": {
+              "description": "Size of the page",
+              "type": "integer",
+              "example": 10,
+              "exclusiveMinimum": 0
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "description": "Pagination cursor for fetching the next set of results",
+            "required": false,
+            "schema": {
+              "description": "Pagination cursor for fetching the next set of results",
+              "type": [
+                "string",
+                "null"
+              ],
+              "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order. Defaults to desc",
+            "required": false,
+            "schema": {
+              "description": "Sort order. Defaults to desc",
+              "type": "string",
+              "example": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "outcome",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "PASS",
+                "FAIL"
+              ]
+            }
+          },
+          {
+            "name": "progressStatus",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "NOT_STARTED",
+                "IN_PROGRESS",
+                "COMPLETED"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort results by",
+            "required": false,
+            "schema": {
+              "description": "Field to sort results by",
+              "type": "string",
+              "example": "updatedAt",
+              "enum": [
+                "updatedAt"
+              ]
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "ACTIVE",
+                "ENDED"
+              ]
+            }
+          },
+          {
+            "name": "targetType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "survey",
+                "learningPath"
+              ]
+            }
+          },
+          {
+            "name": "visibility",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LOCKED",
+                "UNLOCKED"
+              ]
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assignments retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Assignments"
+        ]
+      }
+    },
+    "/assignments/{assignmentId}": {
+      "get": {
+        "operationId": "assignments/get",
+        "summary": "Get assignment",
+        "description": "Retrieve a specific assignment by ID, with optional additional fields (translation, tags, items, progress).",
+        "parameters": [
+          {
+            "name": "assignmentId",
+            "in": "path",
+            "description": "The unique ID of the assignment",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the assignment",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tags",
+                  "progress",
+                  "translation",
+                  "items",
+                  "rewardsPreview"
+                ]
+              }
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assignment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Assignment not found"
+          }
+        },
+        "tags": [
+          "Assignments"
+        ]
+      }
+    },
+    "/assignments/search": {
+      "post": {
+        "operationId": "assignments/search",
+        "summary": "Search assignments",
+        "description": "Search, filter and sort the current user's assignments of one target type using JSONLogic expressions (tags, full-text, progress) with optional field resolution.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "fieldName"
+                          },
+                          "value"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "joinAlias.fieldName"
+                          },
+                          "text"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "ftsAlias"
+                          },
+                          "search term"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "ftsAlias"
+                              },
+                              "search term"
+                            ]
+                          },
+                          {
+                            "in": [
+                              {
+                                "var": "joinAlias.fieldName"
+                              },
+                              [
+                                "value1",
+                                "value2"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "targetType": {
+                    "type": "string",
+                    "enum": [
+                      "survey",
+                      "learningPath"
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "tags",
+                        "progress",
+                        "translation",
+                        "items",
+                        "rewardsPreview"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "targetType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assignments matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchAssignmentsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Search unavailable for this target type"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Assignments"
+        ]
+      }
+    },
+    "/assignments/{assignmentId}/current-attempt": {
+      "get": {
+        "operationId": "assignments/currentAttemptGet",
+        "summary": "Get current attempt",
+        "description": "Retrieve the current attempt number for a specific assignment.",
+        "parameters": [
+          {
+            "name": "assignmentId",
+            "in": "path",
+            "description": "The unique ID of the assignment",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the assignment",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current attempt retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentAttemptResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Assignment not found"
+          }
+        },
+        "tags": [
+          "Assignments"
+        ]
+      }
+    },
+    "/assignments/{assignmentId}/retry": {
+      "post": {
+        "operationId": "assignments/retry",
+        "summary": "Retry assignment",
+        "description": "Retry a assignment.",
+        "parameters": [
+          {
+            "name": "assignmentId",
+            "in": "path",
+            "description": "The unique ID of the assignment",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the assignment",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assignment retried successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetryAssignmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Assignment not found"
+          }
+        },
+        "tags": [
+          "Assignments"
+        ]
+      }
+    },
+    "/assignments/{assignmentId}/tags": {
+      "get": {
+        "operationId": "assignments/listTags",
+        "summary": "List assignment tags",
+        "description": "List the tag assignments of the target behind an assignment. Same data as `?fields=tags` on the assignment itself; this route exists so a client that already holds an assignment id can fetch tags without re-reading the assignment.",
+        "parameters": [
+          {
+            "name": "assignmentId",
+            "in": "path",
+            "description": "The unique ID of the assignment",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the assignment",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignments retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAssignmentTagsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Assignment not found"
+          }
+        },
+        "tags": [
+          "Assignments"
+        ]
+      }
+    },
+    "/assignments/{assignmentId}/tags/{tagId}": {
+      "get": {
+        "operationId": "assignments/getTag",
+        "summary": "Get assignment tag",
+        "description": "Retrieve one tag assignment of the target behind an assignment.",
+        "parameters": [
+          {
+            "name": "assignmentId",
+            "in": "path",
+            "description": "The unique ID of the assignment",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the assignment",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          {
+            "name": "tagId",
+            "in": "path",
+            "description": "Unique identifier for the tag",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the tag",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag assignment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssignmentTagResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Assignment or tag not found"
+          }
+        },
+        "tags": [
+          "Assignments"
+        ]
+      }
+    },
     "/badge-configurations": {
       "get": {
         "operationId": "badgeConfigurations/list",
@@ -7179,7 +7908,6 @@
               },
               "outcome": {
                 "type": "string",
-                "default": "SUCCESS",
                 "enum": [
                   "SUCCESS"
                 ]
@@ -7327,6 +8055,334 @@
           "defaultLang",
           "langs",
           "definition",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "targetId": {
+            "description": "The id of the assigned entity, interpreted according to the assignment's targetType",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq",
+            "minLength": 1
+          },
+          "assignmentId": {
+            "description": "The unique ID of the assignment",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "survey",
+              "learningPath"
+            ]
+          },
+          "userId": {
+            "type": "string"
+          },
+          "assignmentRuleId": {
+            "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "contributingRuleIds": {
+            "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the target anymore. Mutually exclusive with assignmentRuleId.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "The unique ID of the assignment rule",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "periodId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "LOCKED",
+              "UNLOCKED"
+            ]
+          },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
+            ]
+          },
+          "priority": {
+            "type": "number",
+            "default": 0
+          },
+          "unlockedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unlockedByRuleId": {
+            "description": "The unique ID of the assignment rule",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "currentAttempt": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "progress": {
+            "type": "object",
+            "additionalProperties": {},
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "NOT_STARTED",
+                  "IN_PROGRESS",
+                  "COMPLETED"
+                ]
+              },
+              "outcome": {
+                "type": "string",
+                "enum": [
+                  "SUCCESS",
+                  "PASS",
+                  "FAIL"
+                ]
+              },
+              "attempt": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "startedAt": {
+                "type": "string"
+              },
+              "completedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "translation": {
+            "type": "object",
+            "additionalProperties": {},
+            "properties": {
+              "lang": {
+                "$ref": "#/components/schemas/Lang"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "type": "string"
+                },
+                "itemType": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "itemId",
+                "itemType"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "rewardsPreview": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "default": "VIRTUAL_CURRENCY",
+                      "enum": [
+                        "VIRTUAL_CURRENCY"
+                      ]
+                    },
+                    "virtualCurrencyId": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "virtualCurrencyId",
+                    "amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "rewardRuleId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rewardRuleName": {
+                      "type": "string"
+                    },
+                    "rewardType": {
+                      "type": "string",
+                      "enum": [
+                        "BADGE"
+                      ]
+                    },
+                    "badgeConfigurationId": {
+                      "description": "Unique identifier for the badge configuration (NanoID).",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "rewardRuleId",
+                    "rewardRuleName",
+                    "rewardType",
+                    "badgeConfigurationId"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "additionalProperties": {},
+        "required": [
+          "targetId",
+          "assignmentId",
+          "targetType",
+          "userId",
+          "periodId",
+          "timeframeType",
+          "startsAt",
+          "state",
+          "visibility",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetAssignmentTagResponse": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "description": "Unique identifier for the tag",
+            "type": "string",
+            "minLength": 1
+          },
+          "priority": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "tagId",
           "createdAt",
           "updatedAt"
         ]
@@ -11341,7 +12397,6 @@
           },
           "outcome": {
             "type": "string",
-            "default": "SUCCESS",
             "enum": [
               "SUCCESS"
             ]
@@ -12843,6 +13898,35 @@
                   ]
                 }
               },
+              "survey": {
+                "description": "Tag namespaces associated with surveys.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "description": "The tag namespace identifier (e.g. 'difficulty', 'topic').",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "icon": {
+                      "description": "Lucide icon name to display for this namespace.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "labelKey": {
+                      "description": "i18n key used for the namespace display label.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "icon",
+                    "labelKey"
+                  ]
+                }
+              },
               "user": {
                 "description": "Tag namespaces associated with users.",
                 "type": "array",
@@ -13339,6 +14423,364 @@
               "string",
               "null"
             ]
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListAssignmentsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "targetId": {
+                  "description": "The id of the assigned entity, interpreted according to the assignment's targetType",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq",
+                  "minLength": 1
+                },
+                "assignmentId": {
+                  "description": "The unique ID of the assignment",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "targetType": {
+                  "type": "string",
+                  "enum": [
+                    "survey",
+                    "learningPath"
+                  ]
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "assignmentRuleId": {
+                  "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "contributingRuleIds": {
+                  "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the target anymore. Mutually exclusive with assignmentRuleId.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "The unique ID of the assignment rule",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
+                  }
+                },
+                "groupId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "periodId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "timeframeType": {
+                  "type": "string",
+                  "enum": [
+                    "PERMANENT",
+                    "RANGE",
+                    "RECURRING"
+                  ]
+                },
+                "startsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "ACTIVE",
+                    "ENDED"
+                  ]
+                },
+                "visibility": {
+                  "type": "string",
+                  "enum": [
+                    "LOCKED",
+                    "UNLOCKED"
+                  ]
+                },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
+                  ]
+                },
+                "priority": {
+                  "type": "number",
+                  "default": 0
+                },
+                "unlockedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "unlockedByRuleId": {
+                  "description": "The unique ID of the assignment rule",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "currentAttempt": {
+                  "type": "integer",
+                  "default": 1,
+                  "minimum": 1
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "priority": {
+                        "type": "integer",
+                        "default": 0,
+                        "minimum": 0
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "tagId",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "progress": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "NOT_STARTED",
+                        "IN_PROGRESS",
+                        "COMPLETED"
+                      ]
+                    },
+                    "outcome": {
+                      "type": "string",
+                      "enum": [
+                        "SUCCESS",
+                        "PASS",
+                        "FAIL"
+                      ]
+                    },
+                    "attempt": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "startedAt": {
+                      "type": "string"
+                    },
+                    "completedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "translation": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "properties": {
+                    "lang": {
+                      "$ref": "#/components/schemas/Lang"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "itemId": {
+                        "type": "string"
+                      },
+                      "itemType": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "itemId",
+                      "itemType"
+                    ],
+                    "additionalProperties": {}
+                  }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "targetId",
+                "assignmentId",
+                "targetType",
+                "userId",
+                "periodId",
+                "timeframeType",
+                "startsAt",
+                "state",
+                "visibility",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ListAssignmentTagsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagId": {
+                  "description": "Unique identifier for the tag",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "integer",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "tagId",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
           }
         },
         "required": [
@@ -17902,6 +19344,152 @@
           "isDefault"
         ]
       },
+      "RetryAssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "assignmentId": {
+            "description": "The unique ID of the assignment",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "survey",
+              "learningPath"
+            ]
+          },
+          "targetId": {
+            "description": "The id of the assigned entity, interpreted according to the assignment's targetType",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq",
+            "minLength": 1
+          },
+          "userId": {
+            "type": "string"
+          },
+          "assignmentRuleId": {
+            "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "contributingRuleIds": {
+            "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the target anymore. Mutually exclusive with assignmentRuleId.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "The unique ID of the assignment rule",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "periodId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timeframeType": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "RANGE",
+              "RECURRING"
+            ]
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "ENDED"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "LOCKED",
+              "UNLOCKED"
+            ]
+          },
+          "assignmentType": {
+            "type": "string",
+            "default": "REQUIRED",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL"
+            ]
+          },
+          "priority": {
+            "type": "number",
+            "default": 0
+          },
+          "unlockedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unlockedByRuleId": {
+            "description": "The unique ID of the assignment rule",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "currentAttempt": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "assignmentId",
+          "targetType",
+          "targetId",
+          "userId",
+          "periodId",
+          "timeframeType",
+          "startsAt",
+          "state",
+          "visibility",
+          "accountId",
+          "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "RetryLearningPathAssignmentResponse": {
         "type": "object",
         "properties": {
@@ -18162,6 +19750,323 @@
                 "createdAt",
                 "updatedAt"
               ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SearchAssignmentsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "targetId": {
+                  "description": "The id of the assigned entity, interpreted according to the assignment's targetType",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq",
+                  "minLength": 1
+                },
+                "assignmentId": {
+                  "description": "The unique ID of the assignment",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "targetType": {
+                  "type": "string",
+                  "enum": [
+                    "survey",
+                    "learningPath"
+                  ]
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "assignmentRuleId": {
+                  "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "contributingRuleIds": {
+                  "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the target anymore. Mutually exclusive with assignmentRuleId.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "The unique ID of the assignment rule",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
+                  }
+                },
+                "groupId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "periodId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "timeframeType": {
+                  "type": "string",
+                  "enum": [
+                    "PERMANENT",
+                    "RANGE",
+                    "RECURRING"
+                  ]
+                },
+                "startsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "ACTIVE",
+                    "ENDED"
+                  ]
+                },
+                "visibility": {
+                  "type": "string",
+                  "enum": [
+                    "LOCKED",
+                    "UNLOCKED"
+                  ]
+                },
+                "assignmentType": {
+                  "type": "string",
+                  "default": "REQUIRED",
+                  "enum": [
+                    "REQUIRED",
+                    "OPTIONAL"
+                  ]
+                },
+                "priority": {
+                  "type": "number",
+                  "default": 0
+                },
+                "unlockedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "unlockedByRuleId": {
+                  "description": "The unique ID of the assignment rule",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "currentAttempt": {
+                  "type": "integer",
+                  "default": 1,
+                  "minimum": 1
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tagId": {
+                        "description": "Unique identifier for the tag",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "priority": {
+                        "type": "integer",
+                        "default": 0,
+                        "minimum": 0
+                      },
+                      "createdAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "description": "Creation date in ISO format (UTC Timezone)",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "tagId",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                },
+                "progress": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "NOT_STARTED",
+                        "IN_PROGRESS",
+                        "COMPLETED"
+                      ]
+                    },
+                    "outcome": {
+                      "type": "string",
+                      "enum": [
+                        "SUCCESS",
+                        "PASS",
+                        "FAIL"
+                      ]
+                    },
+                    "attempt": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "startedAt": {
+                      "type": "string"
+                    },
+                    "completedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "translation": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "properties": {
+                    "lang": {
+                      "$ref": "#/components/schemas/Lang"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "itemId": {
+                        "type": "string"
+                      },
+                      "itemType": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "itemId",
+                      "itemType"
+                    ],
+                    "additionalProperties": {}
+                  }
+                },
+                "rewardsPreview": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "default": "VIRTUAL_CURRENCY",
+                            "enum": [
+                              "VIRTUAL_CURRENCY"
+                            ]
+                          },
+                          "virtualCurrencyId": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "virtualCurrencyId",
+                          "amount"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "rewardRuleId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rewardRuleName": {
+                            "type": "string"
+                          },
+                          "rewardType": {
+                            "type": "string",
+                            "enum": [
+                              "BADGE"
+                            ]
+                          },
+                          "badgeConfigurationId": {
+                            "description": "Unique identifier for the badge configuration (NanoID).",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "rewardRuleId",
+                          "rewardRuleName",
+                          "rewardType",
+                          "badgeConfigurationId"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "targetId",
+                "assignmentId",
+                "targetType",
+                "userId",
+                "periodId",
+                "timeframeType",
+                "startsAt",
+                "state",
+                "visibility",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
             }
           },
           "nextToken": {
@@ -19174,7 +21079,6 @@
           },
           "outcome": {
             "type": "string",
-            "default": "SUCCESS",
             "enum": [
               "SUCCESS"
             ]
@@ -19826,6 +21730,9 @@
           },
           "archived": {
             "type": "boolean"
+          },
+          "translation": {
+            "$ref": "#/components/schemas/VirtualTransactionHistoryRuleTranslation"
           }
         },
         "required": [
@@ -19833,6 +21740,18 @@
           "name",
           "version",
           "archived"
+        ]
+      },
+      "VirtualTransactionHistoryRuleTranslation": {
+        "description": "The rule name in the caller's language, resolved at the version pinned to the transaction. Absent when the rule has no translated name for that language.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "VirtualTransactionHistorySourceEntity": {
@@ -19903,6 +21822,9 @@
               "FREEZE",
               "ANY"
             ]
+          },
+          "translation": {
+            "$ref": "#/components/schemas/VirtualTransactionHistoryRuleTranslation"
           }
         },
         "required": [
@@ -19971,6 +21893,9 @@
     },
     {
       "name": "Analytics"
+    },
+    {
+      "name": "Assignments"
     },
     {
       "name": "Badges"
