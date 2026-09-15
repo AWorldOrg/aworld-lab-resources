@@ -2420,21 +2420,6 @@
             }
           },
           {
-            "name": "order",
-            "in": "query",
-            "description": "Sort order. Defaults to desc",
-            "required": false,
-            "schema": {
-              "description": "Sort order. Defaults to desc",
-              "type": "string",
-              "example": "desc",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
             "name": "outcome",
             "in": "query",
             "required": false,
@@ -2457,20 +2442,6 @@
                 "NOT_STARTED",
                 "IN_PROGRESS",
                 "COMPLETED"
-              ]
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Field to sort results by",
-            "required": false,
-            "schema": {
-              "description": "Field to sort results by",
-              "type": "string",
-              "example": "updatedAt",
-              "enum": [
-                "updatedAt"
               ]
             }
           },

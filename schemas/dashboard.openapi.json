@@ -908,7 +908,8 @@
                       "quiz",
                       "learningGroup",
                       "learningPath",
-                      "leaderboardConfiguration"
+                      "leaderboardConfiguration",
+                      "emailTemplate"
                     ]
                   },
                   "fields": {
@@ -14872,6 +14873,12 @@
                       "INVITATION_OWNER_TRIAL",
                       "INVITATION_OWNER",
                       "INVITATION_USER",
+                      "TRIAL_EXPIRING_7D",
+                      "TRIAL_EXPIRING_1D",
+                      "TRIAL_EXPIRED",
+                      "SUBSCRIPTION_EXPIRING_7D",
+                      "SUBSCRIPTION_EXPIRING_1D",
+                      "SUBSCRIPTION_EXPIRED",
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
                       "LEARNING_PATH_WEEKLY_DIGEST"
@@ -14892,9 +14899,9 @@
                     "$ref": "#/components/schemas/Lang"
                   },
                   "htmlContent": {
-                    "description": "HTML content of the email template with {{variable}} placeholders",
+                    "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
                     "type": "string",
-                    "minLength": 1
+                    "maxLength": 60000
                   },
                   "textContent": {
                     "description": "Plain text fallback content",
@@ -14929,11 +14936,21 @@
                           "maxLength": 200
                         },
                         "contentBlocks": {
-                          "description": "Translatable text content keyed by block name, injected into {{ contentBlock.* }} placeholders in htmlContent",
+                          "description": "Legacy translatable text blocks keyed by name, still resolved into {{ contentBlocks.* }} placeholders at send time",
                           "type": "object",
                           "additionalProperties": {
                             "type": "string"
                           }
+                        },
+                        "htmlContent": {
+                          "description": "Email-ready HTML body for this language with {{ variable }} placeholders, exported by the visual editor. Falls back to the default-language body when absent",
+                          "type": "string",
+                          "maxLength": 30000
+                        },
+                        "editorContent": {
+                          "description": "TipTap JSON document for this language — the visual editor's source of truth for re-editing",
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -14948,7 +14965,6 @@
                 "required": [
                   "name",
                   "defaultLang",
-                  "htmlContent",
                   "translations"
                 ]
               }
@@ -15071,9 +15087,9 @@
                     "$ref": "#/components/schemas/Lang"
                   },
                   "htmlContent": {
-                    "description": "HTML content of the email template with {{variable}} placeholders",
+                    "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
                     "type": "string",
-                    "minLength": 1
+                    "maxLength": 60000
                   },
                   "textContent": {
                     "description": "Plain text fallback content",
@@ -15103,11 +15119,21 @@
                           "maxLength": 200
                         },
                         "contentBlocks": {
-                          "description": "Translatable text content keyed by block name, injected into {{ contentBlock.* }} placeholders in htmlContent",
+                          "description": "Legacy translatable text blocks keyed by name, still resolved into {{ contentBlocks.* }} placeholders at send time",
                           "type": "object",
                           "additionalProperties": {
                             "type": "string"
                           }
+                        },
+                        "htmlContent": {
+                          "description": "Email-ready HTML body for this language with {{ variable }} placeholders, exported by the visual editor. Falls back to the default-language body when absent",
+                          "type": "string",
+                          "maxLength": 30000
+                        },
+                        "editorContent": {
+                          "description": "TipTap JSON document for this language — the visual editor's source of truth for re-editing",
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -15386,6 +15412,384 @@
           },
           "404": {
             "description": "Email template not found"
+          }
+        },
+        "tags": [
+          "EmailTemplates"
+        ]
+      }
+    },
+    "/email-templates/core/{action}": {
+      "get": {
+        "operationId": "emailTemplates/getCoreTemplate",
+        "summary": "Get core email template",
+        "description": "Renders the default (code-defined) template of a core action with {{ variable }} placeholders, in the requested language and with the workspace branding — the starting point for a workspace override.",
+        "parameters": [
+          {
+            "name": "action",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "WELCOME_OWNER",
+                "WELCOME_USER",
+                "VERIFY_EMAIL",
+                "PASSWORD_RESET",
+                "LOGIN_OTP",
+                "INVITATION_OWNER_TRIAL",
+                "INVITATION_OWNER",
+                "INVITATION_USER",
+                "TRIAL_EXPIRING_7D",
+                "TRIAL_EXPIRING_1D",
+                "TRIAL_EXPIRED",
+                "SUBSCRIPTION_EXPIRING_7D",
+                "SUBSCRIPTION_EXPIRING_1D",
+                "SUBSCRIPTION_EXPIRED",
+                "ALERT",
+                "LEARNING_PATH_ASSIGNED",
+                "LEARNING_PATH_WEEKLY_DIGEST"
+              ]
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Language of the core translation to render",
+            "required": true,
+            "schema": {
+              "description": "Language of the core translation to render",
+              "type": "string",
+              "enum": [
+                "aa",
+                "ab",
+                "af",
+                "agq",
+                "ak",
+                "am",
+                "an",
+                "ann",
+                "apc",
+                "ar",
+                "arn",
+                "as",
+                "asa",
+                "ast",
+                "az",
+                "ba",
+                "bal",
+                "bas",
+                "be",
+                "bem",
+                "bew",
+                "bez",
+                "bg",
+                "bgc",
+                "bgn",
+                "bho",
+                "blo",
+                "blt",
+                "bm",
+                "bn",
+                "bo",
+                "br",
+                "brx",
+                "bs",
+                "bss",
+                "byn",
+                "ca",
+                "cad",
+                "cch",
+                "ccp",
+                "ce",
+                "ceb",
+                "cgg",
+                "cho",
+                "chr",
+                "cic",
+                "ckb",
+                "co",
+                "cs",
+                "csw",
+                "cu",
+                "cv",
+                "cy",
+                "da",
+                "dav",
+                "de",
+                "dje",
+                "doi",
+                "dsb",
+                "dua",
+                "dv",
+                "dyo",
+                "dz",
+                "ebu",
+                "ee",
+                "el",
+                "en",
+                "eo",
+                "es",
+                "et",
+                "eu",
+                "ewo",
+                "fa",
+                "ff",
+                "fi",
+                "fil",
+                "fo",
+                "fr",
+                "frr",
+                "fur",
+                "fy",
+                "ga",
+                "gaa",
+                "gd",
+                "gez",
+                "gl",
+                "gn",
+                "gsw",
+                "gu",
+                "guz",
+                "gv",
+                "ha",
+                "haw",
+                "he",
+                "hi",
+                "hnj",
+                "hr",
+                "hsb",
+                "hu",
+                "hy",
+                "ia",
+                "id",
+                "ie",
+                "ig",
+                "ii",
+                "io",
+                "is",
+                "it",
+                "iu",
+                "ja",
+                "jbo",
+                "jgo",
+                "jmc",
+                "jv",
+                "ka",
+                "kaa",
+                "kab",
+                "kaj",
+                "kam",
+                "kcg",
+                "kde",
+                "kea",
+                "ken",
+                "kgp",
+                "khq",
+                "ki",
+                "kk",
+                "kkj",
+                "kl",
+                "kln",
+                "km",
+                "kn",
+                "ko",
+                "kok",
+                "kpe",
+                "ks",
+                "ksb",
+                "ksf",
+                "ksh",
+                "ku",
+                "kw",
+                "kxv",
+                "ky",
+                "la",
+                "lag",
+                "lb",
+                "lg",
+                "lij",
+                "lkt",
+                "lld",
+                "lmo",
+                "ln",
+                "lo",
+                "lrc",
+                "lt",
+                "ltg",
+                "lu",
+                "luo",
+                "luy",
+                "lv",
+                "mai",
+                "mas",
+                "mdf",
+                "mer",
+                "mfe",
+                "mg",
+                "mgh",
+                "mgo",
+                "mhn",
+                "mi",
+                "mic",
+                "mk",
+                "ml",
+                "mn",
+                "mni",
+                "moh",
+                "mr",
+                "ms",
+                "mt",
+                "mua",
+                "mus",
+                "my",
+                "myv",
+                "mzn",
+                "naq",
+                "nb",
+                "nd",
+                "nds",
+                "ne",
+                "nl",
+                "nmg",
+                "nn",
+                "nnh",
+                "no",
+                "nqo",
+                "nr",
+                "nso",
+                "nus",
+                "nv",
+                "ny",
+                "nyn",
+                "oc",
+                "om",
+                "or",
+                "os",
+                "osa",
+                "pa",
+                "pap",
+                "pcm",
+                "pis",
+                "pl",
+                "prg",
+                "ps",
+                "pt",
+                "qu",
+                "quc",
+                "raj",
+                "rhg",
+                "rif",
+                "rm",
+                "rn",
+                "ro",
+                "rof",
+                "root",
+                "ru",
+                "rw",
+                "rwk",
+                "sa",
+                "sah",
+                "saq",
+                "sat",
+                "sbp",
+                "sc",
+                "scn",
+                "sd",
+                "sdh",
+                "se",
+                "seh",
+                "ses",
+                "sg",
+                "shi",
+                "shn",
+                "si",
+                "sid",
+                "sk",
+                "skr",
+                "sl",
+                "sma",
+                "smj",
+                "smn",
+                "sms",
+                "sn",
+                "so",
+                "sq",
+                "sr",
+                "ss",
+                "ssy",
+                "st",
+                "su",
+                "sv",
+                "sw",
+                "syr",
+                "szl",
+                "ta",
+                "te",
+                "teo",
+                "tg",
+                "th",
+                "ti",
+                "tig",
+                "tk",
+                "tn",
+                "to",
+                "tok",
+                "tpi",
+                "tr",
+                "trv",
+                "trw",
+                "ts",
+                "tt",
+                "twq",
+                "tyv",
+                "tzm",
+                "ug",
+                "uk",
+                "ur",
+                "uz",
+                "vai",
+                "ve",
+                "vec",
+                "vi",
+                "vmw",
+                "vo",
+                "vun",
+                "wa",
+                "wae",
+                "wal",
+                "wbp",
+                "wo",
+                "xh",
+                "xnr",
+                "xog",
+                "yav",
+                "yi",
+                "yo",
+                "yrl",
+                "yue",
+                "za",
+                "zgh",
+                "zh-CN",
+                "zh-TW",
+                "zu"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Core email template rendered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCoreEmailTemplateResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "tags": [
@@ -19988,21 +20392,6 @@
             }
           },
           {
-            "name": "order",
-            "in": "query",
-            "description": "Sort order. Defaults to desc",
-            "required": false,
-            "schema": {
-              "description": "Sort order. Defaults to desc",
-              "type": "string",
-              "example": "desc",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
             "name": "outcome",
             "in": "query",
             "required": false,
@@ -20025,20 +20414,6 @@
                 "NOT_STARTED",
                 "IN_PROGRESS",
                 "COMPLETED"
-              ]
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Field to sort results by",
-            "required": false,
-            "schema": {
-              "description": "Field to sort results by",
-              "type": "string",
-              "example": "updatedAt",
-              "enum": [
-                "updatedAt"
               ]
             }
           },
@@ -35455,6 +35830,12 @@
                       "INVITATION_OWNER_TRIAL",
                       "INVITATION_OWNER",
                       "INVITATION_USER",
+                      "TRIAL_EXPIRING_7D",
+                      "TRIAL_EXPIRING_1D",
+                      "TRIAL_EXPIRED",
+                      "SUBSCRIPTION_EXPIRING_7D",
+                      "SUBSCRIPTION_EXPIRING_1D",
+                      "SUBSCRIPTION_EXPIRED",
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
                       "LEARNING_PATH_WEEKLY_DIGEST"
@@ -35701,6 +36082,12 @@
                       "INVITATION_OWNER_TRIAL",
                       "INVITATION_OWNER",
                       "INVITATION_USER",
+                      "TRIAL_EXPIRING_7D",
+                      "TRIAL_EXPIRING_1D",
+                      "TRIAL_EXPIRED",
+                      "SUBSCRIPTION_EXPIRING_7D",
+                      "SUBSCRIPTION_EXPIRING_1D",
+                      "SUBSCRIPTION_EXPIRED",
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
                       "LEARNING_PATH_WEEKLY_DIGEST"
@@ -70951,6 +71338,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -80887,6 +81280,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -80915,9 +81314,9 @@
             "minItems": 1
           },
           "htmlContent": {
-            "description": "HTML content of the email template with {{variable}} placeholders",
+            "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
             "type": "string",
-            "minLength": 1
+            "maxLength": 60000
           },
           "textContent": {
             "description": "Plain text fallback content",
@@ -80959,7 +81358,6 @@
           "name",
           "defaultLang",
           "langs",
-          "htmlContent",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -86496,6 +86894,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -98671,6 +99075,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -98699,9 +99109,9 @@
             "minItems": 1
           },
           "htmlContent": {
-            "description": "HTML content of the email template with {{variable}} placeholders",
+            "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
             "type": "string",
-            "minLength": 1
+            "maxLength": 60000
           },
           "textContent": {
             "description": "Plain text fallback content",
@@ -98743,7 +99153,6 @@
           "name",
           "defaultLang",
           "langs",
-          "htmlContent",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -98781,11 +99190,21 @@
             "maxLength": 200
           },
           "contentBlocks": {
-            "description": "Translatable text content keyed by block name, injected into {{ contentBlock.* }} placeholders in htmlContent",
+            "description": "Legacy translatable text blocks keyed by name, still resolved into {{ contentBlocks.* }} placeholders at send time",
             "type": "object",
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "htmlContent": {
+            "description": "Email-ready HTML body for this language with {{ variable }} placeholders, exported by the visual editor. Falls back to the default-language body when absent",
+            "type": "string",
+            "maxLength": 30000
+          },
+          "editorContent": {
+            "description": "TipTap JSON document for this language — the visual editor's source of truth for re-editing",
+            "type": "object",
+            "additionalProperties": {}
           },
           "accountId": {
             "type": "string",
@@ -106201,6 +106620,366 @@
           "translations"
         ]
       },
+      "GetCoreEmailTemplateResponse": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "WELCOME_OWNER",
+              "WELCOME_USER",
+              "VERIFY_EMAIL",
+              "PASSWORD_RESET",
+              "LOGIN_OTP",
+              "INVITATION_OWNER_TRIAL",
+              "INVITATION_OWNER",
+              "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
+              "ALERT",
+              "LEARNING_PATH_ASSIGNED",
+              "LEARNING_PATH_WEEKLY_DIGEST"
+            ]
+          },
+          "lang": {
+            "description": "Language actually rendered — 'en' when the core template ships no copy for the requested one",
+            "type": "string",
+            "enum": [
+              "aa",
+              "ab",
+              "af",
+              "agq",
+              "ak",
+              "am",
+              "an",
+              "ann",
+              "apc",
+              "ar",
+              "arn",
+              "as",
+              "asa",
+              "ast",
+              "az",
+              "ba",
+              "bal",
+              "bas",
+              "be",
+              "bem",
+              "bew",
+              "bez",
+              "bg",
+              "bgc",
+              "bgn",
+              "bho",
+              "blo",
+              "blt",
+              "bm",
+              "bn",
+              "bo",
+              "br",
+              "brx",
+              "bs",
+              "bss",
+              "byn",
+              "ca",
+              "cad",
+              "cch",
+              "ccp",
+              "ce",
+              "ceb",
+              "cgg",
+              "cho",
+              "chr",
+              "cic",
+              "ckb",
+              "co",
+              "cs",
+              "csw",
+              "cu",
+              "cv",
+              "cy",
+              "da",
+              "dav",
+              "de",
+              "dje",
+              "doi",
+              "dsb",
+              "dua",
+              "dv",
+              "dyo",
+              "dz",
+              "ebu",
+              "ee",
+              "el",
+              "en",
+              "eo",
+              "es",
+              "et",
+              "eu",
+              "ewo",
+              "fa",
+              "ff",
+              "fi",
+              "fil",
+              "fo",
+              "fr",
+              "frr",
+              "fur",
+              "fy",
+              "ga",
+              "gaa",
+              "gd",
+              "gez",
+              "gl",
+              "gn",
+              "gsw",
+              "gu",
+              "guz",
+              "gv",
+              "ha",
+              "haw",
+              "he",
+              "hi",
+              "hnj",
+              "hr",
+              "hsb",
+              "hu",
+              "hy",
+              "ia",
+              "id",
+              "ie",
+              "ig",
+              "ii",
+              "io",
+              "is",
+              "it",
+              "iu",
+              "ja",
+              "jbo",
+              "jgo",
+              "jmc",
+              "jv",
+              "ka",
+              "kaa",
+              "kab",
+              "kaj",
+              "kam",
+              "kcg",
+              "kde",
+              "kea",
+              "ken",
+              "kgp",
+              "khq",
+              "ki",
+              "kk",
+              "kkj",
+              "kl",
+              "kln",
+              "km",
+              "kn",
+              "ko",
+              "kok",
+              "kpe",
+              "ks",
+              "ksb",
+              "ksf",
+              "ksh",
+              "ku",
+              "kw",
+              "kxv",
+              "ky",
+              "la",
+              "lag",
+              "lb",
+              "lg",
+              "lij",
+              "lkt",
+              "lld",
+              "lmo",
+              "ln",
+              "lo",
+              "lrc",
+              "lt",
+              "ltg",
+              "lu",
+              "luo",
+              "luy",
+              "lv",
+              "mai",
+              "mas",
+              "mdf",
+              "mer",
+              "mfe",
+              "mg",
+              "mgh",
+              "mgo",
+              "mhn",
+              "mi",
+              "mic",
+              "mk",
+              "ml",
+              "mn",
+              "mni",
+              "moh",
+              "mr",
+              "ms",
+              "mt",
+              "mua",
+              "mus",
+              "my",
+              "myv",
+              "mzn",
+              "naq",
+              "nb",
+              "nd",
+              "nds",
+              "ne",
+              "nl",
+              "nmg",
+              "nn",
+              "nnh",
+              "no",
+              "nqo",
+              "nr",
+              "nso",
+              "nus",
+              "nv",
+              "ny",
+              "nyn",
+              "oc",
+              "om",
+              "or",
+              "os",
+              "osa",
+              "pa",
+              "pap",
+              "pcm",
+              "pis",
+              "pl",
+              "prg",
+              "ps",
+              "pt",
+              "qu",
+              "quc",
+              "raj",
+              "rhg",
+              "rif",
+              "rm",
+              "rn",
+              "ro",
+              "rof",
+              "root",
+              "ru",
+              "rw",
+              "rwk",
+              "sa",
+              "sah",
+              "saq",
+              "sat",
+              "sbp",
+              "sc",
+              "scn",
+              "sd",
+              "sdh",
+              "se",
+              "seh",
+              "ses",
+              "sg",
+              "shi",
+              "shn",
+              "si",
+              "sid",
+              "sk",
+              "skr",
+              "sl",
+              "sma",
+              "smj",
+              "smn",
+              "sms",
+              "sn",
+              "so",
+              "sq",
+              "sr",
+              "ss",
+              "ssy",
+              "st",
+              "su",
+              "sv",
+              "sw",
+              "syr",
+              "szl",
+              "ta",
+              "te",
+              "teo",
+              "tg",
+              "th",
+              "ti",
+              "tig",
+              "tk",
+              "tn",
+              "to",
+              "tok",
+              "tpi",
+              "tr",
+              "trv",
+              "trw",
+              "ts",
+              "tt",
+              "twq",
+              "tyv",
+              "tzm",
+              "ug",
+              "uk",
+              "ur",
+              "uz",
+              "vai",
+              "ve",
+              "vec",
+              "vi",
+              "vmw",
+              "vo",
+              "vun",
+              "wa",
+              "wae",
+              "wal",
+              "wbp",
+              "wo",
+              "xh",
+              "xnr",
+              "xog",
+              "yav",
+              "yi",
+              "yo",
+              "yrl",
+              "yue",
+              "za",
+              "zgh",
+              "zh-CN",
+              "zh-TW",
+              "zu"
+            ]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "previewText": {
+            "type": "string"
+          },
+          "htmlContent": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "lang",
+          "subject",
+          "htmlContent"
+        ]
+      },
       "GetCurrentUserPermissionsResponse": {
         "type": "object",
         "properties": {
@@ -106907,6 +107686,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -106935,9 +107720,9 @@
             "minItems": 1
           },
           "htmlContent": {
-            "description": "HTML content of the email template with {{variable}} placeholders",
+            "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
             "type": "string",
-            "minLength": 1
+            "maxLength": 60000
           },
           "textContent": {
             "description": "Plain text fallback content",
@@ -107033,11 +107818,21 @@
                   "maxLength": 200
                 },
                 "contentBlocks": {
-                  "description": "Translatable text content keyed by block name, injected into {{ contentBlock.* }} placeholders in htmlContent",
+                  "description": "Legacy translatable text blocks keyed by name, still resolved into {{ contentBlocks.* }} placeholders at send time",
                   "type": "object",
                   "additionalProperties": {
                     "type": "string"
                   }
+                },
+                "htmlContent": {
+                  "description": "Email-ready HTML body for this language with {{ variable }} placeholders, exported by the visual editor. Falls back to the default-language body when absent",
+                  "type": "string",
+                  "maxLength": 30000
+                },
+                "editorContent": {
+                  "description": "TipTap JSON document for this language — the visual editor's source of truth for re-editing",
+                  "type": "object",
+                  "additionalProperties": {}
                 },
                 "accountId": {
                   "type": "string",
@@ -107085,7 +107880,6 @@
           "name",
           "defaultLang",
           "langs",
-          "htmlContent",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -107123,6 +107917,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -107151,9 +107951,9 @@
             "minItems": 1
           },
           "htmlContent": {
-            "description": "HTML content of the email template with {{variable}} placeholders",
+            "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
             "type": "string",
-            "minLength": 1
+            "maxLength": 60000
           },
           "textContent": {
             "description": "Plain text fallback content",
@@ -107201,7 +108001,6 @@
           "name",
           "defaultLang",
           "langs",
-          "htmlContent",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -107272,11 +108071,21 @@
                   "maxLength": 200
                 },
                 "contentBlocks": {
-                  "description": "Translatable text content keyed by block name, injected into {{ contentBlock.* }} placeholders in htmlContent",
+                  "description": "Legacy translatable text blocks keyed by name, still resolved into {{ contentBlocks.* }} placeholders at send time",
                   "type": "object",
                   "additionalProperties": {
                     "type": "string"
                   }
+                },
+                "htmlContent": {
+                  "description": "Email-ready HTML body for this language with {{ variable }} placeholders, exported by the visual editor. Falls back to the default-language body when absent",
+                  "type": "string",
+                  "maxLength": 30000
+                },
+                "editorContent": {
+                  "description": "TipTap JSON document for this language — the visual editor's source of truth for re-editing",
+                  "type": "object",
+                  "additionalProperties": {}
                 },
                 "accountId": {
                   "type": "string",
@@ -117436,6 +118245,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -117716,6 +118531,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -135109,6 +135930,14 @@
                 "type": "string",
                 "format": "date-time"
               },
+              "lastReminderSentStage": {
+                "description": "Latest pre-expiry reminder the lifecycle scheduler has sent (absent = none). Drives reminder idempotency; managed only by the scheduler.",
+                "type": "string",
+                "enum": [
+                  "SENT_7D",
+                  "SENT_1D"
+                ]
+              },
               "accountId": {
                 "type": "string",
                 "maxLength": 10,
@@ -135258,6 +136087,14 @@
             "description": "Set once (idempotently) when the first invited customer accepts the invitation and their user record is created. Conversion-analytics signal.",
             "type": "string",
             "format": "date-time"
+          },
+          "lastReminderSentStage": {
+            "description": "Latest pre-expiry reminder the lifecycle scheduler has sent (absent = none). Drives reminder idempotency; managed only by the scheduler.",
+            "type": "string",
+            "enum": [
+              "SENT_7D",
+              "SENT_1D"
+            ]
           },
           "accountId": {
             "type": "string",
@@ -146726,6 +147563,12 @@
                     "INVITATION_OWNER_TRIAL",
                     "INVITATION_OWNER",
                     "INVITATION_USER",
+                    "TRIAL_EXPIRING_7D",
+                    "TRIAL_EXPIRING_1D",
+                    "TRIAL_EXPIRED",
+                    "SUBSCRIPTION_EXPIRING_7D",
+                    "SUBSCRIPTION_EXPIRING_1D",
+                    "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST"
@@ -146754,9 +147597,9 @@
                   "minItems": 1
                 },
                 "htmlContent": {
-                  "description": "HTML content of the email template with {{variable}} placeholders",
+                  "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
                   "type": "string",
-                  "minLength": 1
+                  "maxLength": 60000
                 },
                 "textContent": {
                   "description": "Plain text fallback content",
@@ -146856,11 +147699,21 @@
                         "maxLength": 200
                       },
                       "contentBlocks": {
-                        "description": "Translatable text content keyed by block name, injected into {{ contentBlock.* }} placeholders in htmlContent",
+                        "description": "Legacy translatable text blocks keyed by name, still resolved into {{ contentBlocks.* }} placeholders at send time",
                         "type": "object",
                         "additionalProperties": {
                           "type": "string"
                         }
+                      },
+                      "htmlContent": {
+                        "description": "Email-ready HTML body for this language with {{ variable }} placeholders, exported by the visual editor. Falls back to the default-language body when absent",
+                        "type": "string",
+                        "maxLength": 30000
+                      },
+                      "editorContent": {
+                        "description": "TipTap JSON document for this language — the visual editor's source of truth for re-editing",
+                        "type": "object",
+                        "additionalProperties": {}
                       },
                       "accountId": {
                         "type": "string",
@@ -146908,7 +147761,6 @@
                 "name",
                 "defaultLang",
                 "langs",
-                "htmlContent",
                 "accountId",
                 "workspaceId",
                 "sourceRegion",
@@ -146995,6 +147847,12 @@
                     "INVITATION_OWNER_TRIAL",
                     "INVITATION_OWNER",
                     "INVITATION_USER",
+                    "TRIAL_EXPIRING_7D",
+                    "TRIAL_EXPIRING_1D",
+                    "TRIAL_EXPIRED",
+                    "SUBSCRIPTION_EXPIRING_7D",
+                    "SUBSCRIPTION_EXPIRING_1D",
+                    "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST"
@@ -147023,9 +147881,9 @@
                   "minItems": 1
                 },
                 "htmlContent": {
-                  "description": "HTML content of the email template with {{variable}} placeholders",
+                  "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
                   "type": "string",
-                  "minLength": 1
+                  "maxLength": 60000
                 },
                 "textContent": {
                   "description": "Plain text fallback content",
@@ -147121,11 +147979,21 @@
                         "maxLength": 200
                       },
                       "contentBlocks": {
-                        "description": "Translatable text content keyed by block name, injected into {{ contentBlock.* }} placeholders in htmlContent",
+                        "description": "Legacy translatable text blocks keyed by name, still resolved into {{ contentBlocks.* }} placeholders at send time",
                         "type": "object",
                         "additionalProperties": {
                           "type": "string"
                         }
+                      },
+                      "htmlContent": {
+                        "description": "Email-ready HTML body for this language with {{ variable }} placeholders, exported by the visual editor. Falls back to the default-language body when absent",
+                        "type": "string",
+                        "maxLength": 30000
+                      },
+                      "editorContent": {
+                        "description": "TipTap JSON document for this language — the visual editor's source of truth for re-editing",
+                        "type": "object",
+                        "additionalProperties": {}
                       },
                       "accountId": {
                         "type": "string",
@@ -147173,7 +148041,6 @@
                 "name",
                 "defaultLang",
                 "langs",
-                "htmlContent",
                 "accountId",
                 "workspaceId",
                 "sourceRegion",
@@ -160808,6 +161675,12 @@
                     "INVITATION_OWNER_TRIAL",
                     "INVITATION_OWNER",
                     "INVITATION_USER",
+                    "TRIAL_EXPIRING_7D",
+                    "TRIAL_EXPIRING_1D",
+                    "TRIAL_EXPIRED",
+                    "SUBSCRIPTION_EXPIRING_7D",
+                    "SUBSCRIPTION_EXPIRING_1D",
+                    "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST"
@@ -161141,6 +162014,12 @@
                     "INVITATION_OWNER_TRIAL",
                     "INVITATION_OWNER",
                     "INVITATION_USER",
+                    "TRIAL_EXPIRING_7D",
+                    "TRIAL_EXPIRING_1D",
+                    "TRIAL_EXPIRED",
+                    "SUBSCRIPTION_EXPIRING_7D",
+                    "SUBSCRIPTION_EXPIRING_1D",
+                    "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST"
@@ -161440,6 +162319,12 @@
                     "INVITATION_OWNER_TRIAL",
                     "INVITATION_OWNER",
                     "INVITATION_USER",
+                    "TRIAL_EXPIRING_7D",
+                    "TRIAL_EXPIRING_1D",
+                    "TRIAL_EXPIRED",
+                    "SUBSCRIPTION_EXPIRING_7D",
+                    "SUBSCRIPTION_EXPIRING_1D",
+                    "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST"
@@ -184076,6 +184961,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -184104,9 +184995,9 @@
             "minItems": 1
           },
           "htmlContent": {
-            "description": "HTML content of the email template with {{variable}} placeholders",
+            "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
             "type": "string",
-            "minLength": 1
+            "maxLength": 60000
           },
           "textContent": {
             "description": "Plain text fallback content",
@@ -184156,7 +185047,6 @@
           "name",
           "defaultLang",
           "langs",
-          "htmlContent",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -187168,6 +188058,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -204886,6 +205782,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -212565,6 +213467,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
@@ -212593,9 +213501,9 @@
             "minItems": 1
           },
           "htmlContent": {
-            "description": "HTML content of the email template with {{variable}} placeholders",
+            "description": "Legacy single-language HTML body with {{variable}} placeholders. Superseded by the per-translation htmlContent; kept as the send-time fallback for templates created before per-language bodies",
             "type": "string",
-            "minLength": 1
+            "maxLength": 60000
           },
           "textContent": {
             "description": "Plain text fallback content",
@@ -212637,7 +213545,6 @@
           "name",
           "defaultLang",
           "langs",
-          "htmlContent",
           "accountId",
           "workspaceId",
           "sourceRegion",
@@ -217195,6 +218102,12 @@
               "INVITATION_OWNER_TRIAL",
               "INVITATION_OWNER",
               "INVITATION_USER",
+              "TRIAL_EXPIRING_7D",
+              "TRIAL_EXPIRING_1D",
+              "TRIAL_EXPIRED",
+              "SUBSCRIPTION_EXPIRING_7D",
+              "SUBSCRIPTION_EXPIRING_1D",
+              "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST"
