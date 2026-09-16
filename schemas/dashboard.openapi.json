@@ -909,7 +909,9 @@
                       "learningGroup",
                       "learningPath",
                       "leaderboardConfiguration",
-                      "emailTemplate"
+                      "emailTemplate",
+                      "rewardRule",
+                      "streakRule"
                     ]
                   },
                   "fields": {
@@ -19563,7 +19565,7 @@
       "post": {
         "operationId": "learningGroups/generate",
         "summary": "Generate learning group",
-        "description": "Generates a learning group using AI based on a prompt and optional files.",
+        "description": "Reserved for generating a single learning group with AI from a prompt and optional files. Not implemented yet: every call returns 501.",
         "requestBody": {
           "required": true,
           "content": {
@@ -19623,6 +19625,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "501": {
+            "description": "Not implemented yet"
           }
         },
         "tags": [
