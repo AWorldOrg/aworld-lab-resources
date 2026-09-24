@@ -6937,7 +6937,7 @@
       "post": {
         "operationId": "badgeConfigurations/createTags",
         "summary": "Create multiple badge configuration tag assignments",
-        "description": "Creates multiple tag assignments for a specific badge configuration.",
+        "description": "Attaches several tags to this badge configuration in one transaction. Existing assignments are left untouched; re-sending one is a no-op rather than an error.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -7027,7 +7027,7 @@
       "delete": {
         "operationId": "badgeConfigurations/deleteTags",
         "summary": "Delete multiple badge configuration tag assignments",
-        "description": "Deletes multiple tag assignments from a specific badge configuration.",
+        "description": "Detaches several tags from this badge configuration in one transaction. The tag definitions themselves are untouched; only the assignments are removed.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -7098,7 +7098,7 @@
       "get": {
         "operationId": "badgeConfigurations/listTags",
         "summary": "List badge configuration tag assignments",
-        "description": "List tag assignments for a specific badge configuration with pagination.",
+        "description": "Lists the tags attached to this badge configuration. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -7188,7 +7188,7 @@
       "patch": {
         "operationId": "badgeConfigurations/updateTags",
         "summary": "Update multiple badge configuration tag assignments",
-        "description": "Updates multiple tag assignments for a specific badge configuration.",
+        "description": "Updates several of this badge configuration's tag assignments in one transaction — today that means their priority, the field that orders tags expressing a sequence.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -7534,7 +7534,7 @@
       "get": {
         "operationId": "badgeConfigurations/listTranslations",
         "summary": "List badge configuration translations",
-        "description": "List translations for a specific badge configuration.",
+        "description": "Lists every stored translation of this badge configuration, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -9445,7 +9445,7 @@
       "get": {
         "operationId": "contentLayouts/listTags",
         "summary": "List content layout tag assignments",
-        "description": "List all tag assignments for a specific content layout.",
+        "description": "Lists the tags attached to this content layout. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "contentLayoutId",
@@ -9847,7 +9847,7 @@
       "get": {
         "operationId": "contentLayouts/listTranslations",
         "summary": "List content layout translations",
-        "description": "List translations for a specific content layout.",
+        "description": "Lists every stored translation of this content layout, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "contentLayoutId",
@@ -12660,7 +12660,7 @@
       "post": {
         "operationId": "contentPresets/publish",
         "summary": "Publish a content preset",
-        "description": "Publishes a content preset",
+        "description": "Publishes the content preset's current draft, making it the version AI generation reads. Edits are saved as drafts and have no effect on generated content until this is called.",
         "parameters": [
           {
             "name": "contentPresetId",
@@ -14752,7 +14752,7 @@
       "get": {
         "operationId": "emailTemplates/list",
         "summary": "List email templates",
-        "description": "List email templates with pagination.",
+        "description": "Lists the workspace's email templates with pagination. Each template declares the notification topic it belongs to — a template with no topic is transactional and can never be suppressed by a user's preferences.",
         "parameters": [
           {
             "name": "limit",
@@ -16879,7 +16879,7 @@
       "get": {
         "operationId": "learningGroups/listTags",
         "summary": "List learning group tag assignments",
-        "description": "List all tag assignments for a specific learning group.",
+        "description": "Lists the tags attached to this learning group. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "learningGroupId",
@@ -17431,7 +17431,7 @@
       "get": {
         "operationId": "learningGroups/listTranslations",
         "summary": "List learning group translations",
-        "description": "List translations for a specific learning group.",
+        "description": "Lists every stored translation of this learning group, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "learningGroupId",
@@ -23527,7 +23527,7 @@
       "get": {
         "operationId": "learningPaths/listTags",
         "summary": "List learning path tag assignments",
-        "description": "List all tag assignments for a specific learning path.",
+        "description": "Lists the tags attached to this learning path. Rules pool learning paths by tag rather than by id, so this is what decides which cohorts and campaigns a path belongs to.",
         "parameters": [
           {
             "name": "learningPathId",
@@ -29412,7 +29412,7 @@
       "get": {
         "operationId": "missionConfigurations/listTags",
         "summary": "List mission configuration tag assignments",
-        "description": "List all tag assignments for a specific mission configuration.",
+        "description": "Lists the tags attached to this mission configuration. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -29980,7 +29980,7 @@
       "get": {
         "operationId": "missionConfigurations/listTranslations",
         "summary": "List mission configuration translations",
-        "description": "List translations for a specific mission configuration.",
+        "description": "Lists every stored translation of this mission configuration, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "missionConfigurationId",
@@ -32001,7 +32001,7 @@
       "get": {
         "operationId": "missionRules/listTags",
         "summary": "List mission rule tag assignments",
-        "description": "List tag assignments for a specific mission rule.",
+        "description": "Lists the tags attached to this mission rule. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -32060,7 +32060,7 @@
       "post": {
         "operationId": "missionRules/createTags",
         "summary": "Create multiple mission rule tag assignments",
-        "description": "Creates multiple tag assignments for a specific mission rule.",
+        "description": "Attaches several tags to this mission rule in one transaction. Existing assignments are left untouched; re-sending one is a no-op rather than an error.",
         "parameters": [
           {
             "name": "missionRuleId",
@@ -32148,7 +32148,7 @@
       "patch": {
         "operationId": "missionRules/updateTags",
         "summary": "Update multiple mission rule tag assignments",
-        "description": "Updates multiple tag assignments for a specific mission rule.",
+        "description": "Updates several of this mission rule's tag assignments in one transaction — today that means their priority, the field that orders tags expressing a sequence.",
         "parameters": [
           {
             "name": "missionRuleId",
@@ -32233,7 +32233,7 @@
       "delete": {
         "operationId": "missionRules/deleteTags",
         "summary": "Delete multiple mission rule tag assignments",
-        "description": "Deletes multiple tag assignments from a specific mission rule.",
+        "description": "Detaches several tags from this mission rule in one transaction. The tag definitions themselves are untouched; only the assignments are removed.",
         "parameters": [
           {
             "name": "missionRuleId",
@@ -32553,7 +32553,7 @@
       "get": {
         "operationId": "missionRules/listTranslations",
         "summary": "List mission rule translations",
-        "description": "List translations for a specific mission rule.",
+        "description": "Lists every stored translation of this mission rule, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "limit",
@@ -35526,7 +35526,7 @@
       "get": {
         "operationId": "notificationRules/listTranslations",
         "summary": "List notification rule translations",
-        "description": "List translations for a specific notification rule.",
+        "description": "Lists every stored translation of this notification rule, one row per language. Recipients are messaged in their own language when a row exists and in the entity's `defaultLang` otherwise.",
         "parameters": [
           {
             "name": "limit",
@@ -39385,7 +39385,7 @@
       "get": {
         "operationId": "quizzes/listTags",
         "summary": "List quiz tag assignments",
-        "description": "List all tag assignments for a specific quiz.",
+        "description": "Lists the tags attached to this quiz. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -43047,7 +43047,7 @@
       "get": {
         "operationId": "rewardRules/listTranslations",
         "summary": "List reward rule translations",
-        "description": "List translations for a specific reward rule.",
+        "description": "Lists every stored translation of this reward rule, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "rewardRuleId",
@@ -45267,6 +45267,57 @@
                     },
                     "maxItems": 10,
                     "minItems": 1
+                  },
+                  "publish": {
+                    "description": "Publish the configuration as part of this request, so it is live when the call returns. Defaults to false, which creates it unpublished and leaves publishing to POST /{id}/publish.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "instance": {
+                    "description": "First leaderboard instance, created in the same request. Requires `publish: true`. Omit to create the configuration alone and add instances later via POST /{id}/instances.",
+                    "type": "object",
+                    "properties": {
+                      "timeframeType": {
+                        "type": "string",
+                        "enum": [
+                          "PERMANENT",
+                          "RANGE",
+                          "RECURRING"
+                        ]
+                      },
+                      "timeframeTimezoneType": {
+                        "type": "string",
+                        "enum": [
+                          "FIXED",
+                          "USER"
+                        ]
+                      },
+                      "timeframeTimezone": {
+                        "$ref": "#/components/schemas/Timezone"
+                      },
+                      "timeframeStartsAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "timeframeEndsAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "recurrence": {
+                        "type": "string",
+                        "enum": [
+                          "DAILY",
+                          "WEEKLY",
+                          "MONTHLY",
+                          "CUSTOM"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "timeframeType",
+                      "timeframeTimezoneType",
+                      "timeframeStartsAt"
+                    ]
                   }
                 },
                 "required": [
@@ -46161,6 +46212,11 @@
                     },
                     "maxItems": 10,
                     "minItems": 1
+                  },
+                  "publish": {
+                    "description": "Publish this edit as part of the same request, so it is live when the call returns. Defaults to false, which stores the edit as a new unpublished version and leaves publishing to POST /{id}/publish.",
+                    "type": "boolean",
+                    "default": false
                   }
                 },
                 "required": [
@@ -46657,7 +46713,7 @@
       "get": {
         "operationId": "runtimeLeaderboardConfigurations/listTranslations",
         "summary": "List runtime leaderboard configuration translations",
-        "description": "List translations for a specific runtime leaderboard configuration.",
+        "description": "Lists every stored translation of this leaderboard configuration, one row per language — the board's label, description and score label. A reader whose language is missing falls back to the entity's `defaultLang`.",
         "parameters": [
           {
             "name": "runtimeLeaderboardConfigurationId",
@@ -47225,7 +47281,7 @@
       "get": {
         "operationId": "slides/listTags",
         "summary": "List slide tag assignments",
-        "description": "List all tag assignments for a specific slide.",
+        "description": "Lists the tags attached to this slide. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -49193,7 +49249,7 @@
       "get": {
         "operationId": "streakConfigurations/listTags",
         "summary": "List streak configuration tag assignments",
-        "description": "List all tag assignments for a specific streak configuration.",
+        "description": "Lists the tags attached to this streak configuration. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -49588,7 +49644,7 @@
       "get": {
         "operationId": "streakConfigurations/listTranslations",
         "summary": "List streak configuration translations",
-        "description": "List translations for a specific streak configuration.",
+        "description": "Lists every stored translation of this streak configuration, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "streakConfigurationId",
@@ -50637,7 +50693,7 @@
       "get": {
         "operationId": "streakRules/listTags",
         "summary": "List streak rule tag assignments",
-        "description": "List all tag assignments for a specific streak rule.",
+        "description": "Lists the tags attached to this streak rule. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -51032,7 +51088,7 @@
       "get": {
         "operationId": "streakRules/listTranslations",
         "summary": "List streak rule translations",
-        "description": "List translations for a specific streak rule.",
+        "description": "Lists every stored translation of this streak rule, one row per language. A reader whose language is missing falls back to the entity's `defaultLang`, so a partial set is valid rather than broken.",
         "parameters": [
           {
             "name": "streakRuleId",
@@ -58775,7 +58831,7 @@
       "post": {
         "operationId": "users/createTags",
         "summary": "Create multiple user tag assignments",
-        "description": "Creates multiple tag assignments for a user.",
+        "description": "Attaches several tags to a user in one transaction. User tags drive cohort membership, so this can make the user match assignment, mission and leaderboard rules — the reconciliation runs asynchronously afterwards.",
         "parameters": [
           {
             "name": "userId",
@@ -58884,7 +58940,7 @@
       "patch": {
         "operationId": "users/updateTags",
         "summary": "Update multiple user tag assignments",
-        "description": "Updates multiple tag assignments for a user.",
+        "description": "Updates several of a user's tag assignments in one transaction. Because rules match on user tags, a change here can move the user between cohorts; reconciliation runs asynchronously afterwards.",
         "parameters": [
           {
             "name": "userId",
@@ -58993,7 +59049,7 @@
       "delete": {
         "operationId": "users/deleteTags",
         "summary": "Delete multiple user tag assignments",
-        "description": "Deletes multiple tag assignments from a user.",
+        "description": "Detaches several tags from a user in one transaction. Removing a tag can revoke rule-driven assignments the user held through it; reconciliation runs asynchronously afterwards.",
         "parameters": [
           {
             "name": "userId",
@@ -64231,7 +64287,7 @@
       "get": {
         "operationId": "virtualCurrencies/listTranslations",
         "summary": "List virtual currency translations",
-        "description": "List translations for a specific virtual currency.",
+        "description": "Lists every stored translation of this virtual currency, one row per language — this is where its display name comes from. A reader whose language is missing falls back to the entity's `defaultLang`.",
         "parameters": [
           {
             "name": "virtualCurrencyId",
@@ -64418,7 +64474,7 @@
       "post": {
         "operationId": "virtualTransactions/create",
         "summary": "Create virtual transaction",
-        "description": "Creates one or more virtual transactions (credits, debits, or transfers between users). Supports batch operations up to 20 transactions per request.",
+        "description": "Records a virtual currency movement and updates the affected balances in a single transaction. One user against the platform writes one ledger row; a transfer between two users writes a credit and a debit sharing a group id, so value can be neither created nor destroyed.",
         "parameters": [
           {
             "name": "x-external-user-id",
@@ -89980,6 +90036,103 @@
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
             "format": "date-time"
+          },
+          "instance": {
+            "type": "object",
+            "properties": {
+              "runtimeLeaderboardId": {
+                "type": "string"
+              },
+              "runtimeLeaderboardConfigurationId": {
+                "type": "string"
+              },
+              "periodId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "timeframeType": {
+                "type": "string",
+                "enum": [
+                  "PERMANENT",
+                  "RANGE",
+                  "RECURRING"
+                ]
+              },
+              "timeframeTimezoneType": {
+                "type": "string",
+                "enum": [
+                  "FIXED",
+                  "USER"
+                ]
+              },
+              "timeframeTimezone": {
+                "$ref": "#/components/schemas/Timezone"
+              },
+              "timeframeStartsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "timeframeEndsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "state": {
+                "type": "string",
+                "default": "PENDING",
+                "enum": [
+                  "PENDING",
+                  "ACTIVE",
+                  "ENDED"
+                ]
+              },
+              "recurrence": {
+                "type": "string",
+                "enum": [
+                  "DAILY",
+                  "WEEKLY",
+                  "MONTHLY",
+                  "CUSTOM"
+                ]
+              },
+              "accountId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "workspaceId": {
+                "type": "string",
+                "maxLength": 10,
+                "minLength": 10,
+                "pattern": "^[A-Za-z0-9_-]{10}$"
+              },
+              "sourceRegion": {
+                "$ref": "#/components/schemas/SourceRegion"
+              },
+              "createdAt": {
+                "description": "Creation date in ISO format (UTC Timezone)",
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "description": "Creation date in ISO format (UTC Timezone)",
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "runtimeLeaderboardId",
+              "runtimeLeaderboardConfigurationId",
+              "periodId",
+              "timeframeType",
+              "timeframeTimezoneType",
+              "timeframeStartsAt",
+              "accountId",
+              "workspaceId",
+              "sourceRegion",
+              "createdAt",
+              "updatedAt"
+            ]
           }
         },
         "required": [
@@ -129905,6 +130058,9 @@
           },
           "userId": {
             "type": "string"
+          },
+          "lang": {
+            "$ref": "#/components/schemas/Lang"
           },
           "context": {
             "type": "string",
@@ -177846,6 +178002,9 @@
                 },
                 "userId": {
                   "type": "string"
+                },
+                "lang": {
+                  "$ref": "#/components/schemas/Lang"
                 },
                 "context": {
                   "type": "string",

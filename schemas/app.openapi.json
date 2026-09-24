@@ -872,7 +872,7 @@
       "post": {
         "operationId": "assignments/retry",
         "summary": "Retry assignment",
-        "description": "Retry a assignment.",
+        "description": "Starts a new attempt on an assignment, incrementing its attempt counter. Progress is scoped per attempt, so the previous attempt's answers stay recorded and are not resurfaced; only an ACTIVE, UNLOCKED assignment can be retried.",
         "parameters": [
           {
             "name": "assignmentId",
@@ -1384,7 +1384,7 @@
       "get": {
         "operationId": "badgeConfigurations/listTags",
         "summary": "List badge configuration tag assignments",
-        "description": "List tag assignments for a specific badge configuration.",
+        "description": "Lists the tags attached to this badge configuration. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -2150,7 +2150,7 @@
       "get": {
         "operationId": "learningGroups/listTags",
         "summary": "List learning group tag assignments",
-        "description": "List tag assignments for a specific learning group.",
+        "description": "Lists the tags attached to this learning group. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "learningGroupId",
@@ -2833,7 +2833,7 @@
       "get": {
         "operationId": "learningPathAssignments/listItems",
         "summary": "List learning path assignment items",
-        "description": "List items belonging to a learning path assignment.",
+        "description": "Lists the learning path's items as this user sees them: resolved from the path's ordered reference array, filtered to the items available in their language, each carrying that user's progress and outcome for the current attempt.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -2947,7 +2947,7 @@
       "post": {
         "operationId": "learningPathAssignments/retry",
         "summary": "Retry learning path assignment",
-        "description": "Retry a learning path assignment.",
+        "description": "Starts a new attempt on a learning path assignment, incrementing its attempt counter. A FAIL retry resets every item; a PASS retry carries the successful items over, so the two produce different starting progress.",
         "parameters": [
           {
             "name": "learningPathAssignmentId",
@@ -3892,7 +3892,7 @@
       "get": {
         "operationId": "quizzes/listTags",
         "summary": "List quiz tag assignments",
-        "description": "List tag assignments for a specific quiz.",
+        "description": "Lists the tags attached to this quiz. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -4761,7 +4761,7 @@
       "get": {
         "operationId": "slides/listTags",
         "summary": "List slide tag assignments",
-        "description": "List tag assignments for a specific slide.",
+        "description": "Lists the tags attached to this slide. A tag is a shared `namespace:variant` label, and each assignment carries a priority that orders it where the tag expresses a sequence rather than a set.",
         "parameters": [
           {
             "name": "limit",
@@ -6090,7 +6090,7 @@
       "get": {
         "operationId": "users/listMyLearningGroupLogs",
         "summary": "List current user learning group logs",
-        "description": "List completed learning group logs for the current authenticated user.",
+        "description": "Lists the authenticated user's completed learning group logs. One row per group per attempt context, which is what distinguishes a repeat of the same group from the original run.",
         "parameters": [
           {
             "name": "limit",
@@ -6404,7 +6404,7 @@
       "get": {
         "operationId": "users/me/tags/list",
         "summary": "List current user tag assignments",
-        "description": "List tag assignments for the current authenticated user.",
+        "description": "Lists the tags carried by the authenticated user. User tags drive cohort membership: rules assign learning paths, missions and leaderboard audiences by matching on them, so this is the caller's own segmentation as the engines see it.",
         "parameters": [
           {
             "name": "limit",
@@ -6906,7 +6906,7 @@
       "get": {
         "operationId": "virtualTransactions/list",
         "summary": "List virtual transactions",
-        "description": "List virtual transactions with pagination.",
+        "description": "Lists the authenticated user's virtual transactions, most recent first. Each row is one side of a ledger entry — a peer-to-peer transfer appears as two rows sharing a transaction group id.",
         "parameters": [
           {
             "name": "limit",
@@ -7007,7 +7007,7 @@
       "post": {
         "operationId": "virtualTransactions/create",
         "summary": "Create virtual transaction",
-        "description": "Create a new virtual transaction.",
+        "description": "Records a virtual currency movement and updates the affected balances in a single transaction. One user against the platform writes one ledger row; a transfer between two users writes a credit and a debit sharing a group id, so value can be neither created nor destroyed.",
         "parameters": [
           {
             "name": "x-external-user-id",
@@ -7187,7 +7187,7 @@
       "post": {
         "operationId": "virtualTransactions/redeem",
         "summary": "Redeem virtual transaction",
-        "description": "Redeem a virtual transaction.",
+        "description": "Settles a PENDING manual-redemption transaction, moving the reserved amount out of the balance for good. Only PENDING transactions can be redeemed; AUTO transactions are already complete when created.",
         "parameters": [
           {
             "name": "virtualTransactionId",
@@ -21739,6 +21739,9 @@
           },
           "userId": {
             "type": "string"
+          },
+          "lang": {
+            "$ref": "#/components/schemas/Lang"
           },
           "context": {
             "type": "string",
