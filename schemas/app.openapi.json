@@ -62,6 +62,7 @@
                     "type": "string"
                   },
                   "outcome": {
+                    "description": "Whether the user succeeded at the activity, as reported by the caller.\n\nIt is kept as sent and never computed; leave it out for an activity with no success or failure. Mission, streak and reward rules can test it as event.outcome. The failure value is FAILURE, not the FAIL that quiz and learning path logs use.",
                     "type": "string",
                     "enum": [
                       "SUCCESS",
@@ -69,6 +70,7 @@
                     ]
                   },
                   "value": {
+                    "description": "How much of the activity this log records, 1 when omitted.\n\nIt is kept as sent. Mission, streak and reward rules can read it as event.value, for example to advance a mission by the amount reported; a rule that does not read it counts every log alike, whatever its value.",
                     "type": "number",
                     "default": 1
                   },
@@ -345,8 +347,10 @@
           {
             "name": "assignmentType",
             "in": "query",
+            "description": "Whether the assignment is compulsory or suggested for the user. REQUIRED marks a compulsory assignment and OPTIONAL a suggested one; the app shows survey assignments the same way whichever the type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same target.",
             "required": false,
             "schema": {
+              "description": "Whether the assignment is compulsory or suggested for the user. REQUIRED marks a compulsory assignment and OPTIONAL a suggested one; the app shows survey assignments the same way whichever the type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same target.",
               "type": "string",
               "enum": [
                 "REQUIRED",
@@ -456,8 +460,10 @@
           {
             "name": "state",
             "in": "query",
+            "description": "Where the assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app offers only ACTIVE assignments and does not let the user start a PENDING or ENDED one, and only an ACTIVE assignment can be retried.",
             "required": false,
             "schema": {
+              "description": "Where the assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app offers only ACTIVE assignments and does not let the user start a PENDING or ENDED one, and only an ACTIVE assignment can be retried.",
               "type": "string",
               "enum": [
                 "PENDING",
@@ -481,8 +487,10 @@
           {
             "name": "visibility",
             "in": "query",
+            "description": "Whether the user can start the assigned item yet. LOCKED: the user cannot start it until it is unlocked, and the app does not offer it as something to do until then. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its target or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
             "required": false,
             "schema": {
+              "description": "Whether the user can start the assigned item yet. LOCKED: the user cannot start it until it is unlocked, and the app does not offer it as something to do until then. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its target or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
               "type": "string",
               "enum": [
                 "LOCKED",
@@ -1790,8 +1798,10 @@
           {
             "name": "slug",
             "in": "query",
+            "description": "Sets the workspace's subdomain, the leading segment of its sign-in and app URLs, as lowercase letters, digits and hyphens. It can be changed after creation: renaming moves the workspace to its new address and the old address stops working, including links already sent to it (such as invitation emails). Some workspaces cannot be renamed, and every value must be unique across workspaces and outside the names the platform reserves for its own routing.",
             "required": true,
             "schema": {
+              "description": "Sets the workspace's subdomain, the leading segment of its sign-in and app URLs, as lowercase letters, digits and hyphens. It can be changed after creation: renaming moves the workspace to its new address and the old address stops working, including links already sent to it (such as invitation emails). Some workspaces cannot be renamed, and every value must be unique across workspaces and outside the names the platform reserves for its own routing.",
               "type": "string",
               "minLength": 1,
               "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
@@ -2366,8 +2376,10 @@
           {
             "name": "assignmentType",
             "in": "query",
+            "description": "Whether the learning path is compulsory or suggested for the user. REQUIRED: shown in the app among the user's assigned (required) learning paths. OPTIONAL: shown in a separate suggested section, which the app hides when empty. Once started, a learning path is listed with the others whatever its type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same learning path.",
             "required": false,
             "schema": {
+              "description": "Whether the learning path is compulsory or suggested for the user. REQUIRED: shown in the app among the user's assigned (required) learning paths. OPTIONAL: shown in a separate suggested section, which the app hides when empty. Once started, a learning path is listed with the others whatever its type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same learning path.",
               "type": "string",
               "enum": [
                 "REQUIRED",
@@ -2448,8 +2460,10 @@
           {
             "name": "state",
             "in": "query",
+            "description": "Where the learning path assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app lists only ACTIVE learning path assignments, and only an ACTIVE one can be retried.",
             "required": false,
             "schema": {
+              "description": "Where the learning path assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app lists only ACTIVE learning path assignments, and only an ACTIVE one can be retried.",
               "type": "string",
               "enum": [
                 "PENDING",
@@ -2461,8 +2475,10 @@
           {
             "name": "visibility",
             "in": "query",
+            "description": "Whether the user can start the assigned learning path yet. LOCKED: the user sees the assigned learning path, marked as locked, but cannot start it until it is unlocked. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its learning path or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
             "required": false,
             "schema": {
+              "description": "Whether the user can start the assigned learning path yet. LOCKED: the user sees the assigned learning path, marked as locked, but cannot start it until it is unlocked. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its learning path or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
               "type": "string",
               "enum": [
                 "LOCKED",
@@ -7050,6 +7066,7 @@
                 "type": "object",
                 "properties": {
                   "transactions": {
+                    "description": "The transfers to make from your own balance, from 1 to 20.\n\nEach one moves amount from your balance to destinationUserId's, as a credit on them and a matching debit on you. They are written in one all-or-nothing operation, so a destination user or currency that does not exist fails every entry. A currency with no minimum allowed balance lets your balance go negative; one with a minimum rejects any entry that would cross it.",
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -7567,6 +7584,7 @@
             "type": "string"
           },
           "outcome": {
+            "description": "Whether the user succeeded at the activity, as reported by the caller.\n\nIt is kept as sent and never computed; leave it out for an activity with no success or failure. Mission, streak and reward rules can test it as event.outcome. The failure value is FAILURE, not the FAIL that quiz and learning path logs use.",
             "type": "string",
             "enum": [
               "SUCCESS",
@@ -7574,6 +7592,7 @@
             ]
           },
           "value": {
+            "description": "How much of the activity this log records, 1 when omitted.\n\nIt is kept as sent. Mission, streak and reward rules can read it as event.value, for example to advance a mission by the amount reported; a rule that does not read it counts every log alike, whatever its value.",
             "type": "number",
             "default": 1
           },
@@ -7920,6 +7939,7 @@
             "type": "string"
           },
           "title": {
+            "description": "The survey's name, shown to users as the title of their survey assignments and to admins across the console.\n\nIt is one value for every language, not a translation. Survey search matches it as full text and can sort by it.",
             "type": "string",
             "minLength": 1
           },
@@ -7933,6 +7953,7 @@
             }
           },
           "origin": {
+            "description": "Records where the survey came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the survey is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. Survey search can filter on it; beyond that it records provenance only and changes nothing about how the survey behaves.",
             "type": "string",
             "enum": [
               "CATALOG",
@@ -7985,6 +8006,7 @@
             "type": "string"
           },
           "parentType": {
+            "description": "Whether parentId names a learning group or a learning path, the parent this item belongs to directly.\n\nOnce the item has a parent it cannot move to another: an update that names a different parentId or parentType is rejected with 409 Conflict, so clone the item to use it under another parent. The link does not add the item to the parent's items, which are edited on the parent. Through it, editing the item puts the learning group and learning path above it back into draft until they are published again, and archiving the item takes it out of the parent's items, while restoring it adds it back at the end.",
             "type": "string",
             "enum": [
               "learningPath",
@@ -8217,6 +8239,7 @@
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "targetType": {
+            "description": "The kind of item assigned, which tells how to read targetId. Only survey assignments are handled by these endpoints; learning paths are assigned through the learning path assignment endpoints.",
             "type": "string",
             "enum": [
               "survey",
@@ -8224,6 +8247,7 @@
             ]
           },
           "userId": {
+            "description": "The user the item is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
             "type": "string"
           },
           "assignmentRuleId": {
@@ -8241,14 +8265,17 @@
             }
           },
           "groupId": {
+            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its items one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
             "type": "string",
             "minLength": 1
           },
           "periodId": {
+            "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
             "type": "string",
             "minLength": 1
           },
           "timeframeType": {
+            "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
             "type": "string",
             "enum": [
               "PERMANENT",
@@ -8257,14 +8284,17 @@
             ]
           },
           "startsAt": {
+            "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
             "type": "string",
             "format": "date-time"
           },
           "endsAt": {
+            "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
             "type": "string",
             "format": "date-time"
           },
           "state": {
+            "description": "Where the assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app offers only ACTIVE assignments and does not let the user start a PENDING or ENDED one, and only an ACTIVE assignment can be retried.",
             "type": "string",
             "enum": [
               "PENDING",
@@ -8273,6 +8303,7 @@
             ]
           },
           "visibility": {
+            "description": "Whether the user can start the assigned item yet. LOCKED: the user cannot start it until it is unlocked, and the app does not offer it as something to do until then. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its target or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
             "type": "string",
             "enum": [
               "LOCKED",
@@ -8280,6 +8311,7 @@
             ]
           },
           "assignmentType": {
+            "description": "Whether the assignment is compulsory or suggested for the user. REQUIRED marks a compulsory assignment and OPTIONAL a suggested one; the app shows survey assignments the same way whichever the type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same target.",
             "type": "string",
             "default": "REQUIRED",
             "enum": [
@@ -8288,19 +8320,22 @@
             ]
           },
           "priority": {
+            "description": "Ordering weight among the user's assignments: lower values come first. Within the same state, the assignment list shows unlocked assignments before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of assignments at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
             "type": "number",
             "default": 0
           },
           "unlockedAt": {
+            "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
             "type": "string",
             "format": "date-time"
           },
           "unlockedByRuleId": {
-            "description": "The unique ID of the assignment rule",
+            "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "currentAttempt": {
+            "description": "Which attempt at the assigned item the user is on, starting at 1. Each retry of the assignment adds one and starts a fresh attempt, with nothing carried over from the previous one; the progress returned with the assignment is, by default, that of the current attempt. A retry is accepted only while the assignment is ACTIVE and UNLOCKED, otherwise it fails with 409 Conflict.",
             "type": "integer",
             "default": 1,
             "minimum": 1
@@ -8696,14 +8731,17 @@
                   "type": "string"
                 },
                 "sourceEntityType": {
+                  "description": "Records the kind of item whose event earned this badge, such as Quiz or Mission.",
                   "type": "string",
                   "minLength": 1
                 },
                 "sourceEntityId": {
+                  "description": "The ID of the item whose event caused the award, matching sourceEntityType: its quizId, missionId or equivalent.",
                   "type": "string",
                   "minLength": 1
                 },
                 "rewardRuleId": {
+                  "description": "The reward rule that granted this badge.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -8802,6 +8840,7 @@
             "type": "string"
           },
           "sub": {
+            "description": "Identifies the principal's sign-in account. The platform assigns it when the principal is created and it never changes; callers never send it.",
             "type": "string",
             "minLength": 1
           },
@@ -8810,12 +8849,14 @@
             "format": "email"
           },
           "firstName": {
+            "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
             "type": "string",
             "maxLength": 50,
             "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "lastName": {
+            "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
             "type": "string",
             "maxLength": 50,
             "minLength": 2,
@@ -8859,10 +8900,12 @@
             "type": "string"
           },
           "externalId": {
+            "description": "Your own identifier for the person, for matching them with your systems; GET /users/by-external-id/{externalId} finds the user by it. Creating a user with an externalId that another user of the workspace already has is rejected with 409 Conflict.",
             "type": "string",
             "minLength": 1
           },
           "nickname": {
+            "description": "The name the person goes by in the app, shown there in place of their first and last name. It must be unique within the workspace: a nickname another user already has is rejected with 409 Conflict. The app asks a person who has none to choose one when they sign in, and notification emails greet the person by it.",
             "type": "string",
             "maxLength": 40,
             "minLength": 2,
@@ -8879,6 +8922,7 @@
             "$ref": "#/components/schemas/Timezone"
           },
           "currency": {
+            "description": "The person's own choice of currency for money amounts, as an ISO 4217 code; unset when they have not made one.",
             "type": "string",
             "enum": [
               "AED",
@@ -9046,6 +9090,7 @@
             ]
           },
           "role": {
+            "description": "The person's role in the workspace, which decides what they may do and which apps they can sign in to.\n\n- owner: everything an admin can do, and the only role that can give or remove the owner role, since a role can be assigned only at or below the assigner's own.\n- admin: creates, edits, publishes and deletes content, manages users and changes the workspace settings.\n- manager: creates, edits and publishes content, but cannot delete it, manage users, change the workspace settings or read analytics in the console.\n- member: reads content and submits answers in the app, and cannot sign in to the console.\n- viewer: reads everything, the console included, but submits nothing and changes only their own profile.\n\nA caller can give only a role at or below their own, and only an admin or an owner can give viewer; machine credentials act as admin, so they cannot create an owner. Any other role is rejected with 403.",
             "type": "string",
             "default": "member",
             "enum": [
@@ -9057,6 +9102,7 @@
             ]
           },
           "status": {
+            "description": "Whether the person can use the workspace.\n\n- active: the person can sign in, and takes one of the workspace's seats.\n- suspended: the person cannot sign in and is told to contact their administrator; the app signs them out if it is open, and any other session ends when it next refreshes. Their record and history are kept, and their seat is given back.\n\nOnly admins and owners can change it. Reactivating a suspended user takes a seat again, and fails when the workspace has none free.",
             "type": "string",
             "default": "active",
             "enum": [
@@ -9075,6 +9121,7 @@
             "type": "string"
           },
           "referredCount": {
+            "description": "How many people have joined the workspace through this user's referral. It starts at 0 and the platform adds one each time someone joins with the user's referral code or referral link; rule conditions on users can test it.",
             "type": "integer",
             "default": 0,
             "minimum": 0
@@ -9150,6 +9197,7 @@
                     "type": "string"
                   },
                   "sub": {
+                    "description": "Identifies the principal's sign-in account. The platform assigns it when the principal is created and it never changes; callers never send it.",
                     "type": "string",
                     "minLength": 1
                   },
@@ -9158,6 +9206,7 @@
                     "format": "email"
                   },
                   "emailDeliverabilityStatus": {
+                    "description": "The platform's verdict on whether email can reach the principal's address.\n\n- OK: email is sent as usual.\n- BLOCKED_MALFORMED: the address is not well formed, so no email is sent to it.\n- BLOCKED_NO_DNS: the address's domain cannot receive mail, so no email is sent to it. An address whose domain ends in .test, .example, .invalid or .local always gets this status, without a check.\n- BLOCKED_DISPOSABLE: the address belongs to a temporary-mail provider. Email is still sent, but the address cannot start a self-service trial.\n- BLOCKED_RANDOM: the address looks randomly typed. Email is still sent, and a self-service trial is refused only when the mailbox cannot be found either.\n\nNo email means none at all: sign-in codes, invitations, welcome emails and notifications are all withheld, so the person cannot sign in with an emailed code. Neither the app nor the console shows this status. The platform sets it once, when the principal is created or, if it is unset, the next time the person is sent a sign-in code; callers never send it. While it is unset email is sent as usual, and a check that cannot be completed gives OK.",
                     "type": "string",
                     "enum": [
                       "OK",
@@ -9172,12 +9221,14 @@
                     "format": "date-time"
                   },
                   "firstName": {
+                    "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
                     "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
+                    "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
                     "minLength": 2,
@@ -9211,6 +9262,7 @@
                     "type": "string"
                   },
                   "sub": {
+                    "description": "Identifies the principal's sign-in account. The platform assigns it when the principal is created and it never changes; callers never send it.",
                     "type": "string",
                     "minLength": 1
                   },
@@ -9219,18 +9271,21 @@
                     "format": "email"
                   },
                   "firstName": {
+                    "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
                     "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
+                    "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
                     "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "emailDeliverabilityStatus": {
+                    "description": "The platform's verdict on whether email can reach the principal's address.\n\n- OK: email is sent as usual.\n- BLOCKED_MALFORMED: the address is not well formed, so no email is sent to it.\n- BLOCKED_NO_DNS: the address's domain cannot receive mail, so no email is sent to it. An address whose domain ends in .test, .example, .invalid or .local always gets this status, without a check.\n- BLOCKED_DISPOSABLE: the address belongs to a temporary-mail provider. Email is still sent, but the address cannot start a self-service trial.\n- BLOCKED_RANDOM: the address looks randomly typed. Email is still sent, and a self-service trial is refused only when the mailbox cannot be found either.\n\nNo email means none at all: sign-in codes, invitations, welcome emails and notifications are all withheld, so the person cannot sign in with an emailed code. Neither the app nor the console shows this status. The platform sets it once, when the principal is created or, if it is unset, the next time the person is sent a sign-in code; callers never send it. While it is unset email is sent as usual, and a check that cannot be completed gives OK.",
                     "type": "string",
                     "enum": [
                       "OK",
@@ -9556,6 +9611,7 @@
             "type": "string"
           },
           "type": {
+            "description": "A label for the kind of content the learning group holds.\n\n- story: slides.\n- test: quizzes.\n- custom: anything else, or a mix. Used when the field is omitted.\n\nThe app does not show it, and a learning group plays the same way whatever its type. It is kept as sent, except that restoring an archived item into the group sets it to custom, unless a slide comes back into a story or a quiz into a test.",
             "type": "string",
             "default": "custom",
             "enum": [
@@ -9568,6 +9624,7 @@
             "type": "number"
           },
           "origin": {
+            "description": "Records where the learning group came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogLearningGroupId, and does the same for every item cloned with the learning group.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning group is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning group behaves.",
             "type": "string",
             "enum": [
               "CATALOG",
@@ -9619,6 +9676,7 @@
             "format": "uri"
           },
           "backgroundSize": {
+            "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
             "type": "string",
             "enum": [
               "cover",
@@ -9626,6 +9684,7 @@
             ]
           },
           "backgroundPosition": {
+            "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
             "type": "string",
             "enum": [
               "center",
@@ -9639,6 +9698,7 @@
             "type": "string"
           },
           "contentJustify": {
+            "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. It applies to the learning group's title screen, and items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
             "type": "string",
             "enum": [
               "start",
@@ -9683,6 +9743,7 @@
             "type": "string"
           },
           "parentType": {
+            "description": "Whether parentId names a learning group or a learning path, the parent this item belongs to directly.\n\nOnce the item has a parent it cannot move to another: an update that names a different parentId or parentType is rejected with 409 Conflict, so clone the item to use it under another parent. The link does not add the item to the parent's items, which are edited on the parent. Through it, editing the item puts the learning group and learning path above it back into draft until they are published again, style fields the item leaves unset are inherited from them, and archiving the item takes it out of the parent's items, while restoring it adds it back at the end.",
             "type": "string",
             "enum": [
               "learningPath",
@@ -10031,9 +10092,11 @@
         "type": "object",
         "properties": {
           "learningPathId": {
+            "description": "The learning path assigned to the user. On a manual assignment it must be a published learning path of the workspace, otherwise creation fails with 404 Not Found.",
             "type": "string"
           },
           "origin": {
+            "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
             "type": "string",
             "enum": [
               "CATALOG",
@@ -10157,6 +10220,7 @@
             "format": "uri"
           },
           "backgroundSize": {
+            "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and cover when neither sets one.",
             "type": "string",
             "enum": [
               "cover",
@@ -10164,6 +10228,7 @@
             ]
           },
           "backgroundPosition": {
+            "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and center when neither sets one.",
             "type": "string",
             "enum": [
               "center",
@@ -10177,6 +10242,7 @@
             "type": "string"
           },
           "contentJustify": {
+            "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and center when neither sets one.",
             "type": "string",
             "enum": [
               "start",
@@ -10228,28 +10294,35 @@
             "type": "string"
           },
           "userId": {
+            "description": "The user the learning path is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
             "type": "string"
           },
           "learningPathRuleId": {
             "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
-            "type": "string"
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "contributingRuleIds": {
             "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the learning path anymore. Mutually exclusive with learningPathRuleId.",
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "description": "The unique ID of the learning path rule",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           },
           "groupId": {
+            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
             "type": "string",
             "minLength": 1
           },
           "periodId": {
+            "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
             "type": "string",
             "minLength": 1
           },
           "timeframeType": {
+            "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
             "type": "string",
             "enum": [
               "PERMANENT",
@@ -10258,14 +10331,17 @@
             ]
           },
           "startsAt": {
+            "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
             "type": "string",
             "format": "date-time"
           },
           "endsAt": {
+            "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED, and until then the app shows the user how many days are left on the learning path's page. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
             "type": "string",
             "format": "date-time"
           },
           "state": {
+            "description": "Where the learning path assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app lists only ACTIVE learning path assignments, and only an ACTIVE one can be retried.",
             "type": "string",
             "enum": [
               "PENDING",
@@ -10274,6 +10350,7 @@
             ]
           },
           "visibility": {
+            "description": "Whether the user can start the assigned learning path yet. LOCKED: the user sees the assigned learning path, marked as locked, but cannot start it until it is unlocked. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its learning path or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
             "type": "string",
             "enum": [
               "LOCKED",
@@ -10281,6 +10358,7 @@
             ]
           },
           "assignmentType": {
+            "description": "Whether the learning path is compulsory or suggested for the user. REQUIRED: shown in the app among the user's assigned (required) learning paths. OPTIONAL: shown in a separate suggested section, which the app hides when empty. Once started, a learning path is listed with the others whatever its type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same learning path.",
             "type": "string",
             "default": "REQUIRED",
             "enum": [
@@ -10289,17 +10367,22 @@
             ]
           },
           "priority": {
+            "description": "Ordering weight among the user's learning path assignments: lower values come first. Within the same state, the assignment list shows unlocked learning paths before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of learning paths at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
             "type": "number",
             "default": 0
           },
           "unlockedAt": {
+            "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
             "type": "string",
             "format": "date-time"
           },
           "unlockedByRuleId": {
-            "type": "string"
+            "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "currentAttempt": {
+            "description": "Which attempt at the learning path the user is on, starting at 1. The user can retry while the assignment is ACTIVE and the current attempt is complete with outcome PASS or FAIL; a retry adds one and starts the next attempt, and a retry in any other situation fails with 409 Conflict. After FAIL the new attempt starts from scratch; after PASS it keeps what the user already did, except quizzes whose outcome was not SUCCESS, which have to be taken again. The progress returned with the assignment is, by default, that of the current attempt.",
             "type": "integer",
             "default": 1,
             "minimum": 1
@@ -10711,6 +10794,7 @@
             "type": "string"
           },
           "groupTagId": {
+            "description": "Names the tag a GROUP mission is assigned to.\n\nSend it, rather than userId, for a GROUP mission, and leave it out for an INDIVIDUAL one: creating an INDIVIDUAL mission with it is rejected. It must be the ID of an existing tag, or the mission is not created.",
             "type": "string",
             "minLength": 1
           },
@@ -10733,10 +10817,12 @@
             "type": "string"
           },
           "periodId": {
+            "description": "Identifies the period of the mission's timeframe, and is computed by the platform, never sent by API callers.\n\nIt is PERMANENT for a permanent timeframe and the start instant in UTC for a date range: the rule's timeframeStartsAt, or startsAt for a mission created through the API. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC. A mission rule assigns to the same user, or to the same tag for a GROUP rule, at most once per period.",
             "type": "string",
             "minLength": 1
           },
           "timeframeType": {
+            "description": "Tells how the mission's active window is bounded.\n\n- PERMANENT: from startsAt with no end.\n- RANGE: from startsAt to endsAt.\n- RECURRING: one period of a RECURRING mission rule, from startsAt to endsAt; the rule assigns new missions in each following period in which it is evaluated.\n\nA mission assigned by a rule takes the rule's timeframeType, and one created through the API is RANGE or PERMANENT.",
             "type": "string",
             "enum": [
               "PERMANENT",
@@ -10829,6 +10915,7 @@
             ]
           },
           "currentAmount": {
+            "description": "Counts the progress the mission has made toward targetAmount.\n\nOn an INDIVIDUAL mission, each of the user's events that matches the mission's configuration while the mission is ACTIVE adds the amount its incrementExpression evaluates to, capped at what is left to reach targetAmount; once it reaches targetAmount the mission is completed and stops counting. It starts at 0 for a mission assigned by a rule, and at the value sent, 0 when omitted, for one created through the API.",
             "type": "number"
           },
           "targetAmount": {
@@ -10998,6 +11085,7 @@
             "type": "string"
           },
           "difficulty": {
+            "description": "How hard the quiz is meant to be, as set by its author.\n\nIt does not affect scoring: an answer is right or wrong whatever the difficulty, and the app does not show it. Each submitted answer records the quiz's difficulty at that moment, so reward, mission and streak rules can test it as event.difficulty, and the console's quiz analytics group results by it.",
             "type": "string",
             "enum": [
               "EASY",
@@ -11006,6 +11094,7 @@
             ]
           },
           "origin": {
+            "description": "Records where the quiz came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogQuizId.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the quiz is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the quiz behaves.",
             "type": "string",
             "enum": [
               "CATALOG",
@@ -11023,6 +11112,7 @@
             "type": "string"
           },
           "placement": {
+            "description": "A label for where the quiz is meant to appear.\n\nIt is kept and returned as sent.",
             "type": "string",
             "enum": [
               "STANDALONE",
@@ -11064,6 +11154,7 @@
             "format": "uri"
           },
           "backgroundSize": {
+            "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
             "type": "string",
             "enum": [
               "cover",
@@ -11071,6 +11162,7 @@
             ]
           },
           "backgroundPosition": {
+            "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
             "type": "string",
             "enum": [
               "center",
@@ -11084,6 +11176,7 @@
             "type": "string"
           },
           "contentJustify": {
+            "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
             "type": "string",
             "enum": [
               "start",
@@ -11096,6 +11189,7 @@
             "type": "string"
           },
           "parentType": {
+            "description": "Whether parentId names a learning group or a learning path, the parent this item belongs to directly.\n\nOnce the item has a parent it cannot move to another: an update that names a different parentId or parentType is rejected with 409 Conflict, so clone the item to use it under another parent. The link does not add the item to the parent's items, which are edited on the parent. Through it, editing the item puts the learning group and learning path above it back into draft until they are published again, style fields the item leaves unset are inherited from them, and archiving the item takes it out of the parent's items, while restoring it adds it back at the end.",
             "type": "string",
             "enum": [
               "learningPath",
@@ -11670,6 +11764,7 @@
             "minLength": 1
           },
           "timeframeType": {
+            "description": "Sets how long this leaderboard instance stays open and whether the series continues after it closes.\n\n- PERMANENT: the instance never closes and nothing follows it; timeframeEndsAt must not be set.\n- RANGE: the instance runs once, from timeframeStartsAt to timeframeEndsAt, both required.\n- RECURRING: the instance runs from timeframeStartsAt to timeframeEndsAt, both required, and once it ends a new instance for the next period opens automatically, per recurrence.\n\nCan be changed after creation: switching away from RECURRING drops recurrence, and switching to PERMANENT drops timeframeEndsAt.",
             "type": "string",
             "enum": [
               "PERMANENT",
@@ -11678,6 +11773,7 @@
             ]
           },
           "timeframeTimezoneType": {
+            "description": "Chooses how this instance's active window relates to users in different timezones.\n\n- FIXED: the window runs exactly from timeframeStartsAt to timeframeEndsAt, and timeframeTimezone, which is required, is also the zone RECURRING periods roll over in.\n- USER: timeframeTimezone is not used; the instance's state follows timeframeStartsAt and timeframeEndsAt as absolute times, and RECURRING periods roll over in UTC.\n\nThe scored window itself, timeframeStartsAt to timeframeEndsAt, is the same absolute time for every user either way.",
             "type": "string",
             "enum": [
               "FIXED",
@@ -11705,6 +11801,7 @@
             ]
           },
           "recurrence": {
+            "description": "Sets how a RECURRING leaderboard starts its next period once the current one ends.\n\n- DAILY: every calendar day.\n- WEEKLY: every week, Monday to Monday.\n- MONTHLY: every calendar month.\n- CUSTOM: repeats the exact length of the instance's own first period, one period after another, with no calendar alignment.\n\nBoundaries are computed in the timezone timeframeTimezoneType selects, UTC when it is USER. Required when timeframeType is RECURRING and rejected otherwise.",
             "type": "string",
             "enum": [
               "DAILY",
@@ -11782,6 +11879,7 @@
             "type": "string"
           },
           "origin": {
+            "description": "Records where the slide came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogSlideId.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the slide is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the slide behaves.",
             "type": "string",
             "enum": [
               "CATALOG",
@@ -11826,6 +11924,7 @@
             "format": "uri"
           },
           "backgroundSize": {
+            "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
             "type": "string",
             "enum": [
               "cover",
@@ -11833,6 +11932,7 @@
             ]
           },
           "backgroundPosition": {
+            "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
             "type": "string",
             "enum": [
               "center",
@@ -11846,6 +11946,7 @@
             "type": "string"
           },
           "contentJustify": {
+            "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
             "type": "string",
             "enum": [
               "start",
@@ -11858,6 +11959,7 @@
             "type": "string"
           },
           "parentType": {
+            "description": "Whether parentId names a learning group or a learning path, the parent this item belongs to directly.\n\nOnce the item has a parent it cannot move to another: an update that names a different parentId or parentType is rejected with 409 Conflict, so clone the item to use it under another parent. The link does not add the item to the parent's items, which are edited on the parent. Through it, editing the item puts the learning group and learning path above it back into draft until they are published again, style fields the item leaves unset are inherited from them, and archiving the item takes it out of the parent's items, while restoring it adds it back at the end.",
             "type": "string",
             "enum": [
               "learningPath",
@@ -12496,6 +12598,7 @@
             ]
           },
           "cadence": {
+            "description": "Sets how often the user must act to keep the streak alive.\n\n- DAY: the user must contribute a matching event every calendar day.\n- WEEK: the user must contribute at least once every ISO calendar week.\n\nMissing a required day or week breaks the streak, unless freezeEnabled lets the user spend virtual currency to keep it going. DAY cadence only accepts DAYS as the metric.",
             "type": "string",
             "enum": [
               "DAY",
@@ -12503,6 +12606,7 @@
             ]
           },
           "metric": {
+            "description": "Sets what each increment of the streak's counters represents.\n\n- DAYS: one active day.\n- WEEKS: one active week.\n\nMust be DAYS when cadence is DAY, which create checks. Fixed when the rule is created; update cannot change it.",
             "type": "string",
             "enum": [
               "DAYS",
@@ -12566,6 +12670,7 @@
                 "type": "string"
               },
               "name": {
+                "description": "Names the configuration for the people who manage it.\n\nThe app shows the localized label from translations instead, falling back to this name only when no translated label is available.",
                 "type": "string",
                 "minLength": 1
               },
@@ -12573,6 +12678,7 @@
                 "type": "string"
               },
               "matchType": {
+                "description": "Selects how this configuration matches the events that count toward a streak.\n\n- INSTANCE: matches one specific item, named by matchEntityId.\n- ENTITY: matches every item of matchEntity's type.\n- TAG: matches every item of matchEntity's type carrying the tag named by matchEntityId.\n\nmatchEntityId is required with INSTANCE and TAG, which create checks, and unused with ENTITY. matchCondition can narrow the match further.",
                 "type": "string",
                 "enum": [
                   "INSTANCE",
@@ -12581,6 +12687,7 @@
                 ]
               },
               "matchEntity": {
+                "description": "The kind of item matchType and matchEntityId are matched against.",
                 "type": "string",
                 "enum": [
                   "Mission",
@@ -12765,10 +12872,12 @@
                 "type": "string"
               },
               "name": {
+                "description": "Identifies the currency for the people who manage it.\n\nThe app shows the translated label instead; this name is never shown to users.",
                 "type": "string",
                 "minLength": 1
               },
               "catalogVirtualCurrencyId": {
+                "description": "Stores an optional reference to a currency catalog entry.\n\nOnly settable when the currency is created, never on update.",
                 "type": "string",
                 "maxLength": 30,
                 "minLength": 2
@@ -14106,7 +14215,7 @@
             }
           },
           "features": {
-            "description": "Feature flags configuration. Supports boolean or object with enabled flag.",
+            "description": "Feature flags configuration. Each flag is a boolean, or an object with `enabled` and an optional `surfaces` list narrowing which clients honour it.",
             "type": "object",
             "default": {},
             "additionalProperties": {},
@@ -14122,6 +14231,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14142,6 +14263,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14162,6 +14295,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14182,6 +14327,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14202,6 +14359,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14222,6 +14391,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14232,7 +14413,7 @@
                 ]
               },
               "leaderboards": {
-                "description": "Leaderboards feature flag.",
+                "description": "Leaderboards feature flag. Honoured by the backoffice and by the end-user app; use `surfaces` to enable it in only some of them.",
                 "anyOf": [
                   {
                     "type": "boolean"
@@ -14242,6 +14423,50 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "enabled"
+                    ],
+                    "additionalProperties": {}
+                  }
+                ]
+              },
+              "certificates": {
+                "description": "Completion certificates in the end-user app: the profile card and its page, and the certificate at the end of a learning path.",
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14262,6 +14487,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14282,6 +14519,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14302,6 +14551,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14322,6 +14583,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14342,6 +14615,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14362,6 +14647,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14382,6 +14679,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14392,7 +14701,7 @@
                 ]
               },
               "support": {
-                "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Currently implemented in evolve only; if it later ships in the end-user app and the two need to be controlled separately, add an optional `surfaces: ('evolve'|'app')[]` to this object — the schema is a looseObject and storage is schemaless, so that needs no migration, and an absent `surfaces` must keep meaning 'every surface that implements it'.",
+                "description": "In-app 'Request support' form that opens a ticket in AWorld Support. OPT-IN: absent means DISABLED (unlike the older content flags above, which default to enabled), so deploying it does not light the feature up for every workspace. Read it through isSupportEnabled() in utils/features.ts. Implemented in evolve only.",
                 "anyOf": [
                   {
                     "type": "boolean"
@@ -14402,6 +14711,18 @@
                     "properties": {
                       "enabled": {
                         "type": "boolean"
+                      },
+                      "surfaces": {
+                        "description": "Surfaces the enablement applies to. Absent means every surface that implements the feature. Ignored when `enabled` is false.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "lab",
+                            "evolve",
+                            "app"
+                          ]
+                        }
                       }
                     },
                     "required": [
@@ -14541,7 +14862,7 @@
             }
           },
           "tagNamespaces": {
-            "description": "Configuration for tag namespace grouping and display in the backoffice.",
+            "description": "Configuration for tag namespace grouping and display in the console.",
             "type": "object",
             "default": {},
             "properties": {
@@ -15049,6 +15370,7 @@
                   "type": "string"
                 },
                 "outcome": {
+                  "description": "Whether the user succeeded at the activity, as reported by the caller.\n\nIt is kept as sent and never computed; leave it out for an activity with no success or failure. Mission, streak and reward rules can test it as event.outcome. The failure value is FAILURE, not the FAIL that quiz and learning path logs use.",
                   "type": "string",
                   "enum": [
                     "SUCCESS",
@@ -15056,6 +15378,7 @@
                   ]
                 },
                 "value": {
+                  "description": "How much of the activity this log records, 1 when omitted.\n\nIt is kept as sent. Mission, streak and reward rules can read it as event.value, for example to advance a mission by the amount reported; a rule that does not read it counts every log alike, whatever its value.",
                   "type": "number",
                   "default": 1
                 },
@@ -15125,6 +15448,7 @@
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "targetType": {
+                  "description": "The kind of item assigned, which tells how to read targetId. Only survey assignments are handled by these endpoints; learning paths are assigned through the learning path assignment endpoints.",
                   "type": "string",
                   "enum": [
                     "survey",
@@ -15132,6 +15456,7 @@
                   ]
                 },
                 "userId": {
+                  "description": "The user the item is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
                   "type": "string"
                 },
                 "assignmentRuleId": {
@@ -15149,14 +15474,17 @@
                   }
                 },
                 "groupId": {
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its items one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
                 "periodId": {
+                  "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
                   "type": "string",
                   "minLength": 1
                 },
                 "timeframeType": {
+                  "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
                   "type": "string",
                   "enum": [
                     "PERMANENT",
@@ -15165,14 +15493,17 @@
                   ]
                 },
                 "startsAt": {
+                  "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "endsAt": {
+                  "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "state": {
+                  "description": "Where the assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app offers only ACTIVE assignments and does not let the user start a PENDING or ENDED one, and only an ACTIVE assignment can be retried.",
                   "type": "string",
                   "enum": [
                     "PENDING",
@@ -15181,6 +15512,7 @@
                   ]
                 },
                 "visibility": {
+                  "description": "Whether the user can start the assigned item yet. LOCKED: the user cannot start it until it is unlocked, and the app does not offer it as something to do until then. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its target or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
                   "type": "string",
                   "enum": [
                     "LOCKED",
@@ -15188,6 +15520,7 @@
                   ]
                 },
                 "assignmentType": {
+                  "description": "Whether the assignment is compulsory or suggested for the user. REQUIRED marks a compulsory assignment and OPTIONAL a suggested one; the app shows survey assignments the same way whichever the type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same target.",
                   "type": "string",
                   "default": "REQUIRED",
                   "enum": [
@@ -15196,19 +15529,22 @@
                   ]
                 },
                 "priority": {
+                  "description": "Ordering weight among the user's assignments: lower values come first. Within the same state, the assignment list shows unlocked assignments before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of assignments at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
                   "type": "number",
                   "default": 0
                 },
                 "unlockedAt": {
+                  "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "unlockedByRuleId": {
-                  "description": "The unique ID of the assignment rule",
+                  "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "currentAttempt": {
+                  "description": "Which attempt at the assigned item the user is on, starting at 1. Each retry of the assignment adds one and starts a fresh attempt, with nothing carried over from the previous one; the progress returned with the assignment is, by default, that of the current attempt. A retry is accepted only while the assignment is ACTIVE and UNLOCKED, otherwise it fails with 409 Conflict.",
                   "type": "integer",
                   "default": 1,
                   "minimum": 1
@@ -16261,14 +16597,17 @@
                         "type": "string"
                       },
                       "sourceEntityType": {
+                        "description": "Records the kind of item whose event earned this badge, such as Quiz or Mission.",
                         "type": "string",
                         "minLength": 1
                       },
                       "sourceEntityId": {
+                        "description": "The ID of the item whose event caused the award, matching sourceEntityType: its quizId, missionId or equivalent.",
                         "type": "string",
                         "minLength": 1
                       },
                       "rewardRuleId": {
+                        "description": "The reward rule that granted this badge.",
                         "type": "string",
                         "minLength": 1
                       },
@@ -16604,6 +16943,7 @@
                   "type": "string"
                 },
                 "type": {
+                  "description": "A label for the kind of content the learning group holds.\n\n- story: slides.\n- test: quizzes.\n- custom: anything else, or a mix. Used when the field is omitted.\n\nThe app does not show it, and a learning group plays the same way whatever its type. It is kept as sent, except that restoring an archived item into the group sets it to custom, unless a slide comes back into a story or a quiz into a test.",
                   "type": "string",
                   "default": "custom",
                   "enum": [
@@ -16616,6 +16956,7 @@
                   "type": "number"
                 },
                 "origin": {
+                  "description": "Records where the learning group came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogLearningGroupId, and does the same for every item cloned with the learning group.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning group is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning group behaves.",
                   "type": "string",
                   "enum": [
                     "CATALOG",
@@ -16667,6 +17008,7 @@
                   "format": "uri"
                 },
                 "backgroundSize": {
+                  "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "cover",
@@ -16674,6 +17016,7 @@
                   ]
                 },
                 "backgroundPosition": {
+                  "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "center",
@@ -16687,6 +17030,7 @@
                   "type": "string"
                 },
                 "contentJustify": {
+                  "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. It applies to the learning group's title screen, and items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "start",
@@ -16741,6 +17085,7 @@
                   "type": "string"
                 },
                 "parentType": {
+                  "description": "Whether parentId names a learning group or a learning path, the parent this item belongs to directly.\n\nOnce the item has a parent it cannot move to another: an update that names a different parentId or parentType is rejected with 409 Conflict, so clone the item to use it under another parent. The link does not add the item to the parent's items, which are edited on the parent. Through it, editing the item puts the learning group and learning path above it back into draft until they are published again, style fields the item leaves unset are inherited from them, and archiving the item takes it out of the parent's items, while restoring it adds it back at the end.",
                   "type": "string",
                   "enum": [
                     "learningPath",
@@ -17012,9 +17357,11 @@
               "type": "object",
               "properties": {
                 "learningPathId": {
+                  "description": "The learning path assigned to the user. On a manual assignment it must be a published learning path of the workspace, otherwise creation fails with 404 Not Found.",
                   "type": "string"
                 },
                 "origin": {
+                  "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
                   "type": "string",
                   "enum": [
                     "CATALOG",
@@ -17138,6 +17485,7 @@
                   "format": "uri"
                 },
                 "backgroundSize": {
+                  "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and cover when neither sets one.",
                   "type": "string",
                   "enum": [
                     "cover",
@@ -17145,6 +17493,7 @@
                   ]
                 },
                 "backgroundPosition": {
+                  "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and center when neither sets one.",
                   "type": "string",
                   "enum": [
                     "center",
@@ -17158,6 +17507,7 @@
                   "type": "string"
                 },
                 "contentJustify": {
+                  "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and center when neither sets one.",
                   "type": "string",
                   "enum": [
                     "start",
@@ -17209,28 +17559,35 @@
                   "type": "string"
                 },
                 "userId": {
+                  "description": "The user the learning path is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
                   "type": "string"
                 },
                 "learningPathRuleId": {
                   "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
-                  "type": "string"
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "contributingRuleIds": {
                   "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the learning path anymore. Mutually exclusive with learningPathRuleId.",
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The unique ID of the learning path rule",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
                   }
                 },
                 "groupId": {
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
                 "periodId": {
+                  "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
                   "type": "string",
                   "minLength": 1
                 },
                 "timeframeType": {
+                  "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
                   "type": "string",
                   "enum": [
                     "PERMANENT",
@@ -17239,14 +17596,17 @@
                   ]
                 },
                 "startsAt": {
+                  "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "endsAt": {
+                  "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED, and until then the app shows the user how many days are left on the learning path's page. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "state": {
+                  "description": "Where the learning path assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app lists only ACTIVE learning path assignments, and only an ACTIVE one can be retried.",
                   "type": "string",
                   "enum": [
                     "PENDING",
@@ -17255,6 +17615,7 @@
                   ]
                 },
                 "visibility": {
+                  "description": "Whether the user can start the assigned learning path yet. LOCKED: the user sees the assigned learning path, marked as locked, but cannot start it until it is unlocked. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its learning path or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
                   "type": "string",
                   "enum": [
                     "LOCKED",
@@ -17262,6 +17623,7 @@
                   ]
                 },
                 "assignmentType": {
+                  "description": "Whether the learning path is compulsory or suggested for the user. REQUIRED: shown in the app among the user's assigned (required) learning paths. OPTIONAL: shown in a separate suggested section, which the app hides when empty. Once started, a learning path is listed with the others whatever its type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same learning path.",
                   "type": "string",
                   "default": "REQUIRED",
                   "enum": [
@@ -17270,17 +17632,22 @@
                   ]
                 },
                 "priority": {
+                  "description": "Ordering weight among the user's learning path assignments: lower values come first. Within the same state, the assignment list shows unlocked learning paths before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of learning paths at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
                   "type": "number",
                   "default": 0
                 },
                 "unlockedAt": {
+                  "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "unlockedByRuleId": {
-                  "type": "string"
+                  "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "currentAttempt": {
+                  "description": "Which attempt at the learning path the user is on, starting at 1. The user can retry while the assignment is ACTIVE and the current attempt is complete with outcome PASS or FAIL; a retry adds one and starts the next attempt, and a retry in any other situation fails with 409 Conflict. After FAIL the new attempt starts from scratch; after PASS it keeps what the user already did, except quizzes whose outcome was not SUCCESS, which have to be taken again. The progress returned with the assignment is, by default, that of the current attempt.",
                   "type": "integer",
                   "default": 1,
                   "minimum": 1
@@ -17688,6 +18055,7 @@
                   "type": "string"
                 },
                 "groupTagId": {
+                  "description": "Names the tag a GROUP mission is assigned to.\n\nSend it, rather than userId, for a GROUP mission, and leave it out for an INDIVIDUAL one: creating an INDIVIDUAL mission with it is rejected. It must be the ID of an existing tag, or the mission is not created.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -17710,10 +18078,12 @@
                   "type": "string"
                 },
                 "periodId": {
+                  "description": "Identifies the period of the mission's timeframe, and is computed by the platform, never sent by API callers.\n\nIt is PERMANENT for a permanent timeframe and the start instant in UTC for a date range: the rule's timeframeStartsAt, or startsAt for a mission created through the API. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC. A mission rule assigns to the same user, or to the same tag for a GROUP rule, at most once per period.",
                   "type": "string",
                   "minLength": 1
                 },
                 "timeframeType": {
+                  "description": "Tells how the mission's active window is bounded.\n\n- PERMANENT: from startsAt with no end.\n- RANGE: from startsAt to endsAt.\n- RECURRING: one period of a RECURRING mission rule, from startsAt to endsAt; the rule assigns new missions in each following period in which it is evaluated.\n\nA mission assigned by a rule takes the rule's timeframeType, and one created through the API is RANGE or PERMANENT.",
                   "type": "string",
                   "enum": [
                     "PERMANENT",
@@ -17806,6 +18176,7 @@
                   ]
                 },
                 "currentAmount": {
+                  "description": "Counts the progress the mission has made toward targetAmount.\n\nOn an INDIVIDUAL mission, each of the user's events that matches the mission's configuration while the mission is ACTIVE adds the amount its incrementExpression evaluates to, capped at what is left to reach targetAmount; once it reaches targetAmount the mission is completed and stops counting. It starts at 0 for a mission assigned by a rule, and at the value sent, 0 when omitted, for one created through the API.",
                   "type": "number"
                 },
                 "targetAmount": {
@@ -18057,6 +18428,7 @@
                   "type": "string"
                 },
                 "difficulty": {
+                  "description": "How hard the quiz is meant to be, as set by its author.\n\nIt does not affect scoring: an answer is right or wrong whatever the difficulty, and the app does not show it. Each submitted answer records the quiz's difficulty at that moment, so reward, mission and streak rules can test it as event.difficulty, and the console's quiz analytics group results by it.",
                   "type": "string",
                   "enum": [
                     "EASY",
@@ -18065,6 +18437,7 @@
                   ]
                 },
                 "origin": {
+                  "description": "Records where the quiz came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogQuizId.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the quiz is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the quiz behaves.",
                   "type": "string",
                   "enum": [
                     "CATALOG",
@@ -18082,6 +18455,7 @@
                   "type": "string"
                 },
                 "placement": {
+                  "description": "A label for where the quiz is meant to appear.\n\nIt is kept and returned as sent.",
                   "type": "string",
                   "enum": [
                     "STANDALONE",
@@ -18123,6 +18497,7 @@
                   "format": "uri"
                 },
                 "backgroundSize": {
+                  "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "cover",
@@ -18130,6 +18505,7 @@
                   ]
                 },
                 "backgroundPosition": {
+                  "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "center",
@@ -18143,6 +18519,7 @@
                   "type": "string"
                 },
                 "contentJustify": {
+                  "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "start",
@@ -18155,6 +18532,7 @@
                   "type": "string"
                 },
                 "parentType": {
+                  "description": "Whether parentId names a learning group or a learning path, the parent this item belongs to directly.\n\nOnce the item has a parent it cannot move to another: an update that names a different parentId or parentType is rejected with 409 Conflict, so clone the item to use it under another parent. The link does not add the item to the parent's items, which are edited on the parent. Through it, editing the item puts the learning group and learning path above it back into draft until they are published again, style fields the item leaves unset are inherited from them, and archiving the item takes it out of the parent's items, while restoring it adds it back at the end.",
                   "type": "string",
                   "enum": [
                     "learningPath",
@@ -18450,6 +18828,7 @@
                   "minLength": 1
                 },
                 "timeframeType": {
+                  "description": "Sets how long this leaderboard instance stays open and whether the series continues after it closes.\n\n- PERMANENT: the instance never closes and nothing follows it; timeframeEndsAt must not be set.\n- RANGE: the instance runs once, from timeframeStartsAt to timeframeEndsAt, both required.\n- RECURRING: the instance runs from timeframeStartsAt to timeframeEndsAt, both required, and once it ends a new instance for the next period opens automatically, per recurrence.\n\nCan be changed after creation: switching away from RECURRING drops recurrence, and switching to PERMANENT drops timeframeEndsAt.",
                   "type": "string",
                   "enum": [
                     "PERMANENT",
@@ -18458,6 +18837,7 @@
                   ]
                 },
                 "timeframeTimezoneType": {
+                  "description": "Chooses how this instance's active window relates to users in different timezones.\n\n- FIXED: the window runs exactly from timeframeStartsAt to timeframeEndsAt, and timeframeTimezone, which is required, is also the zone RECURRING periods roll over in.\n- USER: timeframeTimezone is not used; the instance's state follows timeframeStartsAt and timeframeEndsAt as absolute times, and RECURRING periods roll over in UTC.\n\nThe scored window itself, timeframeStartsAt to timeframeEndsAt, is the same absolute time for every user either way.",
                   "type": "string",
                   "enum": [
                     "FIXED",
@@ -18485,6 +18865,7 @@
                   ]
                 },
                 "recurrence": {
+                  "description": "Sets how a RECURRING leaderboard starts its next period once the current one ends.\n\n- DAILY: every calendar day.\n- WEEKLY: every week, Monday to Monday.\n- MONTHLY: every calendar month.\n- CUSTOM: repeats the exact length of the instance's own first period, one period after another, with no calendar alignment.\n\nBoundaries are computed in the timezone timeframeTimezoneType selects, UTC when it is USER. Required when timeframeType is RECURRING and rejected otherwise.",
                   "type": "string",
                   "enum": [
                     "DAILY",
@@ -18581,6 +18962,7 @@
                   "type": "string"
                 },
                 "origin": {
+                  "description": "Records where the slide came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogSlideId.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the slide is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the slide behaves.",
                   "type": "string",
                   "enum": [
                     "CATALOG",
@@ -18625,6 +19007,7 @@
                   "format": "uri"
                 },
                 "backgroundSize": {
+                  "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "cover",
@@ -18632,6 +19015,7 @@
                   ]
                 },
                 "backgroundPosition": {
+                  "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "center",
@@ -18645,6 +19029,7 @@
                   "type": "string"
                 },
                 "contentJustify": {
+                  "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and center when none of them sets one.",
                   "type": "string",
                   "enum": [
                     "start",
@@ -18657,6 +19042,7 @@
                   "type": "string"
                 },
                 "parentType": {
+                  "description": "Whether parentId names a learning group or a learning path, the parent this item belongs to directly.\n\nOnce the item has a parent it cannot move to another: an update that names a different parentId or parentType is rejected with 409 Conflict, so clone the item to use it under another parent. The link does not add the item to the parent's items, which are edited on the parent. Through it, editing the item puts the learning group and learning path above it back into draft until they are published again, style fields the item leaves unset are inherited from them, and archiving the item takes it out of the parent's items, while restoring it adds it back at the end.",
                   "type": "string",
                   "enum": [
                     "learningPath",
@@ -19136,6 +19522,7 @@
                   ]
                 },
                 "cadence": {
+                  "description": "Sets how often the user must act to keep the streak alive.\n\n- DAY: the user must contribute a matching event every calendar day.\n- WEEK: the user must contribute at least once every ISO calendar week.\n\nMissing a required day or week breaks the streak, unless freezeEnabled lets the user spend virtual currency to keep it going. DAY cadence only accepts DAYS as the metric.",
                   "type": "string",
                   "enum": [
                     "DAY",
@@ -19143,6 +19530,7 @@
                   ]
                 },
                 "metric": {
+                  "description": "Sets what each increment of the streak's counters represents.\n\n- DAYS: one active day.\n- WEEKS: one active week.\n\nMust be DAYS when cadence is DAY, which create checks. Fixed when the rule is created; update cannot change it.",
                   "type": "string",
                   "enum": [
                     "DAYS",
@@ -19206,6 +19594,7 @@
                       "type": "string"
                     },
                     "name": {
+                      "description": "Names the configuration for the people who manage it.\n\nThe app shows the localized label from translations instead, falling back to this name only when no translated label is available.",
                       "type": "string",
                       "minLength": 1
                     },
@@ -19213,6 +19602,7 @@
                       "type": "string"
                     },
                     "matchType": {
+                      "description": "Selects how this configuration matches the events that count toward a streak.\n\n- INSTANCE: matches one specific item, named by matchEntityId.\n- ENTITY: matches every item of matchEntity's type.\n- TAG: matches every item of matchEntity's type carrying the tag named by matchEntityId.\n\nmatchEntityId is required with INSTANCE and TAG, which create checks, and unused with ENTITY. matchCondition can narrow the match further.",
                       "type": "string",
                       "enum": [
                         "INSTANCE",
@@ -19221,6 +19611,7 @@
                       ]
                     },
                     "matchEntity": {
+                      "description": "The kind of item matchType and matchEntityId are matched against.",
                       "type": "string",
                       "enum": [
                         "Mission",
@@ -19362,10 +19753,12 @@
                   "minLength": 1
                 },
                 "namespace": {
+                  "description": "The first half of the tag's identity, grouping related tags under one category — for example difficulty, topic or region.\n\nCombined with variant as `namespace:variant` to form the tag's id. On create and update, only letters, digits, hyphens and underscores are allowed. The tag's id is set from them when the tag is created and does not change.",
                   "type": "string",
                   "minLength": 1
                 },
                 "variant": {
+                  "description": "The second half of the tag's identity, naming the specific value within its namespace — for example easy within a difficulty namespace.\n\nCombined with namespace as `namespace:variant` to form the tag's id. On create and update, only letters, digits, hyphens and underscores are allowed. The tag's id is set from them when the tag is created and does not change.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -19550,10 +19943,12 @@
                       "type": "string"
                     },
                     "name": {
+                      "description": "Identifies the currency for the people who manage it.\n\nThe app shows the translated label instead; this name is never shown to users.",
                       "type": "string",
                       "minLength": 1
                     },
                     "catalogVirtualCurrencyId": {
+                      "description": "Stores an optional reference to a currency catalog entry.\n\nOnly settable when the currency is created, never on update.",
                       "type": "string",
                       "maxLength": 30,
                       "minLength": 2
@@ -20029,6 +20424,7 @@
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "targetType": {
+            "description": "The kind of item assigned, which tells how to read targetId. Only survey assignments are handled by these endpoints; learning paths are assigned through the learning path assignment endpoints.",
             "type": "string",
             "enum": [
               "survey",
@@ -20042,6 +20438,7 @@
             "minLength": 1
           },
           "userId": {
+            "description": "The user the item is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
             "type": "string"
           },
           "assignmentRuleId": {
@@ -20059,14 +20456,17 @@
             }
           },
           "groupId": {
+            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its items one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
             "type": "string",
             "minLength": 1
           },
           "periodId": {
+            "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
             "type": "string",
             "minLength": 1
           },
           "timeframeType": {
+            "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
             "type": "string",
             "enum": [
               "PERMANENT",
@@ -20075,14 +20475,17 @@
             ]
           },
           "startsAt": {
+            "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
             "type": "string",
             "format": "date-time"
           },
           "endsAt": {
+            "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
             "type": "string",
             "format": "date-time"
           },
           "state": {
+            "description": "Where the assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app offers only ACTIVE assignments and does not let the user start a PENDING or ENDED one, and only an ACTIVE assignment can be retried.",
             "type": "string",
             "enum": [
               "PENDING",
@@ -20091,6 +20494,7 @@
             ]
           },
           "visibility": {
+            "description": "Whether the user can start the assigned item yet. LOCKED: the user cannot start it until it is unlocked, and the app does not offer it as something to do until then. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its target or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
             "type": "string",
             "enum": [
               "LOCKED",
@@ -20098,6 +20502,7 @@
             ]
           },
           "assignmentType": {
+            "description": "Whether the assignment is compulsory or suggested for the user. REQUIRED marks a compulsory assignment and OPTIONAL a suggested one; the app shows survey assignments the same way whichever the type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same target.",
             "type": "string",
             "default": "REQUIRED",
             "enum": [
@@ -20106,19 +20511,22 @@
             ]
           },
           "priority": {
+            "description": "Ordering weight among the user's assignments: lower values come first. Within the same state, the assignment list shows unlocked assignments before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of assignments at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
             "type": "number",
             "default": 0
           },
           "unlockedAt": {
+            "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
             "type": "string",
             "format": "date-time"
           },
           "unlockedByRuleId": {
-            "description": "The unique ID of the assignment rule",
+            "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "currentAttempt": {
+            "description": "Which attempt at the assigned item the user is on, starting at 1. Each retry of the assignment adds one and starts a fresh attempt, with nothing carried over from the previous one; the progress returned with the assignment is, by default, that of the current attempt. A retry is accepted only while the assignment is ACTIVE and UNLOCKED, otherwise it fails with 409 Conflict.",
             "type": "integer",
             "default": 1,
             "minimum": 1
@@ -20173,31 +20581,39 @@
             "type": "string"
           },
           "learningPathId": {
+            "description": "The learning path assigned to the user. On a manual assignment it must be a published learning path of the workspace, otherwise creation fails with 404 Not Found.",
             "type": "string"
           },
           "userId": {
+            "description": "The user the learning path is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
             "type": "string"
           },
           "learningPathRuleId": {
             "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
-            "type": "string"
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "contributingRuleIds": {
             "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the learning path anymore. Mutually exclusive with learningPathRuleId.",
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "description": "The unique ID of the learning path rule",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
           },
           "groupId": {
+            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
             "type": "string",
             "minLength": 1
           },
           "periodId": {
+            "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
             "type": "string",
             "minLength": 1
           },
           "timeframeType": {
+            "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
             "type": "string",
             "enum": [
               "PERMANENT",
@@ -20206,14 +20622,17 @@
             ]
           },
           "startsAt": {
+            "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
             "type": "string",
             "format": "date-time"
           },
           "endsAt": {
+            "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED, and until then the app shows the user how many days are left on the learning path's page. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
             "type": "string",
             "format": "date-time"
           },
           "state": {
+            "description": "Where the learning path assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app lists only ACTIVE learning path assignments, and only an ACTIVE one can be retried.",
             "type": "string",
             "enum": [
               "PENDING",
@@ -20222,6 +20641,7 @@
             ]
           },
           "visibility": {
+            "description": "Whether the user can start the assigned learning path yet. LOCKED: the user sees the assigned learning path, marked as locked, but cannot start it until it is unlocked. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its learning path or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
             "type": "string",
             "enum": [
               "LOCKED",
@@ -20229,6 +20649,7 @@
             ]
           },
           "assignmentType": {
+            "description": "Whether the learning path is compulsory or suggested for the user. REQUIRED: shown in the app among the user's assigned (required) learning paths. OPTIONAL: shown in a separate suggested section, which the app hides when empty. Once started, a learning path is listed with the others whatever its type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same learning path.",
             "type": "string",
             "default": "REQUIRED",
             "enum": [
@@ -20237,17 +20658,22 @@
             ]
           },
           "priority": {
+            "description": "Ordering weight among the user's learning path assignments: lower values come first. Within the same state, the assignment list shows unlocked learning paths before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of learning paths at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
             "type": "number",
             "default": 0
           },
           "unlockedAt": {
+            "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
             "type": "string",
             "format": "date-time"
           },
           "unlockedByRuleId": {
-            "type": "string"
+            "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "currentAttempt": {
+            "description": "Which attempt at the learning path the user is on, starting at 1. The user can retry while the assignment is ACTIVE and the current attempt is complete with outcome PASS or FAIL; a retry adds one and starts the next attempt, and a retry in any other situation fails with 409 Conflict. After FAIL the new attempt starts from scratch; after PASS it keeps what the user already did, except quizzes whose outcome was not SUCCESS, which have to be taken again. The progress returned with the assignment is, by default, that of the current attempt.",
             "type": "integer",
             "default": 1,
             "minimum": 1
@@ -20308,10 +20734,12 @@
                   "minLength": 1
                 },
                 "namespace": {
+                  "description": "The first half of the tag's identity, grouping related tags under one category — for example difficulty, topic or region.\n\nCombined with variant as `namespace:variant` to form the tag's id. On create and update, only letters, digits, hyphens and underscores are allowed. The tag's id is set from them when the tag is created and does not change.",
                   "type": "string",
                   "minLength": 1
                 },
                 "variant": {
+                  "description": "The second half of the tag's identity, naming the specific value within its namespace — for example easy within a difficulty namespace.\n\nCombined with namespace as `namespace:variant` to form the tag's id. On create and update, only letters, digits, hyphens and underscores are allowed. The tag's id is set from them when the tag is created and does not change.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -20461,6 +20889,7 @@
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "targetType": {
+                  "description": "The kind of item assigned, which tells how to read targetId. Only survey assignments are handled by these endpoints; learning paths are assigned through the learning path assignment endpoints.",
                   "type": "string",
                   "enum": [
                     "survey",
@@ -20468,6 +20897,7 @@
                   ]
                 },
                 "userId": {
+                  "description": "The user the item is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
                   "type": "string"
                 },
                 "assignmentRuleId": {
@@ -20485,14 +20915,17 @@
                   }
                 },
                 "groupId": {
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its items one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
                 "periodId": {
+                  "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
                   "type": "string",
                   "minLength": 1
                 },
                 "timeframeType": {
+                  "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
                   "type": "string",
                   "enum": [
                     "PERMANENT",
@@ -20501,14 +20934,17 @@
                   ]
                 },
                 "startsAt": {
+                  "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "endsAt": {
+                  "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "state": {
+                  "description": "Where the assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app offers only ACTIVE assignments and does not let the user start a PENDING or ENDED one, and only an ACTIVE assignment can be retried.",
                   "type": "string",
                   "enum": [
                     "PENDING",
@@ -20517,6 +20953,7 @@
                   ]
                 },
                 "visibility": {
+                  "description": "Whether the user can start the assigned item yet. LOCKED: the user cannot start it until it is unlocked, and the app does not offer it as something to do until then. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its target or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
                   "type": "string",
                   "enum": [
                     "LOCKED",
@@ -20524,6 +20961,7 @@
                   ]
                 },
                 "assignmentType": {
+                  "description": "Whether the assignment is compulsory or suggested for the user. REQUIRED marks a compulsory assignment and OPTIONAL a suggested one; the app shows survey assignments the same way whichever the type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same target.",
                   "type": "string",
                   "default": "REQUIRED",
                   "enum": [
@@ -20532,19 +20970,22 @@
                   ]
                 },
                 "priority": {
+                  "description": "Ordering weight among the user's assignments: lower values come first. Within the same state, the assignment list shows unlocked assignments before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of assignments at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
                   "type": "number",
                   "default": 0
                 },
                 "unlockedAt": {
+                  "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "unlockedByRuleId": {
-                  "description": "The unique ID of the assignment rule",
+                  "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "currentAttempt": {
+                  "description": "Which attempt at the assigned item the user is on, starting at 1. Each retry of the assignment adds one and starts a fresh attempt, with nothing carried over from the previous one; the progress returned with the assignment is, by default, that of the current attempt. A retry is accepted only while the assignment is ACTIVE and UNLOCKED, otherwise it fails with 409 Conflict.",
                   "type": "integer",
                   "default": 1,
                   "minimum": 1
@@ -20767,9 +21208,11 @@
               "type": "object",
               "properties": {
                 "learningPathId": {
+                  "description": "The learning path assigned to the user. On a manual assignment it must be a published learning path of the workspace, otherwise creation fails with 404 Not Found.",
                   "type": "string"
                 },
                 "origin": {
+                  "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
                   "type": "string",
                   "enum": [
                     "CATALOG",
@@ -20893,6 +21336,7 @@
                   "format": "uri"
                 },
                 "backgroundSize": {
+                  "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and cover when neither sets one.",
                   "type": "string",
                   "enum": [
                     "cover",
@@ -20900,6 +21344,7 @@
                   ]
                 },
                 "backgroundPosition": {
+                  "description": "Where the background image is anchored on the screen behind the content.\n\n- center: the image is centered on the screen.\n- top, bottom, left, right: the image is aligned to that edge of the screen and centered along it.\n\nWith cover it decides which part of the image stays in view when the rest is cropped. It has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and center when neither sets one.",
                   "type": "string",
                   "enum": [
                     "center",
@@ -20913,6 +21358,7 @@
                   "type": "string"
                 },
                 "contentJustify": {
+                  "description": "Where the content sits vertically on its screen: at the top with start, in the middle with center, at the bottom with end.\n\nspace-between lays out like start, since the content is a single column. Content taller than the screen starts at the top and scrolls, whatever the value. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and center when neither sets one.",
                   "type": "string",
                   "enum": [
                     "start",
@@ -20964,28 +21410,35 @@
                   "type": "string"
                 },
                 "userId": {
+                  "description": "The user the learning path is assigned to. On a manual assignment it must be an existing user of the workspace, otherwise creation fails with 404 Not Found.",
                   "type": "string"
                 },
                 "learningPathRuleId": {
                   "description": "The ASSIGN rule that created this assignment (rules with duplicatePolicy ALLOW or DISALLOW_ACTIVE). Unset on MERGE-managed assignments, which carry contributingRuleIds instead.",
-                  "type": "string"
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "contributingRuleIds": {
                   "description": "Present on MERGE-managed assignments only: the IDs of the ASSIGN rules (duplicatePolicy MERGE) whose desired state currently contributes to this assignment. The assignment reflects the union of these rules — it is unlocked if any of them wants it unlocked, required if any of them requires it, and revoked only when none of them desires the learning path anymore. Mutually exclusive with learningPathRuleId.",
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The unique ID of the learning path rule",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
                   }
                 },
                 "groupId": {
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
                 "periodId": {
+                  "description": "Identifies the timeframe period and is computed by the platform, never sent by API callers. It is PERMANENT for a permanent timeframe and the start instant in UTC for a date range. For a recurring rule it is the current day (2026-09-24), ISO week (2026-W39) or month (2026-09) in the timezone the rule uses, and for a CUSTOM recurrence the time of the schedule's last run, in UTC.",
                   "type": "string",
                   "minLength": 1
                 },
                 "timeframeType": {
+                  "description": "How the assignment's active window is meant to be bounded: RANGE runs from startsAt to endsAt, PERMANENT has no endsAt and never ends. An assignment created by a recurring rule is RANGE and covers one period of the rule, which creates a new assignment for each period.",
                   "type": "string",
                   "enum": [
                     "PERMANENT",
@@ -20994,14 +21447,17 @@
                   ]
                 },
                 "startsAt": {
+                  "description": "When the assignment starts, as an ISO 8601 date-time in UTC. Until then the assignment is PENDING, from then on ACTIVE. A manual assignment takes the value sent, which may be in the past: the assignment is then created ACTIVE, or ENDED if endsAt has passed too. An assignment created by a rule takes it from the rule: the moment the assignment is created for a PERMANENT rule, the rule's timeframeStartsAt for a RANGE rule, and the start of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it, and moving a RANGE rule's start creates a new assignment instead.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "endsAt": {
+                  "description": "When the assignment ends, as an ISO 8601 date-time in UTC; unset when it never ends. After it the assignment is ENDED, and until then the app shows the user how many days are left on the learning path's page. On a manual assignment, send it with timeframeType RANGE and leave it out with PERMANENT. An assignment created by a rule takes it from the rule: none for a PERMANENT rule, the rule's timeframeEndsAt for a RANGE rule, and the end of the period it covers for a recurring rule. It is fixed at creation: a later change to the rule's dates is not applied to it.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "state": {
+                  "description": "Where the learning path assignment is in its active window: PENDING before startsAt, ACTIVE from startsAt until endsAt, ENDED after endsAt. It is set from those two dates when the assignment is created and changes on its own as each one passes; an assignment without endsAt stays ACTIVE once started. The app lists only ACTIVE learning path assignments, and only an ACTIVE one can be retried.",
                   "type": "string",
                   "enum": [
                     "PENDING",
@@ -21010,6 +21466,7 @@
                   ]
                 },
                 "visibility": {
+                  "description": "Whether the user can start the assigned learning path yet. LOCKED: the user sees the assigned learning path, marked as locked, but cannot start it until it is unlocked. UNLOCKED: the user can open and start it. A LOCKED assignment is unlocked by an UNLOCK rule for its learning path or when an ASSIGN rule that assigns it to the user is evaluated again and now gives it UNLOCKED; rules only ever unlock an existing assignment, never lock it again.",
                   "type": "string",
                   "enum": [
                     "LOCKED",
@@ -21017,6 +21474,7 @@
                   ]
                 },
                 "assignmentType": {
+                  "description": "Whether the learning path is compulsory or suggested for the user. REQUIRED: shown in the app among the user's assigned (required) learning paths. OPTIONAL: shown in a separate suggested section, which the app hides when empty. Once started, a learning path is listed with the others whatever its type. An assignment created by a rule takes its type from the rule and follows later changes to it, except that a change to OPTIONAL is not applied while the user has another active or pending REQUIRED assignment for the same learning path.",
                   "type": "string",
                   "default": "REQUIRED",
                   "enum": [
@@ -21025,17 +21483,22 @@
                   ]
                 },
                 "priority": {
+                  "description": "Ordering weight among the user's learning path assignments: lower values come first. Within the same state, the assignment list shows unlocked learning paths before locked ones and orders each group by priority; an UNLOCK rule that unlocks a limited number of learning paths at a time also picks them in this order. An assignment created by a rule takes its priority from the rule's order and follows later changes to it; a manual assignment has the value sent when it was created, 0 when omitted.",
                   "type": "number",
                   "default": 0
                 },
                 "unlockedAt": {
+                  "description": "When the assignment was unlocked, as an ISO 8601 date-time in UTC. Set when an UNLOCK rule unlocks it or when an ASSIGN rule that assigns it is evaluated again and now gives it UNLOCKED. Unset while the assignment is LOCKED and on one created UNLOCKED.",
                   "type": "string",
                   "format": "date-time"
                 },
                 "unlockedByRuleId": {
-                  "type": "string"
+                  "description": "The UNLOCK rule that unlocked the assignment. Unset while the assignment is LOCKED, on one created UNLOCKED, and when it was unlocked by an ASSIGN rule being evaluated again rather than by an UNLOCK rule.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "currentAttempt": {
+                  "description": "Which attempt at the learning path the user is on, starting at 1. The user can retry while the assignment is ACTIVE and the current attempt is complete with outcome PASS or FAIL; a retry adds one and starts the next attempt, and a retry in any other situation fails with 409 Conflict. After FAIL the new attempt starts from scratch; after PASS it keeps what the user already did, except quizzes whose outcome was not SUCCESS, which have to be taken again. The progress returned with the assignment is, by default, that of the current attempt.",
                   "type": "integer",
                   "default": 1,
                   "minimum": 1
@@ -22265,10 +22728,12 @@
             "type": "string"
           },
           "externalId": {
+            "description": "Your own identifier for the person, for matching them with your systems; GET /users/by-external-id/{externalId} finds the user by it. Creating a user with an externalId that another user of the workspace already has is rejected with 409 Conflict.",
             "type": "string",
             "minLength": 1
           },
           "nickname": {
+            "description": "The name the person goes by in the app, shown there in place of their first and last name. It must be unique within the workspace: a nickname another user already has is rejected with 409 Conflict. The app asks a person who has none to choose one when they sign in, and notification emails greet the person by it.",
             "type": "string",
             "maxLength": 40,
             "minLength": 2,
@@ -22285,6 +22750,7 @@
             "$ref": "#/components/schemas/Timezone"
           },
           "currency": {
+            "description": "The person's own choice of currency for money amounts, as an ISO 4217 code; unset when they have not made one.",
             "type": "string",
             "enum": [
               "AED",
@@ -22452,6 +22918,7 @@
             ]
           },
           "role": {
+            "description": "The person's role in the workspace, which decides what they may do and which apps they can sign in to.\n\n- owner: everything an admin can do, and the only role that can give or remove the owner role, since a role can be assigned only at or below the assigner's own.\n- admin: creates, edits, publishes and deletes content, manages users and changes the workspace settings.\n- manager: creates, edits and publishes content, but cannot delete it, manage users, change the workspace settings or read analytics in the console.\n- member: reads content and submits answers in the app, and cannot sign in to the console.\n- viewer: reads everything, the console included, but submits nothing and changes only their own profile.\n\nA caller can give only a role at or below their own, and only an admin or an owner can give viewer; machine credentials act as admin, so they cannot create an owner. Any other role is rejected with 403.",
             "type": "string",
             "default": "member",
             "enum": [
@@ -22463,6 +22930,7 @@
             ]
           },
           "status": {
+            "description": "Whether the person can use the workspace.\n\n- active: the person can sign in, and takes one of the workspace's seats.\n- suspended: the person cannot sign in and is told to contact their administrator; the app signs them out if it is open, and any other session ends when it next refreshes. Their record and history are kept, and their seat is given back.\n\nOnly admins and owners can change it. Reactivating a suspended user takes a seat again, and fails when the workspace has none free.",
             "type": "string",
             "default": "active",
             "enum": [
@@ -22481,6 +22949,7 @@
             "type": "string"
           },
           "referredCount": {
+            "description": "How many people have joined the workspace through this user's referral. It starts at 0 and the platform adds one each time someone joins with the user's referral code or referral link; rule conditions on users can test it.",
             "type": "integer",
             "default": 0,
             "minimum": 0
