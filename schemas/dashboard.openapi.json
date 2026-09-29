@@ -42138,7 +42138,7 @@
                       "DISABLED"
                     ]
                   },
-                  "catalogRewardRuleId": {
+                  "rewardRuleCatalogId": {
                     "type": "string"
                   },
                   "defaultLang": {
@@ -65106,6 +65106,180 @@
         ]
       }
     },
+    "/virtual-transactions/search": {
+      "post": {
+        "operationId": "virtualTransactions/search",
+        "summary": "Search virtual transactions",
+        "description": "Search, filter, and sort every user's virtual transactions in the workspace using JSONLogic expressions, newest first by default. Supports filtering by userId, virtualCurrencyId, state, direction, initiatorType, and more. A transaction can take a few seconds to appear after it is recorded.",
+        "parameters": [
+          {
+            "name": "x-external-user-id",
+            "in": "header",
+            "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Customer-provided external user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the user identified by this external ID. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-user-id.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+            "required": false,
+            "schema": {
+              "description": "Internal user ID for M2M user delegation. Only applicable when authenticating with M2M client credentials (OAuth 2.0 client_credentials grant); ignored for regular user access tokens. When provided, the request acts on behalf of the specified user. Most endpoints require one of x-user-id or x-external-user-id when using client credentials. Mutually exclusive with x-external-user-id.",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "description": "JSONLogic filter expression",
+                    "type": "object",
+                    "additionalProperties": true,
+                    "examples": [
+                      {
+                        "==": [
+                          {
+                            "var": "fieldName"
+                          },
+                          "value"
+                        ]
+                      },
+                      {
+                        "contains": [
+                          {
+                            "var": "joinAlias.fieldName"
+                          },
+                          "text"
+                        ]
+                      },
+                      {
+                        "match": [
+                          {
+                            "table": "ftsAlias"
+                          },
+                          "search term"
+                        ]
+                      },
+                      {
+                        "and": [
+                          {
+                            "match": [
+                              {
+                                "table": "ftsAlias"
+                              },
+                              "search term"
+                            ]
+                          },
+                          {
+                            "in": [
+                              {
+                                "var": "joinAlias.fieldName"
+                              },
+                              [
+                                "value1",
+                                "value2"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "externalDocs": {
+                      "description": "JSON Logic documentation",
+                      "url": "https://jsonlogic.com/"
+                    },
+                    "notes": [
+                      "This schema ensures only that the value is valid JSON.",
+                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
+                      "Consumers should validate semantics at runtime."
+                    ]
+                  },
+                  "sort": {
+                    "description": "Sort configuration",
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Field to sort by. Use alias.field for multi-table queries.",
+                        "type": "string",
+                        "example": "createdAt"
+                      },
+                      "order": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "example": "desc",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "order"
+                    ]
+                  },
+                  "limit": {
+                    "description": "Page size (max 100)",
+                    "type": "integer",
+                    "example": 20,
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "nextToken": {
+                    "description": "Pagination cursor for fetching the next set of results",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "fields": {
+                    "description": "Additional fields to resolve and include on each item. Supports `rewardRule`, `sourceEntity`, `virtualCurrency`, `streakRule` (snapshot of the streak rule that produced the freeze cost), and `user` (the display name of the user the transaction belongs to).",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "rewardRule",
+                        "sourceEntity",
+                        "virtualCurrency",
+                        "streakRule",
+                        "user"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Virtual transactions matching search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchVirtualTransactionsHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "VirtualTransactions"
+        ]
+      }
+    },
     "/workspace": {
       "get": {
         "operationId": "workspace/get",
@@ -66954,6 +67128,21 @@
                         "required": [
                           "enabled"
                         ]
+                      },
+                      "nicknameModeration": {
+                        "description": "Nickname screening. When omitted, nicknames are screened with the WORDLIST mode.",
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "description": "How nicknames are screened for offensive words when a user sets or changes one.\nOFF: no screening; nicknames are only checked for uniqueness.\nWORDLIST: screened against a multilingual list of offensive words, on the platform. The default.\nAI: screened by an external AI moderation service, which receives the nickname; falls back to WORDLIST when the service is unavailable.",
+                            "type": "string",
+                            "enum": [
+                              "OFF",
+                              "WORDLIST",
+                              "AI"
+                            ]
+                          }
+                        }
                       }
                     }
                   },
@@ -73786,7 +73975,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -90168,7 +90357,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -123803,7 +123992,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -124713,7 +124902,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -138944,6 +139133,21 @@
                 "required": [
                   "enabled"
                 ]
+              },
+              "nicknameModeration": {
+                "description": "Nickname screening. When omitted, nicknames are screened with the WORDLIST mode.",
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "description": "How nicknames are screened for offensive words when a user sets or changes one.\nOFF: no screening; nicknames are only checked for uniqueness.\nWORDLIST: screened against a multilingual list of offensive words, on the platform. The default.\nAI: screened by an external AI moderation service, which receives the nickname; falls back to WORDLIST when the service is unavailable.",
+                    "type": "string",
+                    "enum": [
+                      "OFF",
+                      "WORDLIST",
+                      "AI"
+                    ]
+                  }
+                }
               }
             }
           },
@@ -169558,7 +169762,7 @@
                     "CUSTOM"
                   ]
                 },
-                "catalogRewardRuleId": {
+                "rewardRuleCatalogId": {
                   "type": "string"
                 },
                 "syncWithCatalog": {
@@ -170521,7 +170725,7 @@
                     "CUSTOM"
                   ]
                 },
-                "catalogRewardRuleId": {
+                "rewardRuleCatalogId": {
                   "type": "string"
                 },
                 "syncWithCatalog": {
@@ -193410,7 +193614,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -198496,6 +198700,21 @@
                 "required": [
                   "enabled"
                 ]
+              },
+              "nicknameModeration": {
+                "description": "Nickname screening. When omitted, nicknames are screened with the WORDLIST mode.",
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "description": "How nicknames are screened for offensive words when a user sets or changes one.\nOFF: no screening; nicknames are only checked for uniqueness.\nWORDLIST: screened against a multilingual list of offensive words, on the platform. The default.\nAI: screened by an external AI moderation service, which receives the nickname; falls back to WORDLIST when the service is unavailable.",
+                    "type": "string",
+                    "enum": [
+                      "OFF",
+                      "WORDLIST",
+                      "AI"
+                    ]
+                  }
+                }
               }
             }
           },
@@ -199980,7 +200199,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -206535,6 +206754,148 @@
           "items"
         ]
       },
+      "SearchVirtualTransactionsHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "virtualCurrencyId": {
+                  "type": "string"
+                },
+                "virtualTransactionId": {
+                  "type": "string"
+                },
+                "virtualTransactionGroupId": {
+                  "type": "string"
+                },
+                "redemptionGroupId": {
+                  "type": "string"
+                },
+                "redemptionMode": {
+                  "type": "string",
+                  "enum": [
+                    "AUTO",
+                    "MANUAL"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "COMPLETED",
+                    "EXPIRED",
+                    "REJECTED"
+                  ]
+                },
+                "direction": {
+                  "type": "string",
+                  "enum": [
+                    "CREDIT",
+                    "DEBIT"
+                  ]
+                },
+                "initiatorType": {
+                  "type": "string",
+                  "enum": [
+                    "USER",
+                    "REWARD_RULE",
+                    "STREAK_RULE",
+                    "SYSTEM",
+                    "ADMIN"
+                  ]
+                },
+                "initiator": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "counterpartType": {
+                  "type": "string",
+                  "enum": [
+                    "USER",
+                    "SYSTEM"
+                  ]
+                },
+                "counterpart": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "additionalData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "redeemedAt": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "description": "Creation date in ISO format (UTC Timezone)",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "rewardRule": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryRewardRule"
+                },
+                "sourceEntity": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistorySourceEntity"
+                },
+                "virtualCurrency": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryVirtualCurrency"
+                },
+                "streakRule": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryStreakRule"
+                },
+                "user": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryUser"
+                }
+              },
+              "required": [
+                "userId",
+                "virtualCurrencyId",
+                "virtualTransactionId",
+                "virtualTransactionGroupId",
+                "redemptionMode",
+                "state",
+                "direction",
+                "initiatorType",
+                "initiator",
+                "counterpartType",
+                "counterpart",
+                "amount",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "SourceRegion": {
         "description": "Geographic Region where the entry was originally generated",
         "type": "string",
@@ -212106,7 +212467,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -225290,7 +225651,7 @@
               "CUSTOM"
             ]
           },
-          "catalogRewardRuleId": {
+          "rewardRuleCatalogId": {
             "type": "string"
           },
           "syncWithCatalog": {
@@ -232461,6 +232822,21 @@
                 "required": [
                   "enabled"
                 ]
+              },
+              "nicknameModeration": {
+                "description": "Nickname screening. When omitted, nicknames are screened with the WORDLIST mode.",
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "description": "How nicknames are screened for offensive words when a user sets or changes one.\nOFF: no screening; nicknames are only checked for uniqueness.\nWORDLIST: screened against a multilingual list of offensive words, on the platform. The default.\nAI: screened by an external AI moderation service, which receives the nickname; falls back to WORDLIST when the service is unavailable.",
+                    "type": "string",
+                    "enum": [
+                      "OFF",
+                      "WORDLIST",
+                      "AI"
+                    ]
+                  }
+                }
               }
             }
           },
@@ -233219,6 +233595,185 @@
         },
         "required": [
           "results"
+        ]
+      },
+      "VirtualTransactionHistoryRewardRule": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "rewardRuleId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "translation": {
+            "$ref": "#/components/schemas/VirtualTransactionHistoryRuleTranslation"
+          }
+        },
+        "required": [
+          "rewardRuleId",
+          "name",
+          "version",
+          "archived"
+        ]
+      },
+      "VirtualTransactionHistoryRuleTranslation": {
+        "description": "The rule name in the caller's language, resolved at the version pinned to the transaction. Absent when the rule has no translated name for that language.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "VirtualTransactionHistorySourceEntity": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "sourceType": {
+            "type": "string",
+            "enum": [
+              "Activity",
+              "Quiz",
+              "LearningPath",
+              "LearningGroup",
+              "Slide"
+            ]
+          },
+          "sourceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          }
+        },
+        "required": [
+          "sourceType",
+          "sourceId",
+          "version",
+          "archived",
+          "defaultLang"
+        ]
+      },
+      "VirtualTransactionHistoryStreakRule": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "streakRuleId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "REGULAR",
+              "FREEZE",
+              "ANY"
+            ]
+          },
+          "translation": {
+            "$ref": "#/components/schemas/VirtualTransactionHistoryRuleTranslation"
+          }
+        },
+        "required": [
+          "streakRuleId",
+          "name",
+          "version",
+          "archived"
+        ]
+      },
+      "VirtualTransactionHistoryUser": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unresolved": {
+            "description": "True when the user no longer exists in the workspace; `name` is then the user id.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "userId",
+          "name",
+          "unresolved"
+        ]
+      },
+      "VirtualTransactionHistoryVirtualCurrency": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "virtualCurrencyId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          },
+          "defaultLang": {
+            "$ref": "#/components/schemas/Lang"
+          }
+        },
+        "required": [
+          "virtualCurrencyId",
+          "name",
+          "archived",
+          "defaultLang"
         ]
       },
       "Voice": {
@@ -235138,6 +235693,21 @@
                 "required": [
                   "enabled"
                 ]
+              },
+              "nicknameModeration": {
+                "description": "Nickname screening. When omitted, nicknames are screened with the WORDLIST mode.",
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "description": "How nicknames are screened for offensive words when a user sets or changes one.\nOFF: no screening; nicknames are only checked for uniqueness.\nWORDLIST: screened against a multilingual list of offensive words, on the platform. The default.\nAI: screened by an external AI moderation service, which receives the nickname; falls back to WORDLIST when the service is unavailable.",
+                    "type": "string",
+                    "enum": [
+                      "OFF",
+                      "WORDLIST",
+                      "AI"
+                    ]
+                  }
+                }
               }
             }
           },

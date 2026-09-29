@@ -7398,7 +7398,7 @@
                     ]
                   },
                   "fields": {
-                    "description": "Additional fields to resolve and include on each item. Supports `rewardRule`, `sourceEntity`, `virtualCurrency`, and `streakRule` (snapshot of the streak rule that produced the freeze cost).",
+                    "description": "Additional fields to resolve and include on each item. Supports `rewardRule`, `sourceEntity`, `virtualCurrency`, `streakRule` (snapshot of the streak rule that produced the freeze cost), and `user` (the display name of the user the transaction belongs to).",
                     "type": "array",
                     "items": {
                       "type": "string",
@@ -7406,7 +7406,8 @@
                         "rewardRule",
                         "sourceEntity",
                         "virtualCurrency",
-                        "streakRule"
+                        "streakRule",
+                        "user"
                       ]
                     }
                   }
@@ -14819,6 +14820,21 @@
                 "required": [
                   "enabled"
                 ]
+              },
+              "nicknameModeration": {
+                "description": "Nickname screening. When omitted, nicknames are screened with the WORDLIST mode.",
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "description": "How nicknames are screened for offensive words when a user sets or changes one.\nOFF: no screening; nicknames are only checked for uniqueness.\nWORDLIST: screened against a multilingual list of offensive words, on the platform. The default.\nAI: screened by an external AI moderation service, which receives the nickname; falls back to WORDLIST when the service is unavailable.",
+                    "type": "string",
+                    "enum": [
+                      "OFF",
+                      "WORDLIST",
+                      "AI"
+                    ]
+                  }
+                }
               }
             }
           },
@@ -21951,6 +21967,9 @@
                 },
                 "streakRule": {
                   "$ref": "#/components/schemas/VirtualTransactionHistoryStreakRule"
+                },
+                "user": {
+                  "$ref": "#/components/schemas/VirtualTransactionHistoryUser"
                 }
               },
               "required": [
@@ -23147,6 +23166,30 @@
           "name",
           "version",
           "archived"
+        ]
+      },
+      "VirtualTransactionHistoryUser": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unresolved": {
+            "description": "True when the user no longer exists in the workspace; `name` is then the user id.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "userId",
+          "name",
+          "unresolved"
         ]
       },
       "VirtualTransactionHistoryVirtualCurrency": {
