@@ -720,9 +720,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -2705,9 +2703,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -5653,9 +5649,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -7354,9 +7348,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -10151,7 +10143,10 @@
                     "learningGroup"
                   ]
                 },
-                "itemData": {}
+                "itemData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               },
               "required": [
                 "itemId",
@@ -13875,7 +13870,7 @@
             "default": {},
             "properties": {
               "defaultCurrency": {
-                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own.",
+                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own. When supported currencies are listed, it must be one of them.",
                 "type": "string",
                 "enum": [
                   "AED",
@@ -14043,7 +14038,7 @@
                 ]
               },
               "supportedCurrencies": {
-                "description": "List of currency codes a user may choose from. Also the list offered by the onboarding picker.",
+                "description": "List of currency codes a user may choose from in their profile.",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -14996,7 +14991,7 @@
         ]
       },
       "JsonLogicExpression": {
-        "description": "A JSON Logic expression used to define conditional rules in a declarative way.\n\nJSON Logic is a lightweight way to express rules, conditions, and decision trees in JSON format.\nThis schema only validates that the input is valid JSON; it does not validate the correctness of\nthe JSON Logic operators or semantics.",
+        "description": "A JSON Logic expression used to define conditional rules in a declarative way.\n\nWhen a rule is created or updated, every expression it carries is checked, and the request is\nrejected with `400 validation/invalid_input` if an expression cannot be evaluated or cannot serve\nits field — for example an unknown operator, the wrong number of arguments, an empty `{}`, an\nobject with more than one key, a malformed `var`, or a condition that returns a number or a\nstring instead of true/false. Each issue names the field and the location inside the expression.\nThe check does not prove that a rule does what you intended, and variable names are not checked\nagainst your data. Expressions are limited to 64 KB and 1024 nesting levels.",
         "type": "object",
         "additionalProperties": true,
         "examples": [
@@ -15040,9 +15035,9 @@
           "url": "https://jsonlogic.com/"
         },
         "notes": [
-          "This schema ensures only that the value is valid JSON.",
+          "Rule create and update requests reject an expression that cannot be evaluated.",
           "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-          "Consumers should validate semantics at runtime."
+          "Whether a valid expression matches the intended users or events is not checked."
         ]
       },
       "Lang": {
@@ -16926,7 +16921,10 @@
                     "learningGroup"
                   ]
                 },
-                "itemData": {}
+                "itemData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               },
               "required": [
                 "itemId",
@@ -17351,13 +17349,42 @@
         "properties": {
           "items": {
             "type": "array",
-            "items": {}
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "type": "string"
+                },
+                "itemType": {
+                  "type": "string",
+                  "enum": [
+                    "activity",
+                    "game",
+                    "quiz",
+                    "story",
+                    "slide",
+                    "survey",
+                    "learningGroup"
+                  ]
+                },
+                "itemData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "itemId",
+                "itemType"
+              ]
+            }
           },
           "nextToken": {
+            "description": "Pagination cursor for fetching the next set of results",
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "example": "eyJwayI6IndvcmtzcGFjZUlkI3pPR0JndVctQWoiLCJxdWl6SWQiOiItRktBdDZfbXM4M3RvSUZaLWVjeFQifQ=="
           }
         },
         "required": [
@@ -17431,7 +17458,10 @@
                           "learningGroup"
                         ]
                       },
-                      "itemData": {}
+                      "itemData": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      }
                     },
                     "required": [
                       "itemId",
@@ -21282,7 +21312,10 @@
                           "learningGroup"
                         ]
                       },
-                      "itemData": {}
+                      "itemData": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      }
                     },
                     "required": [
                       "itemId",

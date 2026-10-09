@@ -698,98 +698,54 @@
     "/ai/learningPaths/generateVideo": {
       "post": {
         "operationId": "ai/learningPathsGenerateVideo",
-        "summary": "Generate per-slide avatar video (avatar or lipsync mode)",
-        "description": "Initiate an AI per-slide video render. Mode 'avatar' renders a fresh talking-head from the slide's existing audio and a provider-shaped avatarId; mode 'lipsync' rewrites a supplied source videoUrl's lip movements to match the slide's audio. One (slideId, lang) pair per request — the cross-language follow-up popup spawns N parallel requests rather than batching here. Queue-backed (AW-722): returns a durable jobId immediately; idempotent on re-submit, preempts a stale in-flight render, and locks the slide translation while running.",
+        "summary": "Generate per-slide avatar video",
+        "description": "Initiate an AI per-slide video render. Mode 'avatar' renders a fresh talking-head from the slide's existing audio and an optional avatarId. One (slideId, lang) pair per request — the cross-language follow-up popup spawns N parallel requests rather than batching here. Queue-backed (AW-722): returns a durable jobId immediately; idempotent on re-submit, preempts a stale in-flight render, and locks the slide translation while running.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "learningPathId": {
-                        "type": "string"
-                      },
-                      "slideId": {
-                        "type": "string"
-                      },
-                      "lang": {
-                        "$ref": "#/components/schemas/Lang"
-                      },
-                      "mode": {
-                        "type": "string",
-                        "enum": [
-                          "avatar"
-                        ]
-                      },
-                      "avatarId": {
-                        "type": "string",
-                        "minLength": 1
-                      },
-                      "imageUrl": {
-                        "type": "string",
-                        "format": "uri"
-                      },
-                      "prompt": {
-                        "type": "string",
-                        "minLength": 1
-                      },
-                      "provider": {
-                        "type": "string",
-                        "enum": [
-                          "longcat",
-                          "veedAvatars",
-                          "heygen"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "learningPathId",
-                      "slideId",
-                      "lang",
-                      "mode"
+                "type": "object",
+                "properties": {
+                  "learningPathId": {
+                    "type": "string"
+                  },
+                  "slideId": {
+                    "type": "string"
+                  },
+                  "lang": {
+                    "$ref": "#/components/schemas/Lang"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "avatar"
                     ]
                   },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "learningPathId": {
-                        "type": "string"
-                      },
-                      "slideId": {
-                        "type": "string"
-                      },
-                      "lang": {
-                        "$ref": "#/components/schemas/Lang"
-                      },
-                      "mode": {
-                        "type": "string",
-                        "enum": [
-                          "lipsync"
-                        ]
-                      },
-                      "videoUrl": {
-                        "type": "string",
-                        "format": "uri"
-                      },
-                      "provider": {
-                        "type": "string",
-                        "enum": [
-                          "veedAvatars",
-                          "latentSync"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "learningPathId",
-                      "slideId",
-                      "lang",
-                      "mode",
-                      "videoUrl"
+                  "avatarId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "longcat"
                     ]
                   }
+                },
+                "required": [
+                  "learningPathId",
+                  "slideId",
+                  "lang",
+                  "mode"
                 ]
               }
             }
@@ -6682,9 +6638,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -6911,9 +6865,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -9278,9 +9230,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -12441,9 +12391,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -12893,9 +12841,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -14343,9 +14289,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -20292,9 +20236,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -21021,9 +20963,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -27435,9 +27375,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -28100,9 +28038,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -28885,9 +28821,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -30537,9 +30471,9 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
+                      "Rule create and update requests reject an expression that cannot be evaluated.",
                       "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "Whether a valid expression matches the intended users or events is not checked."
                     ]
                   },
                   "incrementExpression": {
@@ -30587,9 +30521,9 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
+                      "Rule create and update requests reject an expression that cannot be evaluated.",
                       "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "Whether a valid expression matches the intended users or events is not checked."
                     ]
                   },
                   "targetAmountExpression": {
@@ -30637,9 +30571,9 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
+                      "Rule create and update requests reject an expression that cannot be evaluated.",
                       "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "Whether a valid expression matches the intended users or events is not checked."
                     ]
                   },
                   "intermediateLevels": {
@@ -30703,9 +30637,9 @@
                             "url": "https://jsonlogic.com/"
                           },
                           "notes": [
-                            "This schema ensures only that the value is valid JSON.",
+                            "Rule create and update requests reject an expression that cannot be evaluated.",
                             "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                            "Consumers should validate semantics at runtime."
+                            "Whether a valid expression matches the intended users or events is not checked."
                           ]
                         }
                       },
@@ -31277,9 +31211,9 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
+                      "Rule create and update requests reject an expression that cannot be evaluated.",
                       "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "Whether a valid expression matches the intended users or events is not checked."
                     ]
                   },
                   "incrementExpression": {
@@ -31327,9 +31261,9 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
+                      "Rule create and update requests reject an expression that cannot be evaluated.",
                       "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "Whether a valid expression matches the intended users or events is not checked."
                     ]
                   },
                   "targetAmountExpression": {
@@ -31377,9 +31311,9 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
+                      "Rule create and update requests reject an expression that cannot be evaluated.",
                       "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "Whether a valid expression matches the intended users or events is not checked."
                     ]
                   },
                   "intermediateLevels": {
@@ -31443,9 +31377,9 @@
                             "url": "https://jsonlogic.com/"
                           },
                           "notes": [
-                            "This schema ensures only that the value is valid JSON.",
+                            "Rule create and update requests reject an expression that cannot be evaluated.",
                             "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                            "Consumers should validate semantics at runtime."
+                            "Whether a valid expression matches the intended users or events is not checked."
                           ]
                         }
                       },
@@ -38250,9 +38184,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -38699,9 +38631,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -47276,9 +47206,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -47627,9 +47555,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -54987,9 +54913,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -55514,9 +55438,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -58548,9 +58470,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -61254,9 +61174,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -63508,9 +63426,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -63957,9 +63873,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -65198,9 +65112,7 @@
                       "url": "https://jsonlogic.com/"
                     },
                     "notes": [
-                      "This schema ensures only that the value is valid JSON.",
-                      "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                      "Consumers should validate semantics at runtime."
+                      "A filter this endpoint cannot compile is rejected with 400."
                     ]
                   },
                   "sort": {
@@ -66556,6 +66468,351 @@
                         "type": "array",
                         "items": {
                           "$ref": "#/components/schemas/Lang"
+                        }
+                      }
+                    }
+                  },
+                  "currencies": {
+                    "description": "Currency configuration. The update replaces it like every other section: leaving it out clears the stored currencies.",
+                    "type": "object",
+                    "properties": {
+                      "defaultCurrency": {
+                        "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own. When supported currencies are listed, it must be one of them.",
+                        "type": "string",
+                        "enum": [
+                          "AED",
+                          "AFN",
+                          "ALL",
+                          "AMD",
+                          "ANG",
+                          "AOA",
+                          "ARS",
+                          "AUD",
+                          "AWG",
+                          "AZN",
+                          "BAM",
+                          "BBD",
+                          "BDT",
+                          "BGN",
+                          "BHD",
+                          "BIF",
+                          "BMD",
+                          "BND",
+                          "BOB",
+                          "BRL",
+                          "BSD",
+                          "BTN",
+                          "BWP",
+                          "BYN",
+                          "BZD",
+                          "CAD",
+                          "CDF",
+                          "CHF",
+                          "CLP",
+                          "CNY",
+                          "COP",
+                          "CRC",
+                          "CUC",
+                          "CUP",
+                          "CVE",
+                          "CZK",
+                          "DJF",
+                          "DKK",
+                          "DOP",
+                          "DZD",
+                          "EGP",
+                          "ERN",
+                          "ETB",
+                          "EUR",
+                          "FJD",
+                          "FKP",
+                          "GBP",
+                          "GEL",
+                          "GHS",
+                          "GIP",
+                          "GMD",
+                          "GNF",
+                          "GTQ",
+                          "GYD",
+                          "HKD",
+                          "HNL",
+                          "HRK",
+                          "HTG",
+                          "HUF",
+                          "IDR",
+                          "ILS",
+                          "INR",
+                          "IQD",
+                          "IRR",
+                          "ISK",
+                          "JMD",
+                          "JOD",
+                          "JPY",
+                          "KES",
+                          "KGS",
+                          "KHR",
+                          "KMF",
+                          "KPW",
+                          "KRW",
+                          "KWD",
+                          "KYD",
+                          "KZT",
+                          "LAK",
+                          "LBP",
+                          "LKR",
+                          "LRD",
+                          "LSL",
+                          "LYD",
+                          "MAD",
+                          "MDL",
+                          "MGA",
+                          "MKD",
+                          "MMK",
+                          "MNT",
+                          "MOP",
+                          "MRU",
+                          "MUR",
+                          "MVR",
+                          "MWK",
+                          "MXN",
+                          "MYR",
+                          "MZN",
+                          "NAD",
+                          "NGN",
+                          "NIO",
+                          "NOK",
+                          "NPR",
+                          "NZD",
+                          "OMR",
+                          "PAB",
+                          "PEN",
+                          "PGK",
+                          "PHP",
+                          "PKR",
+                          "PLN",
+                          "PYG",
+                          "QAR",
+                          "RON",
+                          "RSD",
+                          "RUB",
+                          "RWF",
+                          "SAR",
+                          "SBD",
+                          "SCR",
+                          "SDG",
+                          "SEK",
+                          "SGD",
+                          "SHP",
+                          "SLE",
+                          "SLL",
+                          "SOS",
+                          "SRD",
+                          "SSP",
+                          "STN",
+                          "SVC",
+                          "SYP",
+                          "SZL",
+                          "THB",
+                          "TJS",
+                          "TMT",
+                          "TND",
+                          "TOP",
+                          "TRY",
+                          "TTD",
+                          "TWD",
+                          "TZS",
+                          "UAH",
+                          "UGX",
+                          "USD",
+                          "UYU",
+                          "UZS",
+                          "VES",
+                          "VND",
+                          "VUV",
+                          "WST",
+                          "XAF",
+                          "XCD",
+                          "XCG",
+                          "XDR",
+                          "XOF",
+                          "XPF",
+                          "XSU",
+                          "YER",
+                          "ZAR",
+                          "ZMW",
+                          "ZWG",
+                          "ZWL"
+                        ]
+                      },
+                      "supportedCurrencies": {
+                        "description": "List of currency codes a user may choose from in their profile.",
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "AED",
+                            "AFN",
+                            "ALL",
+                            "AMD",
+                            "ANG",
+                            "AOA",
+                            "ARS",
+                            "AUD",
+                            "AWG",
+                            "AZN",
+                            "BAM",
+                            "BBD",
+                            "BDT",
+                            "BGN",
+                            "BHD",
+                            "BIF",
+                            "BMD",
+                            "BND",
+                            "BOB",
+                            "BRL",
+                            "BSD",
+                            "BTN",
+                            "BWP",
+                            "BYN",
+                            "BZD",
+                            "CAD",
+                            "CDF",
+                            "CHF",
+                            "CLP",
+                            "CNY",
+                            "COP",
+                            "CRC",
+                            "CUC",
+                            "CUP",
+                            "CVE",
+                            "CZK",
+                            "DJF",
+                            "DKK",
+                            "DOP",
+                            "DZD",
+                            "EGP",
+                            "ERN",
+                            "ETB",
+                            "EUR",
+                            "FJD",
+                            "FKP",
+                            "GBP",
+                            "GEL",
+                            "GHS",
+                            "GIP",
+                            "GMD",
+                            "GNF",
+                            "GTQ",
+                            "GYD",
+                            "HKD",
+                            "HNL",
+                            "HRK",
+                            "HTG",
+                            "HUF",
+                            "IDR",
+                            "ILS",
+                            "INR",
+                            "IQD",
+                            "IRR",
+                            "ISK",
+                            "JMD",
+                            "JOD",
+                            "JPY",
+                            "KES",
+                            "KGS",
+                            "KHR",
+                            "KMF",
+                            "KPW",
+                            "KRW",
+                            "KWD",
+                            "KYD",
+                            "KZT",
+                            "LAK",
+                            "LBP",
+                            "LKR",
+                            "LRD",
+                            "LSL",
+                            "LYD",
+                            "MAD",
+                            "MDL",
+                            "MGA",
+                            "MKD",
+                            "MMK",
+                            "MNT",
+                            "MOP",
+                            "MRU",
+                            "MUR",
+                            "MVR",
+                            "MWK",
+                            "MXN",
+                            "MYR",
+                            "MZN",
+                            "NAD",
+                            "NGN",
+                            "NIO",
+                            "NOK",
+                            "NPR",
+                            "NZD",
+                            "OMR",
+                            "PAB",
+                            "PEN",
+                            "PGK",
+                            "PHP",
+                            "PKR",
+                            "PLN",
+                            "PYG",
+                            "QAR",
+                            "RON",
+                            "RSD",
+                            "RUB",
+                            "RWF",
+                            "SAR",
+                            "SBD",
+                            "SCR",
+                            "SDG",
+                            "SEK",
+                            "SGD",
+                            "SHP",
+                            "SLE",
+                            "SLL",
+                            "SOS",
+                            "SRD",
+                            "SSP",
+                            "STN",
+                            "SVC",
+                            "SYP",
+                            "SZL",
+                            "THB",
+                            "TJS",
+                            "TMT",
+                            "TND",
+                            "TOP",
+                            "TRY",
+                            "TTD",
+                            "TWD",
+                            "TZS",
+                            "UAH",
+                            "UGX",
+                            "USD",
+                            "UYU",
+                            "UZS",
+                            "VES",
+                            "VND",
+                            "VUV",
+                            "WST",
+                            "XAF",
+                            "XCD",
+                            "XCG",
+                            "XDR",
+                            "XOF",
+                            "XPF",
+                            "XSU",
+                            "YER",
+                            "ZAR",
+                            "ZMW",
+                            "ZWG",
+                            "ZWL"
+                          ]
                         }
                       }
                     }
@@ -71392,9 +71649,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "incrementExpression": {
@@ -71442,9 +71699,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "targetAmountExpression": {
@@ -71492,9 +71749,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "intermediateLevels": {
@@ -71558,9 +71815,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 }
               },
@@ -86317,9 +86574,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "incrementExpression": {
@@ -86367,9 +86624,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "targetAmountExpression": {
@@ -86417,9 +86674,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "intermediateLevels": {
@@ -86483,9 +86740,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 }
               },
@@ -112239,7 +112496,10 @@
                     "learningGroup"
                   ]
                 },
-                "itemData": {}
+                "itemData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               },
               "required": [
                 "itemId",
@@ -116768,9 +117028,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "incrementExpression": {
@@ -116818,9 +117078,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "targetAmountExpression": {
@@ -116868,9 +117128,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "intermediateLevels": {
@@ -116934,9 +117194,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 }
               },
@@ -117531,9 +117791,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "incrementExpression": {
@@ -117581,9 +117841,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "targetAmountExpression": {
@@ -117631,9 +117891,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "intermediateLevels": {
@@ -117697,9 +117957,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 }
               },
@@ -138188,7 +138448,7 @@
             "default": {},
             "properties": {
               "defaultCurrency": {
-                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own.",
+                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own. When supported currencies are listed, it must be one of them.",
                 "type": "string",
                 "enum": [
                   "AED",
@@ -138356,7 +138616,7 @@
                 ]
               },
               "supportedCurrencies": {
-                "description": "List of currency codes a user may choose from. Also the list offered by the onboarding picker.",
+                "description": "List of currency codes a user may choose from in their profile.",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -140530,7 +140790,7 @@
         ]
       },
       "JsonLogicExpression": {
-        "description": "A JSON Logic expression used to define conditional rules in a declarative way.\n\nJSON Logic is a lightweight way to express rules, conditions, and decision trees in JSON format.\nThis schema only validates that the input is valid JSON; it does not validate the correctness of\nthe JSON Logic operators or semantics.",
+        "description": "A JSON Logic expression used to define conditional rules in a declarative way.\n\nWhen a rule is created or updated, every expression it carries is checked, and the request is\nrejected with `400 validation/invalid_input` if an expression cannot be evaluated or cannot serve\nits field — for example an unknown operator, the wrong number of arguments, an empty `{}`, an\nobject with more than one key, a malformed `var`, or a condition that returns a number or a\nstring instead of true/false. Each issue names the field and the location inside the expression.\nThe check does not prove that a rule does what you intended, and variable names are not checked\nagainst your data. Expressions are limited to 64 KB and 1024 nesting levels.",
         "type": "object",
         "additionalProperties": true,
         "examples": [
@@ -140574,9 +140834,9 @@
           "url": "https://jsonlogic.com/"
         },
         "notes": [
-          "This schema ensures only that the value is valid JSON.",
+          "Rule create and update requests reject an expression that cannot be evaluated.",
           "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-          "Consumers should validate semantics at runtime."
+          "Whether a valid expression matches the intended users or events is not checked."
         ]
       },
       "Lang": {
@@ -152724,7 +152984,10 @@
                     "learningGroup"
                   ]
                 },
-                "itemData": {}
+                "itemData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               },
               "required": [
                 "itemId",
@@ -153609,7 +153872,10 @@
                           "learningGroup"
                         ]
                       },
-                      "itemData": {}
+                      "itemData": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      }
                     },
                     "required": [
                       "itemId",
@@ -155265,7 +155531,10 @@
                     "learningGroup"
                   ]
                 },
-                "itemData": {}
+                "itemData": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               },
               "required": [
                 "itemId",
@@ -159534,9 +159803,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "incrementExpression": {
@@ -159584,9 +159853,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "targetAmountExpression": {
@@ -159634,9 +159903,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "intermediateLevels": {
@@ -159700,9 +159969,9 @@
                           "url": "https://jsonlogic.com/"
                         },
                         "notes": [
-                          "This schema ensures only that the value is valid JSON.",
+                          "Rule create and update requests reject an expression that cannot be evaluated.",
                           "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                          "Consumers should validate semantics at runtime."
+                          "Whether a valid expression matches the intended users or events is not checked."
                         ]
                       }
                     },
@@ -160350,9 +160619,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "incrementExpression": {
@@ -160400,9 +160669,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "targetAmountExpression": {
@@ -160450,9 +160719,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "intermediateLevels": {
@@ -160516,9 +160785,9 @@
                           "url": "https://jsonlogic.com/"
                         },
                         "notes": [
-                          "This schema ensures only that the value is valid JSON.",
+                          "Rule create and update requests reject an expression that cannot be evaluated.",
                           "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                          "Consumers should validate semantics at runtime."
+                          "Whether a valid expression matches the intended users or events is not checked."
                         ]
                       }
                     },
@@ -161132,9 +161401,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "incrementExpression": {
@@ -161182,9 +161451,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "targetAmountExpression": {
@@ -161232,9 +161501,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 },
                 "intermediateLevels": {
@@ -161298,9 +161567,9 @@
                           "url": "https://jsonlogic.com/"
                         },
                         "notes": [
-                          "This schema ensures only that the value is valid JSON.",
+                          "Rule create and update requests reject an expression that cannot be evaluated.",
                           "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                          "Consumers should validate semantics at runtime."
+                          "Whether a valid expression matches the intended users or events is not checked."
                         ]
                       }
                     },
@@ -190995,9 +191264,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "incrementExpression": {
@@ -191045,9 +191314,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "targetAmountExpression": {
@@ -191095,9 +191364,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "intermediateLevels": {
@@ -191161,9 +191430,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 }
               },
@@ -197755,7 +198024,7 @@
             "default": {},
             "properties": {
               "defaultCurrency": {
-                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own.",
+                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own. When supported currencies are listed, it must be one of them.",
                 "type": "string",
                 "enum": [
                   "AED",
@@ -197923,7 +198192,7 @@
                 ]
               },
               "supportedCurrencies": {
-                "description": "List of currency codes a user may choose from. Also the list offered by the onboarding picker.",
+                "description": "List of currency codes a user may choose from in their profile.",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -201818,9 +202087,7 @@
           "url": "https://jsonlogic.com/"
         },
         "notes": [
-          "This schema ensures only that the value is valid JSON.",
-          "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-          "Consumers should validate semantics at runtime."
+          "A filter this endpoint cannot compile is rejected with 400."
         ]
       },
       "SearchLearningGroupsHistoryResponse": {
@@ -209884,9 +210151,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "incrementExpression": {
@@ -209934,9 +210201,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "targetAmountExpression": {
@@ -209984,9 +210251,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "intermediateLevels": {
@@ -210050,9 +210317,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 }
               },
@@ -221908,9 +222175,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "incrementExpression": {
@@ -221958,9 +222225,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "targetAmountExpression": {
@@ -222008,9 +222275,9 @@
               "url": "https://jsonlogic.com/"
             },
             "notes": [
-              "This schema ensures only that the value is valid JSON.",
+              "Rule create and update requests reject an expression that cannot be evaluated.",
               "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-              "Consumers should validate semantics at runtime."
+              "Whether a valid expression matches the intended users or events is not checked."
             ]
           },
           "intermediateLevels": {
@@ -222074,9 +222341,9 @@
                     "url": "https://jsonlogic.com/"
                   },
                   "notes": [
-                    "This schema ensures only that the value is valid JSON.",
+                    "Rule create and update requests reject an expression that cannot be evaluated.",
                     "JSON Logic supports a wide variety of operators such as `==`, `and`, `or`, `>`, `<`, etc.",
-                    "Consumers should validate semantics at runtime."
+                    "Whether a valid expression matches the intended users or events is not checked."
                   ]
                 }
               },
@@ -231877,7 +232144,7 @@
             "default": {},
             "properties": {
               "defaultCurrency": {
-                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own.",
+                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own. When supported currencies are listed, it must be one of them.",
                 "type": "string",
                 "enum": [
                   "AED",
@@ -232045,7 +232312,7 @@
                 ]
               },
               "supportedCurrencies": {
-                "description": "List of currency codes a user may choose from. Also the list offered by the onboarding picker.",
+                "description": "List of currency codes a user may choose from in their profile.",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -234748,7 +235015,7 @@
             "default": {},
             "properties": {
               "defaultCurrency": {
-                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own.",
+                "description": "Default currency code for the workspace. Used for readers who have not chosen one of their own. When supported currencies are listed, it must be one of them.",
                 "type": "string",
                 "enum": [
                   "AED",
@@ -234916,7 +235183,7 @@
                 ]
               },
               "supportedCurrencies": {
-                "description": "List of currency codes a user may choose from. Also the list offered by the onboarding picker.",
+                "description": "List of currency codes a user may choose from in their profile.",
                 "type": "array",
                 "items": {
                   "type": "string",
