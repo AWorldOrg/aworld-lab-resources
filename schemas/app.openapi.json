@@ -3007,6 +3007,12 @@
           },
           "404": {
             "description": "Learning path assignment not found"
+          },
+          "409": {
+            "description": "The current attempt cannot be retried: it is not complete, it was a success, or another retry started first"
+          },
+          "422": {
+            "description": "The next attempt already has progress, so it cannot be started again"
           }
         },
         "tags": [
