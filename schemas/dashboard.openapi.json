@@ -944,6 +944,132 @@
         ]
       }
     },
+    "/ai/text/assist": {
+      "post": {
+        "operationId": "ai/assistText",
+        "summary": "Ask the assistant",
+        "description": "Runs one prompt through the platform's text model and returns its answer as free text, for an in-product assistant that only reads. Available to every role signed in to the workspace on the web; machine-to-machine credentials are refused.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "description": "The full instruction for the model, sent as a single user turn. At most 131,072 characters.",
+                    "type": "string",
+                    "maxLength": 131072,
+                    "minLength": 1
+                  },
+                  "temperature": {
+                    "description": "Sampling temperature, from 0 (most deterministic) to 2. Omitted, the model's default applies.",
+                    "type": "number",
+                    "maximum": 2,
+                    "minimum": 0
+                  },
+                  "maxOutputTokens": {
+                    "description": "Upper bound on the answer's length in tokens, at most 2048, which is also the default.",
+                    "type": "integer",
+                    "default": 2048,
+                    "maximum": 2048,
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The model's answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateTextResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "AI"
+        ]
+      }
+    },
+    "/ai/text/generate": {
+      "post": {
+        "operationId": "ai/generateText",
+        "summary": "Generate text",
+        "description": "Runs one prompt through the platform's text model and returns its answer, as free text or as a JSON value. For authoring: available to the roles that can create content, signed in to the workspace on the web; machine-to-machine credentials are refused.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "description": "The full instruction for the model, sent as a single user turn. At most 65,536 characters.",
+                    "type": "string",
+                    "maxLength": 65536,
+                    "minLength": 1
+                  },
+                  "responseFormat": {
+                    "description": "What the answer must be. Defaults to `text`.\n`text`: free text.\n`json`: a single JSON value, returned as a string for the caller to parse.",
+                    "type": "string",
+                    "default": "text",
+                    "enum": [
+                      "text",
+                      "json"
+                    ]
+                  },
+                  "temperature": {
+                    "description": "Sampling temperature, from 0 (most deterministic) to 2. Omitted, the model's default applies.",
+                    "type": "number",
+                    "maximum": 2,
+                    "minimum": 0
+                  },
+                  "maxOutputTokens": {
+                    "description": "Upper bound on the answer's length in tokens, at most 8192. Omitted, the model's default applies.",
+                    "type": "integer",
+                    "maximum": 8192,
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The model's answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateTextResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "AI"
+        ]
+      }
+    },
     "/ai/images/generate/{generationId}": {
       "get": {
         "operationId": "ai/getImageGenerationStatus",
@@ -62852,10 +62978,7 @@
                     "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                     "type": "string",
                     "enum": [
-                      "longcat",
-                      "heygen",
-                      "veedAvatars",
-                      "pandora"
+                      "longcat"
                     ]
                   },
                   "providerAvatarId": {
@@ -63158,10 +63281,7 @@
                     "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                     "type": "string",
                     "enum": [
-                      "longcat",
-                      "heygen",
-                      "veedAvatars",
-                      "pandora"
+                      "longcat"
                     ]
                   },
                   "providerAvatarId": {
@@ -77420,10 +77540,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
@@ -79576,10 +79693,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
@@ -95904,10 +96018,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
@@ -101942,6 +102053,18 @@
           "createdAt"
         ]
       },
+      "GenerateTextResponse": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "description": "The model's answer. With `responseFormat: json` it is the JSON value as a string.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
       "GetActivityHistoryVersionResponse": {
         "type": "object",
         "properties": {
@@ -107883,10 +108006,7 @@
                   "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                   "type": "string",
                   "enum": [
-                    "longcat",
-                    "heygen",
-                    "veedAvatars",
-                    "pandora"
+                    "longcat"
                   ]
                 },
                 "providerAvatarId": {
@@ -136331,10 +136451,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
@@ -136533,10 +136650,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
@@ -185599,10 +185713,7 @@
                   "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                   "type": "string",
                   "enum": [
-                    "longcat",
-                    "heygen",
-                    "veedAvatars",
-                    "pandora"
+                    "longcat"
                   ]
                 },
                 "providerAvatarId": {
@@ -185854,10 +185965,7 @@
                   "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                   "type": "string",
                   "enum": [
-                    "longcat",
-                    "heygen",
-                    "veedAvatars",
-                    "pandora"
+                    "longcat"
                   ]
                 },
                 "providerAvatarId": {
@@ -186075,10 +186183,7 @@
                   "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                   "type": "string",
                   "enum": [
-                    "longcat",
-                    "heygen",
-                    "veedAvatars",
-                    "pandora"
+                    "longcat"
                   ]
                 },
                 "providerAvatarId": {
@@ -197043,10 +197148,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
@@ -206645,10 +206747,7 @@
                   "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                   "type": "string",
                   "enum": [
-                    "longcat",
-                    "heygen",
-                    "veedAvatars",
-                    "pandora"
+                    "longcat"
                   ]
                 },
                 "providerAvatarId": {
@@ -206871,10 +206970,7 @@
                   "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
                   "type": "string",
                   "enum": [
-                    "longcat",
-                    "heygen",
-                    "veedAvatars",
-                    "pandora"
+                    "longcat"
                   ]
                 },
                 "providerAvatarId": {
@@ -215922,10 +216018,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
@@ -230896,10 +230989,7 @@
             "description": "Records which avatar video source this avatar is associated with.\n\nOptional — most avatars work with just a portrait image and a narration voice. When set, providerAvatarId records the avatar's identifier in that source's catalogue.",
             "type": "string",
             "enum": [
-              "longcat",
-              "heygen",
-              "veedAvatars",
-              "pandora"
+              "longcat"
             ]
           },
           "providerAvatarId": {
