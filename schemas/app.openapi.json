@@ -3843,14 +3843,93 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "answerData": {
+                    "type": "object",
+                    "properties": {
+                      "answers": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "opt1",
+                            "opt2",
+                            "opt3",
+                            "opt4"
+                          ]
+                        },
+                        "maxItems": 4,
+                        "minItems": 1
+                      },
+                      "itemIdsInOrder": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                          "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                          "example": "sky"
+                        },
+                        "maxItems": 20,
+                        "minItems": 2
+                      },
+                      "pairs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "leftId": {
+                              "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                              "type": "string",
+                              "example": "sky",
+                              "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                            },
+                            "rightId": {
+                              "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                              "type": "string",
+                              "example": "sky",
+                              "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                            }
+                          },
+                          "required": [
+                            "leftId",
+                            "rightId"
+                          ]
+                        },
+                        "maxItems": 20,
+                        "minItems": 1
+                      },
+                      "blanks": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "position": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "position",
+                            "value"
+                          ]
+                        },
+                        "maxItems": 20,
+                        "minItems": 1
+                      }
+                    }
+                  },
                   "answer": {
+                    "description": "Deprecated: send `answerData: { answers: [\"<slot>\"] }`. A single ticked option slot; converted on the way in, never stored.",
                     "type": "string",
                     "enum": [
                       "opt1",
                       "opt2",
                       "opt3",
                       "opt4"
-                    ]
+                    ],
+                    "deprecated": true
                   },
                   "context": {
                     "type": "string",
@@ -3875,10 +3954,7 @@
                       "learningGroup"
                     ]
                   }
-                },
-                "required": [
-                  "answer"
-                ]
+                }
               }
             }
           }
@@ -11095,6 +11171,20 @@
               "HARD"
             ]
           },
+          "quizType": {
+            "type": "string",
+            "default": "CHOICE",
+            "enum": [
+              "CHOICE",
+              "FILL_THE_BLANKS",
+              "SORTING",
+              "MATCHING"
+            ]
+          },
+          "multipleSelection": {
+            "type": "boolean",
+            "default": false
+          },
           "origin": {
             "description": "Records where the quiz came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogQuizId.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the quiz is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the quiz behaves.",
             "type": "string",
@@ -11297,6 +11387,39 @@
                   "generatedAt"
                 ]
               },
+              "fillTheBlanks": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "description": "The sentence, with a gap written as `{{0}}`, `{{1}}`, … where the number is the matching blank's `position`. The numbers bind answers to gaps explicitly, so a translation may place them in whatever order its language needs.",
+                    "type": "string",
+                    "example": "The sky is {{0}} because air {{1}} the light.",
+                    "minLength": 1
+                  },
+                  "blanks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "position": {
+                          "description": "The number written in the sentence's `{{n}}` marker for this gap. Each declared position must appear exactly once in `text`, and every marker in `text` must have an entry here.",
+                          "type": "integer",
+                          "example": 0,
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "position"
+                      ]
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "text",
+                  "blanks"
+                ]
+              },
               "createdAt": {
                 "description": "Creation date in ISO format (UTC Timezone)",
                 "type": "string",
@@ -11306,6 +11429,69 @@
                 "description": "Creation date in ISO format (UTC Timezone)",
                 "type": "string",
                 "format": "date-time"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "itemId": {
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "type": "string",
+                      "example": "sky",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "itemId",
+                    "label"
+                  ]
+                }
+              },
+              "leftItems": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "itemId": {
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "type": "string",
+                      "example": "sky",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "itemId",
+                    "label"
+                  ]
+                }
+              },
+              "rightItems": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "itemId": {
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "type": "string",
+                      "example": "sky",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "itemId",
+                    "label"
+                  ]
+                }
               }
             },
             "required": [
@@ -11336,23 +11522,197 @@
                   "FAIL"
                 ]
               },
-              "answer": {
-                "type": "string",
-                "enum": [
-                  "opt1",
-                  "opt2",
-                  "opt3",
-                  "opt4"
+              "answerData": {
+                "type": "object",
+                "properties": {
+                  "answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "opt1",
+                        "opt2",
+                        "opt3",
+                        "opt4"
+                      ]
+                    },
+                    "maxItems": 4,
+                    "minItems": 1
+                  },
+                  "itemIdsInOrder": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "example": "sky"
+                    },
+                    "maxItems": 20,
+                    "minItems": 2
+                  },
+                  "pairs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "leftId": {
+                          "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                          "type": "string",
+                          "example": "sky",
+                          "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                        },
+                        "rightId": {
+                          "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                          "type": "string",
+                          "example": "sky",
+                          "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                        }
+                      },
+                      "required": [
+                        "leftId",
+                        "rightId"
+                      ]
+                    },
+                    "maxItems": 20,
+                    "minItems": 1
+                  },
+                  "blanks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "position": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "position",
+                        "value"
+                      ]
+                    },
+                    "maxItems": 20,
+                    "minItems": 1
+                  }
+                }
+              },
+              "correctAnswers": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "opt1",
+                    "opt2",
+                    "opt3",
+                    "opt4"
+                  ]
+                }
+              },
+              "itemIdsInOrder": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                  "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                  "example": "sky"
+                }
+              },
+              "pairs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "leftId": {
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "type": "string",
+                      "example": "sky",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "rightId": {
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "type": "string",
+                      "example": "sky",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    }
+                  },
+                  "required": [
+                    "leftId",
+                    "rightId"
+                  ]
+                }
+              },
+              "fillTheBlanks": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "description": "The sentence, with a gap written as `{{0}}`, `{{1}}`, … where the number is the matching blank's `position`. The numbers bind answers to gaps explicitly, so a translation may place them in whatever order its language needs.",
+                    "type": "string",
+                    "example": "The sky is {{0}} because air {{1}} the light.",
+                    "minLength": 1
+                  },
+                  "blanks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "position": {
+                          "description": "The number written in the sentence's `{{n}}` marker for this gap. Each declared position must appear exactly once in `text`, and every marker in `text` must have an entry here.",
+                          "type": "integer",
+                          "example": 0,
+                          "minimum": 0
+                        },
+                        "answer": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "alternatives": {
+                          "description": "Other answers accepted for this gap. Gaps whose accepted answers are the same are interchangeable: the learner may fill them in any order, and each accepted answer counts once among them.",
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "maxItems": 10
+                        }
+                      },
+                      "required": [
+                        "position",
+                        "answer"
+                      ]
+                    },
+                    "maxItems": 20,
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "text",
+                  "blanks"
                 ]
               },
-              "correctAnswer": {
+              "answer": {
+                "description": "Deprecated: read `answerData.answers`. The single ticked slot of a single-selection attempt; absent otherwise.",
                 "type": "string",
                 "enum": [
                   "opt1",
                   "opt2",
                   "opt3",
                   "opt4"
-                ]
+                ],
+                "deprecated": true
+              },
+              "correctAnswer": {
+                "description": "Deprecated: read `correctAnswers`. The single correct slot of a single-selection quiz; absent otherwise.",
+                "type": "string",
+                "enum": [
+                  "opt1",
+                  "opt2",
+                  "opt3",
+                  "opt4"
+                ],
+                "deprecated": true
               },
               "explanation": {
                 "type": "string"
@@ -11588,6 +11948,39 @@
               "generatedAt"
             ]
           },
+          "fillTheBlanks": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "description": "The sentence, with a gap written as `{{0}}`, `{{1}}`, … where the number is the matching blank's `position`. The numbers bind answers to gaps explicitly, so a translation may place them in whatever order its language needs.",
+                "type": "string",
+                "example": "The sky is {{0}} because air {{1}} the light.",
+                "minLength": 1
+              },
+              "blanks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "position": {
+                      "description": "The number written in the sentence's `{{n}}` marker for this gap. Each declared position must appear exactly once in `text`, and every marker in `text` must have an entry here.",
+                      "type": "integer",
+                      "example": 0,
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "position"
+                  ]
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "text",
+              "blanks"
+            ]
+          },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
@@ -11597,6 +11990,69 @@
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
             "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                  "type": "string",
+                  "example": "sky",
+                  "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "itemId",
+                "label"
+              ]
+            }
+          },
+          "leftItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                  "type": "string",
+                  "example": "sky",
+                  "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "itemId",
+                "label"
+              ]
+            }
+          },
+          "rightItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                  "type": "string",
+                  "example": "sky",
+                  "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "itemId",
+                "label"
+              ]
+            }
           }
         },
         "required": [
@@ -18488,6 +18944,20 @@
                     "HARD"
                   ]
                 },
+                "quizType": {
+                  "type": "string",
+                  "default": "CHOICE",
+                  "enum": [
+                    "CHOICE",
+                    "FILL_THE_BLANKS",
+                    "SORTING",
+                    "MATCHING"
+                  ]
+                },
+                "multipleSelection": {
+                  "type": "boolean",
+                  "default": false
+                },
                 "origin": {
                   "description": "Records where the quiz came from.\n\n- CATALOG: copied from a catalog workspace, on its own or inside a learning path or learning group cloned from one. Cloning sets it, together with catalogWorkspaceId and catalogQuizId.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the quiz is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the quiz behaves.",
                   "type": "string",
@@ -18700,6 +19170,39 @@
                         "generatedAt"
                       ]
                     },
+                    "fillTheBlanks": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "description": "The sentence, with a gap written as `{{0}}`, `{{1}}`, … where the number is the matching blank's `position`. The numbers bind answers to gaps explicitly, so a translation may place them in whatever order its language needs.",
+                          "type": "string",
+                          "example": "The sky is {{0}} because air {{1}} the light.",
+                          "minLength": 1
+                        },
+                        "blanks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "position": {
+                                "description": "The number written in the sentence's `{{n}}` marker for this gap. Each declared position must appear exactly once in `text`, and every marker in `text` must have an entry here.",
+                                "type": "integer",
+                                "example": 0,
+                                "minimum": 0
+                              }
+                            },
+                            "required": [
+                              "position"
+                            ]
+                          },
+                          "minItems": 1
+                        }
+                      },
+                      "required": [
+                        "text",
+                        "blanks"
+                      ]
+                    },
                     "createdAt": {
                       "description": "Creation date in ISO format (UTC Timezone)",
                       "type": "string",
@@ -18709,6 +19212,69 @@
                       "description": "Creation date in ISO format (UTC Timezone)",
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "itemId": {
+                            "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                            "type": "string",
+                            "example": "sky",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "label": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "itemId",
+                          "label"
+                        ]
+                      }
+                    },
+                    "leftItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "itemId": {
+                            "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                            "type": "string",
+                            "example": "sky",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "label": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "itemId",
+                          "label"
+                        ]
+                      }
+                    },
+                    "rightItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "itemId": {
+                            "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                            "type": "string",
+                            "example": "sky",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "label": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "itemId",
+                          "label"
+                        ]
+                      }
                     }
                   },
                   "required": [
@@ -22108,13 +22674,90 @@
               "HARD"
             ]
           },
-          "answer": {
+          "answerData": {
+            "type": "object",
+            "properties": {
+              "answers": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "opt1",
+                    "opt2",
+                    "opt3",
+                    "opt4"
+                  ]
+                },
+                "maxItems": 4,
+                "minItems": 1
+              },
+              "itemIdsInOrder": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                  "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                  "example": "sky"
+                },
+                "maxItems": 20,
+                "minItems": 2
+              },
+              "pairs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "leftId": {
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "type": "string",
+                      "example": "sky",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "rightId": {
+                      "description": "Identifier of one item, shared by `itemIdsInOrder` / `pairs` and the keys of `itemLabels`. Letters, digits, `_` and `-`, up to 64 characters; it may not be a bare number, nor `__proto__`, `constructor` or `prototype`.",
+                      "type": "string",
+                      "example": "sky",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    }
+                  },
+                  "required": [
+                    "leftId",
+                    "rightId"
+                  ]
+                },
+                "maxItems": 20,
+                "minItems": 1
+              },
+              "blanks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "position": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "position",
+                    "value"
+                  ]
+                },
+                "maxItems": 20,
+                "minItems": 1
+              }
+            }
+          },
+          "quizType": {
             "type": "string",
             "enum": [
-              "opt1",
-              "opt2",
-              "opt3",
-              "opt4"
+              "CHOICE",
+              "FILL_THE_BLANKS",
+              "SORTING",
+              "MATCHING"
             ]
           },
           "lang": {
@@ -22170,13 +22813,23 @@
           },
           "sourceRegion": {
             "$ref": "#/components/schemas/SourceRegion"
+          },
+          "answer": {
+            "description": "Deprecated: read `answerData.answers`. The single ticked slot of a single-selection attempt; absent otherwise.",
+            "type": "string",
+            "enum": [
+              "opt1",
+              "opt2",
+              "opt3",
+              "opt4"
+            ],
+            "deprecated": true
           }
         },
         "required": [
           "quizId",
           "userId",
           "difficulty",
-          "answer",
           "lang",
           "progress",
           "outcome",
