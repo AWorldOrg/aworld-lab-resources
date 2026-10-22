@@ -12519,6 +12519,44 @@
                                 },
                                 "style": {
                                   "type": "string"
+                                },
+                                "source": {
+                                  "description": "Where the image came from when AI generation placed it.\n\n- generated: an AI-generated image.\n- document: a figure taken from one of the documents the learning path was generated from; sourceMediaId, sourceFileIndex, page and figureId say which.\n\nAbsent on images added by hand and on images generated before it was recorded.",
+                                  "type": "string",
+                                  "enum": [
+                                    "generated",
+                                    "document"
+                                  ]
+                                },
+                                "sourceMediaId": {
+                                  "description": "The media id of the document the figure was taken from. Set only when source is document.",
+                                  "type": "string",
+                                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                },
+                                "sourceFileIndex": {
+                                  "description": "The position of that document among the files of the generation request, from 0. Set only when source is document.",
+                                  "type": "integer"
+                                },
+                                "page": {
+                                  "description": "The page of the document the figure is on, from 1. Set only when source is document.",
+                                  "type": "integer"
+                                },
+                                "rationale": {
+                                  "description": "Why AI generation chose this image for the slide, in one or two sentences.",
+                                  "type": "string"
+                                },
+                                "figureId": {
+                                  "description": "The figure's identifier within the documents of the generation, unique across them. Set only when source is document.",
+                                  "type": "string"
+                                },
+                                "figureMediaId": {
+                                  "description": "The media id of the figure's own image in the media library. Set only when source is document.",
+                                  "type": "string",
+                                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                },
+                                "description": {
+                                  "description": "What the image shows, in one or two sentences: the end-user app reads it as the image's accessible text. Set when source is document.",
+                                  "type": "string"
                                 }
                               }
                             }
@@ -19780,6 +19818,44 @@
                                         "type": "string"
                                       },
                                       "style": {
+                                        "type": "string"
+                                      },
+                                      "source": {
+                                        "description": "Where the image came from when AI generation placed it.\n\n- generated: an AI-generated image.\n- document: a figure taken from one of the documents the learning path was generated from; sourceMediaId, sourceFileIndex, page and figureId say which.\n\nAbsent on images added by hand and on images generated before it was recorded.",
+                                        "type": "string",
+                                        "enum": [
+                                          "generated",
+                                          "document"
+                                        ]
+                                      },
+                                      "sourceMediaId": {
+                                        "description": "The media id of the document the figure was taken from. Set only when source is document.",
+                                        "type": "string",
+                                        "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                      },
+                                      "sourceFileIndex": {
+                                        "description": "The position of that document among the files of the generation request, from 0. Set only when source is document.",
+                                        "type": "integer"
+                                      },
+                                      "page": {
+                                        "description": "The page of the document the figure is on, from 1. Set only when source is document.",
+                                        "type": "integer"
+                                      },
+                                      "rationale": {
+                                        "description": "Why AI generation chose this image for the slide, in one or two sentences.",
+                                        "type": "string"
+                                      },
+                                      "figureId": {
+                                        "description": "The figure's identifier within the documents of the generation, unique across them. Set only when source is document.",
+                                        "type": "string"
+                                      },
+                                      "figureMediaId": {
+                                        "description": "The media id of the figure's own image in the media library. Set only when source is document.",
+                                        "type": "string",
+                                        "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                      },
+                                      "description": {
+                                        "description": "What the image shows, in one or two sentences: the end-user app reads it as the image's accessible text. Set when source is document.",
                                         "type": "string"
                                       }
                                     }
