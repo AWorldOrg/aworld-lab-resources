@@ -21001,7 +21001,7 @@
                     ]
                   },
                   "groupId": {
-                    "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                    "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                     "type": "string",
                     "minLength": 1
                   },
@@ -21816,7 +21816,7 @@
                     "exclusiveMinimum": 0
                   },
                   "groupId": {
-                    "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+                    "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                     "type": "string",
                     "minLength": 1
                   },
@@ -22808,7 +22808,7 @@
                     "exclusiveMinimum": 0
                   },
                   "groupId": {
-                    "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+                    "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                     "type": "string",
                     "minLength": 1
                   },
@@ -68507,6 +68507,15 @@
                           "type": "string",
                           "format": "uri"
                         }
+                      },
+                      "assignedLearningPathsView": {
+                        "description": "How the end-user app presents a user's assigned and started learning paths.\nflat: one list of learning paths. The default when omitted.\nbyPlanCards: learning paths whose assignments share a groupId are shown together as one plan, in step order, with how many of them the user has completed, every step as a card. A learning path that shares its groupId with no other is shown on its own.\nbyPlanTimeline: grouped as with byPlanCards; each plan shows the step the user is at as a card, beside all of its steps as a numbered timeline.",
+                        "type": "string",
+                        "enum": [
+                          "flat",
+                          "byPlanCards",
+                          "byPlanTimeline"
+                        ]
                       }
                     }
                   },
@@ -73393,7 +73402,7 @@
             "exclusiveMinimum": 0
           },
           "groupId": {
-            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
             "minLength": 1
           },
@@ -87878,7 +87887,7 @@
             }
           },
           "groupId": {
-            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
             "type": "string",
             "minLength": 1
           },
@@ -88333,7 +88342,7 @@
             "exclusiveMinimum": 0
           },
           "groupId": {
-            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
             "minLength": 1
           },
@@ -116497,7 +116506,7 @@
             }
           },
           "groupId": {
-            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+            "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
             "type": "string",
             "minLength": 1
           },
@@ -117312,7 +117321,7 @@
                   }
                 },
                 "groupId": {
-                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -117872,7 +117881,7 @@
                   }
                 },
                 "groupId": {
-                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -118221,7 +118230,7 @@
             "exclusiveMinimum": 0
           },
           "groupId": {
-            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
             "minLength": 1
           },
@@ -119226,7 +119235,7 @@
             "exclusiveMinimum": 0
           },
           "groupId": {
-            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
             "minLength": 1
           },
@@ -141946,6 +141955,15 @@
                   "type": "string",
                   "format": "uri"
                 }
+              },
+              "assignedLearningPathsView": {
+                "description": "How the end-user app presents a user's assigned and started learning paths.\nflat: one list of learning paths. The default when omitted.\nbyPlanCards: learning paths whose assignments share a groupId are shown together as one plan, in step order, with how many of them the user has completed, every step as a card. A learning path that shares its groupId with no other is shown on its own.\nbyPlanTimeline: grouped as with byPlanCards; each plan shows the step the user is at as a card, beside all of its steps as a numbered timeline.",
+                "type": "string",
+                "enum": [
+                  "flat",
+                  "byPlanCards",
+                  "byPlanTimeline"
+                ]
               }
             }
           },
@@ -157783,7 +157801,7 @@
                   }
                 },
                 "groupId": {
-                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -158171,7 +158189,7 @@
                   }
                 },
                 "groupId": {
-                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -159005,7 +159023,7 @@
                         }
                       },
                       "groupId": {
-                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                         "type": "string",
                         "minLength": 1
                       },
@@ -159819,7 +159837,7 @@
                   "exclusiveMinimum": 0
                 },
                 "groupId": {
-                  "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+                  "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -160877,7 +160895,7 @@
                   "exclusiveMinimum": 0
                 },
                 "groupId": {
-                  "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+                  "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -161901,7 +161919,7 @@
                   "exclusiveMinimum": 0
                 },
                 "groupId": {
-                  "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+                  "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -163120,7 +163138,7 @@
                         }
                       },
                       "groupId": {
-                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                         "type": "string",
                         "minLength": 1
                       },
@@ -194900,7 +194918,7 @@
             "exclusiveMinimum": 0
           },
           "groupId": {
-            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
             "minLength": 1
           },
@@ -202010,6 +202028,15 @@
                   "type": "string",
                   "format": "uri"
                 }
+              },
+              "assignedLearningPathsView": {
+                "description": "How the end-user app presents a user's assigned and started learning paths.\nflat: one list of learning paths. The default when omitted.\nbyPlanCards: learning paths whose assignments share a groupId are shown together as one plan, in step order, with how many of them the user has completed, every step as a card. A learning path that shares its groupId with no other is shown on its own.\nbyPlanTimeline: grouped as with byPlanCards; each plan shows the step the user is at as a card, beside all of its steps as a numbered timeline.",
+                "type": "string",
+                "enum": [
+                  "flat",
+                  "byPlanCards",
+                  "byPlanTimeline"
+                ]
               }
             }
           },
@@ -207151,7 +207178,7 @@
                   }
                 },
                 "groupId": {
-                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                  "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                   "type": "string",
                   "minLength": 1
                 },
@@ -207798,7 +207825,7 @@
                         }
                       },
                       "groupId": {
-                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                         "type": "string",
                         "minLength": 1
                       },
@@ -208374,7 +208401,7 @@
                         }
                       },
                       "groupId": {
-                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It has no effect on what the user sees or can start, and a later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
+                        "description": "Optional grouping label, copied from the rule that created the assignment or set by the caller on a manual one. Rules that form one pathway, such as an ASSIGN rule and the UNLOCK rules that open its learning paths one after another, share a groupId. It does not affect what the user can start. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app shows the assignments that share a groupId together, as one plan. A later change to the rule's groupId is not applied to existing assignments. An assignment merged from several rules takes it from one of them.",
                         "type": "string",
                         "minLength": 1
                       },
@@ -225749,7 +225776,7 @@
             "exclusiveMinimum": 0
           },
           "groupId": {
-            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
+            "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
             "minLength": 1
           },
@@ -237256,6 +237283,15 @@
                   "type": "string",
                   "format": "uri"
                 }
+              },
+              "assignedLearningPathsView": {
+                "description": "How the end-user app presents a user's assigned and started learning paths.\nflat: one list of learning paths. The default when omitted.\nbyPlanCards: learning paths whose assignments share a groupId are shown together as one plan, in step order, with how many of them the user has completed, every step as a card. A learning path that shares its groupId with no other is shown on its own.\nbyPlanTimeline: grouped as with byPlanCards; each plan shows the step the user is at as a card, beside all of its steps as a numbered timeline.",
+                "type": "string",
+                "enum": [
+                  "flat",
+                  "byPlanCards",
+                  "byPlanTimeline"
+                ]
               }
             }
           },
@@ -240127,6 +240163,15 @@
                   "type": "string",
                   "format": "uri"
                 }
+              },
+              "assignedLearningPathsView": {
+                "description": "How the end-user app presents a user's assigned and started learning paths.\nflat: one list of learning paths. The default when omitted.\nbyPlanCards: learning paths whose assignments share a groupId are shown together as one plan, in step order, with how many of them the user has completed, every step as a card. A learning path that shares its groupId with no other is shown on its own.\nbyPlanTimeline: grouped as with byPlanCards; each plan shows the step the user is at as a card, beside all of its steps as a numbered timeline.",
+                "type": "string",
+                "enum": [
+                  "flat",
+                  "byPlanCards",
+                  "byPlanTimeline"
+                ]
               }
             }
           },
