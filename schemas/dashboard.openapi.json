@@ -146628,6 +146628,51 @@
             "description": "The version of the document reading that produced the structured reading, for comparing generations; synth when it was written from the prompt.",
             "type": "string"
           },
+          "readIssues": {
+            "description": "The source documents that could not be read cleanly, one entry each; absent when every page was read.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fileIndex": {
+                  "description": "The document's position in the generation request's files, from 0.",
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "fileName": {
+                  "description": "The document's file name, when it was sent.",
+                  "type": "string"
+                },
+                "pagesReadOffline": {
+                  "description": "Pages whose text was read with a less accurate fallback reader, 1-based; content drawn from them may be less accurate.",
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "unreadablePages": {
+                  "description": "Pages that could not be read at all, 1-based; the learning path has nothing from them.",
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "unreadable": {
+                  "description": "True when nothing could be read from the document, so it was left out and only the other documents were used.",
+                  "type": "boolean"
+                },
+                "notReadInTime": {
+                  "description": "With unreadable: the document itself is fine, but there was no time left to read it in this generation; generating again may include it.",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "fileIndex"
+              ]
+            }
+          },
           "generatedAt": {
             "description": "When the generation finished, as an ISO 8601 timestamp.",
             "type": "string"
