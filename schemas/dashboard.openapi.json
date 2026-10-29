@@ -16372,14 +16372,12 @@
                     "description": "Optional first name to assign to the invited user. Applied only when the principal is created at accept time; ignored if the principal already exists.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "Optional last name to assign to the invited user. Applied only when the principal is created at accept time; ignored if the principal already exists.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "nickname": {
@@ -63442,14 +63440,12 @@
                     "description": "Optional first name for the person's principal, the identity shared by every workspace they belong to. Applied only when this request creates the principal; ignored if one already exists for the email address. The user itself stores no name: read it from the user's principal.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "Optional last name for the person's principal, the identity shared by every workspace they belong to. Applied only when this request creates the principal; ignored if one already exists for the email address.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   }
                 },
@@ -70651,7 +70647,6 @@
                   "tagNamespaces": {
                     "description": "Configuration for tag namespace grouping and display in the console.",
                     "type": "object",
-                    "default": {},
                     "properties": {
                       "learningPath": {
                         "description": "Tag namespaces associated with learning paths.",
@@ -87191,14 +87186,12 @@
             "description": "Optional first name of the invited user. Applied to the principal only when it is created at accept time; ignored if the principal already exists.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "lastName": {
             "description": "Optional last name of the invited user. Applied to the principal only when it is created at accept time; ignored if the principal already exists.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "nickname": {
@@ -113939,14 +113932,12 @@
                 "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "lastName": {
                 "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "createdAt": {
@@ -113989,14 +113980,12 @@
                 "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "lastName": {
                 "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "emailDeliverabilityStatus": {
@@ -114378,14 +114367,12 @@
                     "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "createdAt": {
@@ -114428,14 +114415,12 @@
                     "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "emailDeliverabilityStatus": {
@@ -115347,14 +115332,12 @@
             "description": "Optional first name of the invited user. Applied to the principal only when it is created at accept time; ignored if the principal already exists.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "lastName": {
             "description": "Optional last name of the invited user. Applied to the principal only when it is created at accept time; ignored if the principal already exists.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "nickname": {
@@ -140105,14 +140088,12 @@
                 "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "lastName": {
                 "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "createdAt": {
@@ -140155,14 +140136,12 @@
                 "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "lastName": {
                 "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                 "type": "string",
                 "maxLength": 50,
-                "minLength": 2,
                 "pattern": "^[\\p{L}\\p{M}' -]+$/u"
               },
               "emailDeliverabilityStatus": {
@@ -140523,14 +140502,12 @@
                     "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "createdAt": {
@@ -140573,14 +140550,12 @@
                     "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "emailDeliverabilityStatus": {
@@ -144304,6 +144279,36 @@
               }
             }
           },
+          "identity": {
+            "description": "External identity providers bound to this workspace. Returned only on authenticated configuration reads: never on public workspace lookups, and never to the end-user app.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "entra": {
+                "description": "Microsoft Entra binding for this workspace: which directory is trusted, and what happens when a verified identity has no user yet.",
+                "type": "object",
+                "properties": {
+                  "tenantId": {
+                    "description": "Microsoft Entra tenant (directory) ID this workspace trusts. A token is accepted only when its `tid` and issuer match this value.",
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "access": {
+                    "description": "How a verified Microsoft Entra identity becomes a workspace user. Defaults to AUTO.\n\n- AUTO: a person with no user in the workspace is created on first sign-in, the way an accepted invitation would create them. Allowed email domains and the seat limit still apply.\n- EXISTING_ONLY: only people who already have a user in the workspace are admitted; the rest are refused with a message telling them to request access.",
+                    "type": "string",
+                    "default": "AUTO",
+                    "enum": [
+                      "AUTO",
+                      "EXISTING_ONLY"
+                    ]
+                  }
+                },
+                "required": [
+                  "tenantId"
+                ]
+              }
+            }
+          },
           "tagNamespaces": {
             "description": "Configuration for tag namespace grouping and display in the console.",
             "type": "object",
@@ -145052,14 +145057,12 @@
             "description": "Optional first name of the invited user. Applied to the principal only when it is created at accept time; ignored if the principal already exists.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "lastName": {
             "description": "Optional last name of the invited user. Applied to the principal only when it is created at accept time; ignored if the principal already exists.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "nickname": {
@@ -190805,14 +190808,12 @@
                           "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "lastName": {
                           "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "createdAt": {
@@ -190855,14 +190856,12 @@
                           "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "lastName": {
                           "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "emailDeliverabilityStatus": {
@@ -204845,6 +204844,36 @@
               }
             }
           },
+          "identity": {
+            "description": "External identity providers bound to this workspace. Returned only on authenticated configuration reads: never on public workspace lookups, and never to the end-user app.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "entra": {
+                "description": "Microsoft Entra binding for this workspace: which directory is trusted, and what happens when a verified identity has no user yet.",
+                "type": "object",
+                "properties": {
+                  "tenantId": {
+                    "description": "Microsoft Entra tenant (directory) ID this workspace trusts. A token is accepted only when its `tid` and issuer match this value.",
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "access": {
+                    "description": "How a verified Microsoft Entra identity becomes a workspace user. Defaults to AUTO.\n\n- AUTO: a person with no user in the workspace is created on first sign-in, the way an accepted invitation would create them. Allowed email domains and the seat limit still apply.\n- EXISTING_ONLY: only people who already have a user in the workspace are admitted; the rest are refused with a message telling them to request access.",
+                    "type": "string",
+                    "default": "AUTO",
+                    "enum": [
+                      "AUTO",
+                      "EXISTING_ONLY"
+                    ]
+                  }
+                },
+                "required": [
+                  "tenantId"
+                ]
+              }
+            }
+          },
           "tagNamespaces": {
             "description": "Configuration for tag namespace grouping and display in the console.",
             "type": "object",
@@ -212354,14 +212383,12 @@
                           "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "lastName": {
                           "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "createdAt": {
@@ -212404,14 +212431,12 @@
                           "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "lastName": {
                           "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                           "type": "string",
                           "maxLength": 50,
-                          "minLength": 2,
                           "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                         },
                         "emailDeliverabilityStatus": {
@@ -240431,6 +240456,36 @@
               }
             }
           },
+          "identity": {
+            "description": "External identity providers bound to this workspace. Returned only on authenticated configuration reads: never on public workspace lookups, and never to the end-user app.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "entra": {
+                "description": "Microsoft Entra binding for this workspace: which directory is trusted, and what happens when a verified identity has no user yet.",
+                "type": "object",
+                "properties": {
+                  "tenantId": {
+                    "description": "Microsoft Entra tenant (directory) ID this workspace trusts. A token is accepted only when its `tid` and issuer match this value.",
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "access": {
+                    "description": "How a verified Microsoft Entra identity becomes a workspace user. Defaults to AUTO.\n\n- AUTO: a person with no user in the workspace is created on first sign-in, the way an accepted invitation would create them. Allowed email domains and the seat limit still apply.\n- EXISTING_ONLY: only people who already have a user in the workspace are admitted; the rest are refused with a message telling them to request access.",
+                    "type": "string",
+                    "default": "AUTO",
+                    "enum": [
+                      "AUTO",
+                      "EXISTING_ONLY"
+                    ]
+                  }
+                },
+                "required": [
+                  "tenantId"
+                ]
+              }
+            }
+          },
           "tagNamespaces": {
             "description": "Configuration for tag namespace grouping and display in the console.",
             "type": "object",
@@ -243331,6 +243386,36 @@
                   "manager",
                   "member",
                   "viewer"
+                ]
+              }
+            }
+          },
+          "identity": {
+            "description": "External identity providers bound to this workspace. Returned only on authenticated configuration reads: never on public workspace lookups, and never to the end-user app.",
+            "type": "object",
+            "default": {},
+            "properties": {
+              "entra": {
+                "description": "Microsoft Entra binding for this workspace: which directory is trusted, and what happens when a verified identity has no user yet.",
+                "type": "object",
+                "properties": {
+                  "tenantId": {
+                    "description": "Microsoft Entra tenant (directory) ID this workspace trusts. A token is accepted only when its `tid` and issuer match this value.",
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "access": {
+                    "description": "How a verified Microsoft Entra identity becomes a workspace user. Defaults to AUTO.\n\n- AUTO: a person with no user in the workspace is created on first sign-in, the way an accepted invitation would create them. Allowed email domains and the seat limit still apply.\n- EXISTING_ONLY: only people who already have a user in the workspace are admitted; the rest are refused with a message telling them to request access.",
+                    "type": "string",
+                    "default": "AUTO",
+                    "enum": [
+                      "AUTO",
+                      "EXISTING_ONLY"
+                    ]
+                  }
+                },
+                "required": [
+                  "tenantId"
                 ]
               }
             }

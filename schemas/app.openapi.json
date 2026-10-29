@@ -8927,14 +8927,12 @@
             "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           },
           "lastName": {
             "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
             "type": "string",
             "maxLength": 50,
-            "minLength": 2,
             "pattern": "^[\\p{L}\\p{M}' -]+$/u"
           }
         },
@@ -9299,14 +9297,12 @@
                     "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "createdAt": {
@@ -9349,14 +9345,12 @@
                     "description": "The person's first name, shared by every workspace they belong to. It is set when the principal is created, from the person's sign-up, their invitation or the admin who created their user, and no invitation or user creation that follows for the same email address changes it. The console shows it with lastName to identify the person; the app shows the nickname instead when there is one.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "lastName": {
                     "description": "The person's last name, shared by every workspace they belong to. It is set with firstName when the principal is created, and no invitation or user creation that follows for the same email address changes it.",
                     "type": "string",
                     "maxLength": 50,
-                    "minLength": 2,
                     "pattern": "^[\\p{L}\\p{M}' -]+$/u"
                   },
                   "emailDeliverabilityStatus": {
