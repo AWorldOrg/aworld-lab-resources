@@ -118,6 +118,9 @@
           "401": {
             "description": "Unauthorized"
           },
+          "404": {
+            "description": "Activity or tag not found"
+          },
           "409": {
             "description": "Activity Log ID already exists"
           }
@@ -7208,6 +7211,9 @@
           "401": {
             "description": "Unauthorized"
           },
+          "404": {
+            "description": "User or virtual currency not found"
+          },
           "409": {
             "description": "Conflict"
           }
@@ -8047,6 +8053,11 @@
           "backgroundImage": {
             "type": "string",
             "format": "uri"
+          },
+          "backgroundImageMediaId": {
+            "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "backgroundSize": {
             "type": "string",
@@ -9744,6 +9755,11 @@
             "type": "string",
             "format": "uri"
           },
+          "backgroundImageMediaId": {
+            "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
           "backgroundSize": {
             "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
             "type": "string",
@@ -9873,6 +9889,11 @@
               "image": {
                 "type": "string",
                 "format": "uri"
+              },
+              "imageMediaId": {
+                "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
               },
               "description": {
                 "type": "string"
@@ -10135,6 +10156,11 @@
             "type": "string",
             "format": "uri"
           },
+          "imageMediaId": {
+            "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
           "description": {
             "type": "string"
           },
@@ -10165,7 +10191,7 @@
             "type": "string"
           },
           "origin": {
-            "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
+            "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace is CUSTOM, with no catalogWorkspaceId or catalogLearningPathId. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
             "type": "string",
             "enum": [
               "CATALOG",
@@ -10290,6 +10316,11 @@
           "backgroundImage": {
             "type": "string",
             "format": "uri"
+          },
+          "backgroundImageMediaId": {
+            "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "backgroundSize": {
             "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and cover when neither sets one.",
@@ -10524,9 +10555,19 @@
                 "type": "string",
                 "format": "uri"
               },
+              "imageMediaId": {
+                "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
               "video": {
                 "type": "string",
                 "format": "uri"
+              },
+              "videoMediaId": {
+                "description": "The id of the media library file at video. Leave it out when video is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
               },
               "description": {
                 "type": "string"
@@ -10833,9 +10874,19 @@
             "type": "string",
             "format": "uri"
           },
+          "imageMediaId": {
+            "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
           "video": {
             "type": "string",
             "format": "uri"
+          },
+          "videoMediaId": {
+            "description": "The id of the media library file at video. Leave it out when video is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "description": {
             "type": "string"
@@ -11238,6 +11289,11 @@
           "backgroundImage": {
             "type": "string",
             "format": "uri"
+          },
+          "backgroundImageMediaId": {
+            "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
           "backgroundSize": {
             "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
@@ -12375,6 +12431,11 @@
             "type": "string",
             "format": "uri"
           },
+          "backgroundImageMediaId": {
+            "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
           "backgroundSize": {
             "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
             "type": "string",
@@ -12473,6 +12534,11 @@
                 "type": "string",
                 "format": "uri"
               },
+              "imageMediaId": {
+                "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
               "content": {
                 "properties": {
                   "contents": {
@@ -12504,6 +12570,11 @@
                             "url": {
                               "type": "string",
                               "format": "uri"
+                            },
+                            "mediaId": {
+                              "description": "The id of the media library file at url. Leave it out when url is not a media library file.",
+                              "type": "string",
+                              "example": "FUMzPf00hz_kcj2R2Hlzq"
                             },
                             "metadata": {
                               "type": "object",
@@ -12885,6 +12956,11 @@
             "type": "string",
             "format": "uri"
           },
+          "imageMediaId": {
+            "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
           "content": {
             "properties": {
               "contents": {
@@ -12916,6 +12992,11 @@
                         "url": {
                           "type": "string",
                           "format": "uri"
+                        },
+                        "mediaId": {
+                          "description": "The id of the media library file at url. Leave it out when url is not a media library file.",
+                          "type": "string",
+                          "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "metadata": {
                           "type": "object",
@@ -13250,6 +13331,11 @@
                 "type": "string",
                 "format": "uri"
               },
+              "iconMediaId": {
+                "description": "The id of the media library file at icon. Leave it out when icon is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
               "createdAt": {
                 "description": "Creation date in ISO format (UTC Timezone)",
                 "type": "string",
@@ -13418,6 +13504,11 @@
               "icon": {
                 "type": "string",
                 "format": "uri"
+              },
+              "iconMediaId": {
+                "description": "The id of the media library file at icon. Leave it out when icon is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
               },
               "createdAt": {
                 "description": "Creation date in ISO format (UTC Timezone)",
@@ -13614,10 +13705,20 @@
                 "type": "string",
                 "format": "uri"
               },
+              "logoMediaId": {
+                "description": "The id of the media library file at logo. Leave it out when logo is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
               "favicon": {
                 "description": "URL to the workspace favicon.",
                 "type": "string",
                 "format": "uri"
+              },
+              "faviconMediaId": {
+                "description": "The id of the media library file at favicon. Leave it out when favicon is not a media library file.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
               },
               "font": {
                 "description": "Font configuration. Accepts a FontConfig object or a plain string (legacy Google Fonts name).",
@@ -13665,6 +13766,11 @@
                               "description": "CDN URL of the font file.",
                               "type": "string",
                               "format": "uri"
+                            },
+                            "mediaId": {
+                              "description": "The id of the media library file at url. Leave it out when url is not a media library file.",
+                              "type": "string",
+                              "example": "FUMzPf00hz_kcj2R2Hlzq"
                             },
                             "format": {
                               "description": "Font format for @font-face src.",
@@ -16363,6 +16469,11 @@
                   "type": "string",
                   "format": "uri"
                 },
+                "imageMediaId": {
+                  "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
                 "origin": {
                   "description": "Indicates if the badge is from a catalog or custom-created.",
                   "type": "string",
@@ -17548,6 +17659,11 @@
                   "type": "string",
                   "format": "uri"
                 },
+                "backgroundImageMediaId": {
+                  "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
                 "backgroundSize": {
                   "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Items in the learning group that leave it unset inherit it; a learning group that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
                   "type": "string",
@@ -17697,6 +17813,11 @@
                     "image": {
                       "type": "string",
                       "format": "uri"
+                    },
+                    "imageMediaId": {
+                      "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
                     },
                     "description": {
                       "type": "string"
@@ -17931,7 +18052,7 @@
                   "type": "string"
                 },
                 "origin": {
-                  "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
+                  "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace is CUSTOM, with no catalogWorkspaceId or catalogLearningPathId. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
                   "type": "string",
                   "enum": [
                     "CATALOG",
@@ -18056,6 +18177,11 @@
                 "backgroundImage": {
                   "type": "string",
                   "format": "uri"
+                },
+                "backgroundImageMediaId": {
+                  "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "backgroundSize": {
                   "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and cover when neither sets one.",
@@ -18290,9 +18416,19 @@
                       "type": "string",
                       "format": "uri"
                     },
+                    "imageMediaId": {
+                      "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
                     "video": {
                       "type": "string",
                       "format": "uri"
+                    },
+                    "videoMediaId": {
+                      "description": "The id of the media library file at video. Leave it out when video is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
                     },
                     "description": {
                       "type": "string"
@@ -19083,6 +19219,11 @@
                   "type": "string",
                   "format": "uri"
                 },
+                "backgroundImageMediaId": {
+                  "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
                 "backgroundSize": {
                   "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
                   "type": "string",
@@ -19689,6 +19830,11 @@
                   "type": "string",
                   "format": "uri"
                 },
+                "backgroundImageMediaId": {
+                  "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
                 "backgroundSize": {
                   "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Content that leaves it unset takes the value from its layout or from the learning group or learning path it belongs to, and cover when none of them sets one.",
                   "type": "string",
@@ -19797,6 +19943,11 @@
                       "type": "string",
                       "format": "uri"
                     },
+                    "imageMediaId": {
+                      "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
                     "content": {
                       "properties": {
                         "contents": {
@@ -19828,6 +19979,11 @@
                                   "url": {
                                     "type": "string",
                                     "format": "uri"
+                                  },
+                                  "mediaId": {
+                                    "description": "The id of the media library file at url. Leave it out when url is not a media library file.",
+                                    "type": "string",
+                                    "example": "FUMzPf00hz_kcj2R2Hlzq"
                                   },
                                   "metadata": {
                                     "type": "object",
@@ -20391,6 +20547,11 @@
                       "type": "string",
                       "format": "uri"
                     },
+                    "iconMediaId": {
+                      "description": "The id of the media library file at icon. Leave it out when icon is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
                     "createdAt": {
                       "description": "Creation date in ISO format (UTC Timezone)",
                       "type": "string",
@@ -20706,6 +20867,11 @@
                     "icon": {
                       "type": "string",
                       "format": "uri"
+                    },
+                    "iconMediaId": {
+                      "description": "The id of the media library file at icon. Leave it out when icon is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
                     },
                     "createdAt": {
                       "description": "Creation date in ISO format (UTC Timezone)",
@@ -21935,7 +22101,7 @@
                   "type": "string"
                 },
                 "origin": {
-                  "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace keeps the source's value. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
+                  "description": "Records where the learning path came from.\n\n- CATALOG: copied from a catalog workspace. Cloning sets it, together with catalogWorkspaceId and catalogLearningPathId, and does the same for every learning group and item cloned with the learning path.\n- AI: generated with AI.\n- CUSTOM: created in this workspace. Used when the field is omitted on create.\n\nIt is fixed when the learning path is created: a value sent on update is ignored, and a copy cloned within the same workspace is CUSTOM, with no catalogWorkspaceId or catalogLearningPathId. It records provenance only and changes nothing about how the learning path behaves; the console's learning path lists can filter by it.",
                   "type": "string",
                   "enum": [
                     "CATALOG",
@@ -22060,6 +22226,11 @@
                 "backgroundImage": {
                   "type": "string",
                   "format": "uri"
+                },
+                "backgroundImageMediaId": {
+                  "description": "The id of the media library file at backgroundImage. Leave it out when backgroundImage is not a media library file.",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
                 "backgroundSize": {
                   "description": "How the background image is scaled to the screen behind the content.\n\n- cover: the image covers the whole screen and is cropped where its proportions differ from the screen's.\n- contain: the whole image is shown inside the screen, without cropping.\n\nIt has an effect only when a background image is shown. Learning groups and items in the learning path that leave it unset inherit it; a learning path that leaves it unset takes the value from its layout, and cover when neither sets one.",
@@ -22294,9 +22465,19 @@
                       "type": "string",
                       "format": "uri"
                     },
+                    "imageMediaId": {
+                      "description": "The id of the media library file at image. Leave it out when image is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
                     "video": {
                       "type": "string",
                       "format": "uri"
+                    },
+                    "videoMediaId": {
+                      "description": "The id of the media library file at video. Leave it out when video is not a media library file.",
+                      "type": "string",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
                     },
                     "description": {
                       "type": "string"
