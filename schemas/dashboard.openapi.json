@@ -18351,6 +18351,19 @@
                                       "generatedAt": {
                                         "type": "string",
                                         "format": "date-time"
+                                      },
+                                      "needsReview": {
+                                        "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                        "type": "boolean"
+                                      },
+                                      "reviewedBy": {
+                                        "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                        "type": "string"
+                                      },
+                                      "reviewedAt": {
+                                        "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                        "type": "string",
+                                        "format": "date-time"
                                       }
                                     },
                                     "required": [
@@ -18641,6 +18654,19 @@
                                         "type": "string"
                                       },
                                       "generatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      },
+                                      "needsReview": {
+                                        "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                        "type": "boolean"
+                                      },
+                                      "reviewedBy": {
+                                        "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                        "type": "string"
+                                      },
+                                      "reviewedAt": {
+                                        "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                                         "type": "string",
                                         "format": "date-time"
                                       }
@@ -19340,6 +19366,19 @@
                                                 "generatedAt": {
                                                   "type": "string",
                                                   "format": "date-time"
+                                                },
+                                                "needsReview": {
+                                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                                  "type": "boolean"
+                                                },
+                                                "reviewedBy": {
+                                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                                  "type": "string"
+                                                },
+                                                "reviewedAt": {
+                                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                                  "type": "string",
+                                                  "format": "date-time"
                                                 }
                                               },
                                               "required": [
@@ -19630,6 +19669,19 @@
                                                   "type": "string"
                                                 },
                                                 "generatedAt": {
+                                                  "type": "string",
+                                                  "format": "date-time"
+                                                },
+                                                "needsReview": {
+                                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                                  "type": "boolean"
+                                                },
+                                                "reviewedBy": {
+                                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                                  "type": "string"
+                                                },
+                                                "reviewedAt": {
+                                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                                                   "type": "string",
                                                   "format": "date-time"
                                                 }
@@ -25545,6 +25597,19 @@
                                                 "generatedAt": {
                                                   "type": "string",
                                                   "format": "date-time"
+                                                },
+                                                "needsReview": {
+                                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                                  "type": "boolean"
+                                                },
+                                                "reviewedBy": {
+                                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                                  "type": "string"
+                                                },
+                                                "reviewedAt": {
+                                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                                  "type": "string",
+                                                  "format": "date-time"
                                                 }
                                               },
                                               "required": [
@@ -25835,6 +25900,19 @@
                                                   "type": "string"
                                                 },
                                                 "generatedAt": {
+                                                  "type": "string",
+                                                  "format": "date-time"
+                                                },
+                                                "needsReview": {
+                                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                                  "type": "boolean"
+                                                },
+                                                "reviewedBy": {
+                                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                                  "type": "string"
+                                                },
+                                                "reviewedAt": {
+                                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                                                   "type": "string",
                                                   "format": "date-time"
                                                 }
@@ -26534,6 +26612,19 @@
                                                           "generatedAt": {
                                                             "type": "string",
                                                             "format": "date-time"
+                                                          },
+                                                          "needsReview": {
+                                                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                                            "type": "boolean"
+                                                          },
+                                                          "reviewedBy": {
+                                                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                                            "type": "string"
+                                                          },
+                                                          "reviewedAt": {
+                                                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                                            "type": "string",
+                                                            "format": "date-time"
                                                           }
                                                         },
                                                         "required": [
@@ -26824,6 +26915,19 @@
                                                             "type": "string"
                                                           },
                                                           "generatedAt": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                          },
+                                                          "needsReview": {
+                                                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                                            "type": "boolean"
+                                                          },
+                                                          "reviewedBy": {
+                                                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                                            "type": "string"
+                                                          },
+                                                          "reviewedAt": {
+                                                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                                                             "type": "string",
                                                             "format": "date-time"
                                                           }
@@ -27320,6 +27424,19 @@
                                       "generatedAt": {
                                         "type": "string",
                                         "format": "date-time"
+                                      },
+                                      "needsReview": {
+                                        "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                        "type": "boolean"
+                                      },
+                                      "reviewedBy": {
+                                        "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                        "type": "string"
+                                      },
+                                      "reviewedAt": {
+                                        "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                        "type": "string",
+                                        "format": "date-time"
                                       }
                                     },
                                     "required": [
@@ -27610,6 +27727,19 @@
                                         "type": "string"
                                       },
                                       "generatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      },
+                                      "needsReview": {
+                                        "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                        "type": "boolean"
+                                      },
+                                      "reviewedBy": {
+                                        "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                        "type": "string"
+                                      },
+                                      "reviewedAt": {
+                                        "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                                         "type": "string",
                                         "format": "date-time"
                                       }
@@ -28917,6 +29047,19 @@
                                 "generatedAt": {
                                   "type": "string",
                                   "format": "date-time"
+                                },
+                                "needsReview": {
+                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                  "type": "boolean"
+                                },
+                                "reviewedBy": {
+                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                  "type": "string"
+                                },
+                                "reviewedAt": {
+                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                  "type": "string",
+                                  "format": "date-time"
                                 }
                               },
                               "required": [
@@ -28985,6 +29128,19 @@
                                 "generatedAt": {
                                   "type": "string",
                                   "format": "date-time"
+                                },
+                                "needsReview": {
+                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                  "type": "boolean"
+                                },
+                                "reviewedBy": {
+                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                  "type": "string"
+                                },
+                                "reviewedAt": {
+                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                  "type": "string",
+                                  "format": "date-time"
                                 }
                               },
                               "required": [
@@ -29027,6 +29183,104 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "LearningPaths"
+        ]
+      }
+    },
+    "/learning-paths/audio-content/review": {
+      "patch": {
+        "operationId": "learningPaths/audioContentReview",
+        "summary": "Mark a slide or quiz narration as reviewed",
+        "description": "Confirms that a narration the automatic check flagged as possibly not matching its text was listened to and is correct: clears `needsReview` and records who reviewed it and when. Refused when the narration was generated again since it was listened to.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "slide"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "generatedAt": {
+                        "description": "The `generatedAt` of the narration that was listened to. The review is refused when the narration was generated again since.",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId",
+                      "lang",
+                      "generatedAt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "quiz"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "generatedAt": {
+                        "description": "The `generatedAt` of the narration that was listened to. The review is refused when the narration was generated again since.",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId",
+                      "lang",
+                      "generatedAt"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The narration, marked as reviewed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioContentReviewResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "The translation has no narration"
+          },
+          "409": {
+            "description": "The narration was generated again since it was listened to, or is being generated"
           }
         },
         "tags": [
@@ -41501,6 +41755,19 @@
                             "generatedAt": {
                               "type": "string",
                               "format": "date-time"
+                            },
+                            "needsReview": {
+                              "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                              "type": "boolean"
+                            },
+                            "reviewedBy": {
+                              "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                              "type": "string"
+                            },
+                            "reviewedAt": {
+                              "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                              "type": "string",
+                              "format": "date-time"
                             }
                           },
                           "required": [
@@ -42190,6 +42457,19 @@
                               "type": "string"
                             },
                             "generatedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "needsReview": {
+                              "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                              "type": "boolean"
+                            },
+                            "reviewedBy": {
+                              "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                              "type": "string"
+                            },
+                            "reviewedAt": {
+                              "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                               "type": "string",
                               "format": "date-time"
                             }
@@ -51659,6 +51939,19 @@
                               "type": "string"
                             },
                             "generatedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "needsReview": {
+                              "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                              "type": "boolean"
+                            },
+                            "reviewedBy": {
+                              "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                              "type": "string"
+                            },
+                            "reviewedAt": {
+                              "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                               "type": "string",
                               "format": "date-time"
                             }
@@ -80907,6 +81200,69 @@
         },
         "required": [
           "results"
+        ]
+      },
+      "AudioContentReviewResponse": {
+        "type": "object",
+        "properties": {
+          "audioContent": {
+            "type": "object",
+            "properties": {
+              "media": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "description": "CDN URL",
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "mediaId": {
+                    "description": "The unique ID of the media file",
+                    "type": "string",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
+                  },
+                  "contentType": {
+                    "description": "MIME type",
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                  }
+                },
+                "required": [
+                  "url",
+                  "contentType"
+                ]
+              },
+              "sourceTextHash": {
+                "type": "string"
+              },
+              "generatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "needsReview": {
+                "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                "type": "boolean"
+              },
+              "reviewedBy": {
+                "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                "type": "string"
+              },
+              "reviewedAt": {
+                "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "media",
+              "sourceTextHash",
+              "generatedAt"
+            ]
+          }
+        },
+        "required": [
+          "audioContent"
         ]
       },
       "AuditLogActor": {
@@ -127067,6 +127423,19 @@
                     "generatedAt": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
                     }
                   },
                   "required": [
@@ -127660,6 +128029,19 @@
                     "generatedAt": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
                     }
                   },
                   "required": [
@@ -128137,6 +128519,19 @@
                       "type": "string"
                     },
                     "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                       "type": "string",
                       "format": "date-time"
                     }
@@ -132641,6 +133036,19 @@
                     "generatedAt": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
                     }
                   },
                   "required": [
@@ -133208,6 +133616,19 @@
                     "generatedAt": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
                     }
                   },
                   "required": [
@@ -133754,6 +134175,19 @@
                       "type": "string"
                     },
                     "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                       "type": "string",
                       "format": "date-time"
                     }
@@ -173259,6 +173693,19 @@
                           "generatedAt": {
                             "type": "string",
                             "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
                           }
                         },
                         "required": [
@@ -173783,6 +174230,19 @@
                           "generatedAt": {
                             "type": "string",
                             "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
                           }
                         },
                         "required": [
@@ -174158,6 +174618,19 @@
                       "type": "string"
                     },
                     "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                       "type": "string",
                       "format": "date-time"
                     }
@@ -174588,6 +175061,19 @@
                             "type": "string"
                           },
                           "generatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                             "type": "string",
                             "format": "date-time"
                           }
@@ -180362,6 +180848,19 @@
                           "generatedAt": {
                             "type": "string",
                             "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
                           }
                         },
                         "required": [
@@ -180860,6 +181359,19 @@
                           "generatedAt": {
                             "type": "string",
                             "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
                           }
                         },
                         "required": [
@@ -181297,6 +181809,19 @@
                             "type": "string"
                           },
                           "generatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                             "type": "string",
                             "format": "date-time"
                           }
@@ -181849,6 +182374,19 @@
                       "type": "string"
                     },
                     "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
                       "type": "string",
                       "format": "date-time"
                     }
