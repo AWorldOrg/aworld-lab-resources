@@ -2802,6 +2802,43 @@
         ]
       }
     },
+    "/analytics/badges": {
+      "get": {
+        "operationId": "analytics/listBadges",
+        "summary": "List the workspace's badges with how many people obtained them",
+        "description": "Every badge of the workspace with its label, description and image, and how many people obtained it.\n\nEach person is counted once, however many times the badge was granted to them, and people who have left the workspace are not counted. A badge with levels counts as obtained only once its last level is reached.\n\nWho obtained a badge is listed by `GET /analytics/badges/{badgeConfigurationId}/holders`.",
+        "parameters": [
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Language for each badge's label and description. A badge with no text in it falls back to its default language.",
+            "required": false,
+            "schema": {
+              "description": "Language for each badge's label and description. A badge with no text in it falls back to its default language.",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Badge analytics retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadgeAnalyticsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
     "/analytics/content": {
       "get": {
         "operationId": "analytics/content",
@@ -3375,6 +3412,31 @@
         ]
       }
     },
+    "/analytics/badges/exists": {
+      "get": {
+        "operationId": "analytics/badgesExist",
+        "summary": "Check whether the workspace has any badge",
+        "description": "Whether the workspace has at least one badge configured. A cheap check for deciding whether to offer the badges report, without computing who obtained each badge: that is `GET /analytics/badges`.",
+        "responses": {
+          "200": {
+            "description": "Badge presence retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadgeAnalyticsExistsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
     "/analytics/learning/{learningPathId}": {
       "get": {
         "operationId": "analytics/getLearningDetail",
@@ -3638,6 +3700,103 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserAnalyticsDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
+    "/analytics/badges/{badgeConfigurationId}/holders": {
+      "get": {
+        "operationId": "analytics/listBadgeHolders",
+        "summary": "List the people who obtained one badge",
+        "description": "Who obtained a badge, by name, with when they first obtained it. Searchable by nickname or email, sortable, paginated.\n\nOne row per person, however many times the badge was granted to them; people who have left the workspace are not listed. A badge with levels lists only the people who reached its last level. `total` counts every row matching the current search, so a client can say what an export covers.\n\nA badge that is not this workspace's returns an empty list.",
+        "parameters": [
+          {
+            "name": "badgeConfigurationId",
+            "in": "path",
+            "description": "Unique identifier for the badge configuration (NanoID).",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier for the badge configuration (NanoID).",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Case-insensitive substring match on nickname or email. LIKE wildcards in the term are escaped, so a `_` searches for a `_`.",
+            "required": false,
+            "schema": {
+              "description": "Case-insensitive substring match on nickname or email. LIKE wildcards in the term are escaped, so a `_` searches for a `_`.",
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "`firstAssignedAt` orders by when the badge was obtained; `nickname` alphabetically, with people who have no nickname last.",
+            "required": false,
+            "schema": {
+              "description": "`firstAssignedAt` orders by when the badge was obtained; `nickname` alphabetically, with people who have no nickname last.",
+              "type": "string",
+              "default": "firstAssignedAt",
+              "enum": [
+                "firstAssignedAt",
+                "nickname"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Badge holders retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadgeAnalyticsHoldersResponse"
                 }
               }
             }
@@ -30322,6 +30481,16 @@
             }
           },
           {
+            "name": "includeNotReady",
+            "in": "query",
+            "description": "Whether files whose status is not ready are returned too.\n\nDefaults to false: only ready files are returned, so an upload that was started but never completed does not appear.",
+            "required": false,
+            "schema": {
+              "description": "Whether files whose status is not ready are returned too.\n\nDefaults to false: only ready files are returned, so an upload that was started but never completed does not appear.",
+              "type": "boolean"
+            }
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -30713,6 +30882,10 @@
                   "includeHidden": {
                     "description": "Whether files marked hidden are returned too.\n\nDefaults to false: hidden files, such as the figures taken from documents attached to an AI generation that no learning path uses yet, are left out.",
                     "type": "boolean"
+                  },
+                  "includeNotReady": {
+                    "description": "Whether files whose status is not ready are returned too.\n\nDefaults to false: only ready files are returned, so an upload that was started but never completed does not appear.",
+                    "type": "boolean"
                   }
                 }
               }
@@ -30897,6 +31070,50 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/media/{mediaId}/confirm": {
+      "post": {
+        "operationId": "media/confirmUpload",
+        "summary": "Confirm a media upload",
+        "description": "Confirms that the file was uploaded with the URL from GET /media/upload-url, so the media file becomes ready.\n\nCall it once the upload request succeeds. The file is looked up before the media file changes: if it was not received, the answer is 409 media/upload_missing and the file stays uploading. Confirming a file that is already past uploading changes nothing and returns it as it is. An upload nobody confirms is confirmed automatically within about 15 minutes, and an upload that never arrived is removed after its upload URL expires.",
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "description": "The unique ID of the media file",
+            "required": true,
+            "schema": {
+              "description": "The unique ID of the media file",
+              "type": "string",
+              "example": "FUMzPf00hz_kcj2R2Hlzq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The media file, with its status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmMediaUploadResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Media file not found"
+          },
+          "409": {
+            "description": "The file was not received (media/upload_missing)"
           }
         },
         "tags": [
@@ -82066,6 +82283,128 @@
           "unresolved"
         ]
       },
+      "BadgeAnalyticsExistsResponse": {
+        "type": "object",
+        "properties": {
+          "exists": {
+            "description": "True when the workspace has at least one badge, whether or not anyone has obtained it yet.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "exists"
+        ]
+      },
+      "BadgeAnalyticsHoldersResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "nickname": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "email": {
+                  "description": "The person's email; empty when missing.",
+                  "type": "string"
+                },
+                "profileImage": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "firstAssignedAt": {
+                  "description": "When the person first obtained the badge (ISO 8601). A badge granted again later keeps this date.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "userId",
+                "nickname",
+                "email",
+                "profileImage",
+                "firstAssignedAt"
+              ]
+            }
+          },
+          "total": {
+            "description": "People matching the current search, across every page: what an export of this list covers.",
+            "type": "integer"
+          },
+          "nextToken": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "nextToken"
+        ]
+      },
+      "BadgeAnalyticsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Every badge of the workspace, the most held first, then by label.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "badgeConfigurationId": {
+                  "description": "Unique identifier for the badge configuration (NanoID).",
+                  "type": "string"
+                },
+                "label": {
+                  "description": "The badge's title in the requested language, else in its default language, else its internal name.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "The badge's subtitle, in the same language as `label`.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "image": {
+                  "description": "Badge image URL.",
+                  "type": "string"
+                },
+                "isLadder": {
+                  "description": "True for a badge with levels. Such a badge counts as obtained only once its last level is reached.",
+                  "type": "boolean"
+                },
+                "holders": {
+                  "description": "People in the workspace who obtained the badge, each counted once however many times it was granted. People who have left the workspace are not counted.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "badgeConfigurationId",
+                "label",
+                "description",
+                "image",
+                "isLadder",
+                "holders"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "BatchTranslationResponse": {
         "type": "object",
         "properties": {
@@ -84098,6 +84437,220 @@
           "langs",
           "accountId",
           "workspaceId",
+          "sourceRegion",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ConfirmMediaUploadResponse": {
+        "description": "Media file entity",
+        "type": "object",
+        "properties": {
+          "mediaId": {
+            "description": "The unique ID of the media file",
+            "type": "string",
+            "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "fileName": {
+            "description": "Storage filename",
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1
+          },
+          "originalFileName": {
+            "description": "User-provided filename",
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1
+          },
+          "contentType": {
+            "description": "MIME type",
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+          },
+          "fileType": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video",
+              "audio",
+              "document",
+              "font",
+              "other"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "workspace",
+              "common"
+            ]
+          },
+          "key": {
+            "description": "R2 object key",
+            "type": "string",
+            "minLength": 1
+          },
+          "fileSize": {
+            "description": "File size in bytes",
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "url": {
+            "description": "CDN URL",
+            "type": "string",
+            "format": "uri"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "prompt": {
+                "description": "The prompt an AI-generated image was generated from.",
+                "type": "string"
+              },
+              "model": {
+                "description": "The model that generated the image.",
+                "type": "string"
+              },
+              "style": {
+                "description": "The image style requested for the generation.",
+                "type": "string"
+              },
+              "grounding": {
+                "description": "The web search results a generated image was grounded on.",
+                "type": "object",
+                "properties": {
+                  "searchEntryPoint": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "uri": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "uri"
+                      ]
+                    }
+                  },
+                  "searchQueries": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "source": {
+                "description": "Why the file was added to the media library.\n\n- documentFigure: a figure cropped from a document attached to an AI generation.\n- documentBundle: the structured reading of the documents (or of the prompt) an AI generation wrote its content from.\n- sourceDocument: a document uploaded to generate a learning path from.\n- generatedImage: an image generated with AI.\n- userUpload: a file an author uploaded in the console.",
+                "type": "string",
+                "enum": [
+                  "documentFigure",
+                  "documentBundle",
+                  "sourceDocument",
+                  "generatedImage",
+                  "userUpload"
+                ]
+              },
+              "generationSessionId": {
+                "description": "The AI generation session that added the file.",
+                "type": "string"
+              },
+              "sourceMediaId": {
+                "description": "For a document figure, the media id of the document it was cropped from.",
+                "type": "string",
+                "example": "FUMzPf00hz_kcj2R2Hlzq"
+              },
+              "sourceFileName": {
+                "description": "For a document figure, the file name of the document it was cropped from.",
+                "type": "string"
+              },
+              "page": {
+                "description": "For a document figure, the page of the document it appears on, from 1.",
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "figureId": {
+                "description": "For a document figure, its id within the generation's reading of the documents (f1, f2, …).",
+                "type": "string"
+              },
+              "kind": {
+                "description": "For a document figure, what it is: picture, chart, diagram, table or other.",
+                "type": "string"
+              },
+              "caption": {
+                "description": "For a document figure, its caption in the document.",
+                "type": "string"
+              },
+              "figureCount": {
+                "description": "For the reading of the documents, how many figures were taken from them.",
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "hidden": {
+            "description": "Whether the file is left out of the media library's listing and search.\n\nFigures taken from documents attached to an AI generation are added hidden and shown once they are used in a learning path or picked by an author.",
+            "type": "boolean",
+            "default": false
+          },
+          "status": {
+            "description": "Where the file is in its upload.\n\nA file is uploading from the moment its upload URL is issued until the upload is confirmed (POST /media/{mediaId}/confirm), then ready. Only ready files are returned by listing and search unless includeNotReady is set, and only ready files can be shown in published content.",
+            "type": "string",
+            "default": "ready",
+            "enum": [
+              "uploading",
+              "scanning",
+              "syncing",
+              "ready",
+              "quarantined",
+              "failed"
+            ]
+          },
+          "accountId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "workspaceId": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[A-Za-z0-9_-]{10}$"
+          },
+          "sourceRegion": {
+            "$ref": "#/components/schemas/SourceRegion"
+          },
+          "createdAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "description": "Creation date in ISO format (UTC Timezone)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "mediaId",
+          "fileName",
+          "originalFileName",
+          "contentType",
+          "fileType",
+          "scope",
+          "key",
+          "fileSize",
+          "url",
           "sourceRegion",
           "createdAt",
           "updatedAt"
@@ -122479,6 +123032,19 @@
             "description": "Whether the file is left out of the media library's listing and search.\n\nFigures taken from documents attached to an AI generation are added hidden and shown once they are used in a learning path or picked by an author.",
             "type": "boolean",
             "default": false
+          },
+          "status": {
+            "description": "Where the file is in its upload.\n\nA file is uploading from the moment its upload URL is issued until the upload is confirmed (POST /media/{mediaId}/confirm), then ready. Only ready files are returned by listing and search unless includeNotReady is set, and only ready files can be shown in published content.",
+            "type": "string",
+            "default": "ready",
+            "enum": [
+              "uploading",
+              "scanning",
+              "syncing",
+              "ready",
+              "quarantined",
+              "failed"
+            ]
           },
           "accountId": {
             "type": "string",
@@ -195117,6 +195683,19 @@
             "type": "boolean",
             "default": false
           },
+          "status": {
+            "description": "Where the file is in its upload.\n\nA file is uploading from the moment its upload URL is issued until the upload is confirmed (POST /media/{mediaId}/confirm), then ready. Only ready files are returned by listing and search unless includeNotReady is set, and only ready files can be shown in published content.",
+            "type": "string",
+            "default": "ready",
+            "enum": [
+              "uploading",
+              "scanning",
+              "syncing",
+              "ready",
+              "quarantined",
+              "failed"
+            ]
+          },
           "accountId": {
             "type": "string",
             "maxLength": 10,
@@ -212209,6 +212788,19 @@
                   "type": "boolean",
                   "default": false
                 },
+                "status": {
+                  "description": "Where the file is in its upload.\n\nA file is uploading from the moment its upload URL is issued until the upload is confirmed (POST /media/{mediaId}/confirm), then ready. Only ready files are returned by listing and search unless includeNotReady is set, and only ready files can be shown in published content.",
+                  "type": "string",
+                  "default": "ready",
+                  "enum": [
+                    "uploading",
+                    "scanning",
+                    "syncing",
+                    "ready",
+                    "quarantined",
+                    "failed"
+                  ]
+                },
                 "accountId": {
                   "type": "string",
                   "maxLength": 10,
@@ -215499,6 +216091,19 @@
             "description": "Whether the file is left out of the media library's listing and search.\n\nFigures taken from documents attached to an AI generation are added hidden and shown once they are used in a learning path or picked by an author.",
             "type": "boolean",
             "default": false
+          },
+          "status": {
+            "description": "Where the file is in its upload.\n\nA file is uploading from the moment its upload URL is issued until the upload is confirmed (POST /media/{mediaId}/confirm), then ready. Only ready files are returned by listing and search unless includeNotReady is set, and only ready files can be shown in published content.",
+            "type": "string",
+            "default": "ready",
+            "enum": [
+              "uploading",
+              "scanning",
+              "syncing",
+              "ready",
+              "quarantined",
+              "failed"
+            ]
           },
           "accountId": {
             "type": "string",
@@ -231266,6 +231871,19 @@
             "description": "Whether the file is left out of the media library's listing and search.\n\nFigures taken from documents attached to an AI generation are added hidden and shown once they are used in a learning path or picked by an author.",
             "type": "boolean",
             "default": false
+          },
+          "status": {
+            "description": "Where the file is in its upload.\n\nA file is uploading from the moment its upload URL is issued until the upload is confirmed (POST /media/{mediaId}/confirm), then ready. Only ready files are returned by listing and search unless includeNotReady is set, and only ready files can be shown in published content.",
+            "type": "string",
+            "default": "ready",
+            "enum": [
+              "uploading",
+              "scanning",
+              "syncing",
+              "ready",
+              "quarantined",
+              "failed"
+            ]
           },
           "accountId": {
             "type": "string",
