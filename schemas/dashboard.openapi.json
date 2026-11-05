@@ -655,6 +655,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "409": {
+            "description": "A source document is not ready yet (still being checked) or was blocked (code media/not_ready). Retry in a few seconds when it is still being checked."
           }
         },
         "tags": [
@@ -3545,6 +3548,31 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LearningAnalyticsDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
+    "/analytics/referrals/exists": {
+      "get": {
+        "operationId": "analytics/referralsExist",
+        "summary": "Check whether anyone joined through a referral",
+        "description": "Whether at least one person joined the workspace through a referral. A cheap check for deciding whether to offer the referrals report, without computing the figures: that is `GET /analytics/referrals`.",
+        "responses": {
+          "200": {
+            "description": "Referral presence retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferralAnalyticsExistsResponse"
                 }
               }
             }
@@ -15438,7 +15466,8 @@
                       "SUBSCRIPTION_EXPIRED",
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
-                      "LEARNING_PATH_WEEKLY_DIGEST"
+                      "LEARNING_PATH_WEEKLY_DIGEST",
+                      "MEDIA_UPLOAD_BLOCKED"
                     ]
                   },
                   "name": {
@@ -16007,7 +16036,8 @@
                 "SUBSCRIPTION_EXPIRED",
                 "ALERT",
                 "LEARNING_PATH_ASSIGNED",
-                "LEARNING_PATH_WEEKLY_DIGEST"
+                "LEARNING_PATH_WEEKLY_DIGEST",
+                "MEDIA_UPLOAD_BLOCKED"
               ]
             }
           },
@@ -31021,10 +31051,10 @@
           {
             "name": "mediaId",
             "in": "query",
-            "description": "Optional media ID. If provided, replaces existing file",
+            "description": "Optional media ID. If provided, replaces existing file. The new file must keep the file extension and file type of the existing one, otherwise the request is rejected with 400: upload it as a new media instead.",
             "required": false,
             "schema": {
-              "description": "Optional media ID. If provided, replaces existing file",
+              "description": "Optional media ID. If provided, replaces existing file. The new file must keep the file extension and file type of the existing one, otherwise the request is rejected with 400: upload it as a new media instead.",
               "type": "string",
               "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
@@ -38267,7 +38297,8 @@
                       "SUBSCRIPTION_EXPIRED",
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
-                      "LEARNING_PATH_WEEKLY_DIGEST"
+                      "LEARNING_PATH_WEEKLY_DIGEST",
+                      "MEDIA_UPLOAD_BLOCKED"
                     ]
                   },
                   "notificationRuleId": {
@@ -38527,7 +38558,8 @@
                       "SUBSCRIPTION_EXPIRED",
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
-                      "LEARNING_PATH_WEEKLY_DIGEST"
+                      "LEARNING_PATH_WEEKLY_DIGEST",
+                      "MEDIA_UPLOAD_BLOCKED"
                     ]
                   },
                   "translations": {
@@ -77578,7 +77610,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "origin": {
@@ -88573,7 +88606,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "name": {
@@ -94770,7 +94804,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "origin": {
@@ -107623,7 +107658,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "name": {
@@ -115363,7 +115399,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "lang": {
@@ -116596,7 +116633,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "name": {
@@ -116827,7 +116865,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "name": {
@@ -127459,7 +127498,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "origin": {
@@ -127752,7 +127792,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "origin": {
@@ -141811,6 +141852,19 @@
             "description": "URL expiration time in seconds",
             "type": "integer",
             "exclusiveMinimum": 0
+          },
+          "status": {
+            "description": "Where the file is in its upload.\n\nA file is uploading from the moment its upload URL is issued until the upload is confirmed (POST /media/{mediaId}/confirm), then ready. Only ready files are returned by listing and search unless includeNotReady is set, and only ready files can be shown in published content.",
+            "type": "string",
+            "default": "ready",
+            "enum": [
+              "uploading",
+              "scanning",
+              "syncing",
+              "ready",
+              "quarantined",
+              "failed"
+            ]
           },
           "metadataHeaders": {
             "description": "Metadata headers to include with the upload request (x-amz-meta-* format)",
@@ -158895,7 +158949,8 @@
                     "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
-                    "LEARNING_PATH_WEEKLY_DIGEST"
+                    "LEARNING_PATH_WEEKLY_DIGEST",
+                    "MEDIA_UPLOAD_BLOCKED"
                   ]
                 },
                 "name": {
@@ -159179,7 +159234,8 @@
                     "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
-                    "LEARNING_PATH_WEEKLY_DIGEST"
+                    "LEARNING_PATH_WEEKLY_DIGEST",
+                    "MEDIA_UPLOAD_BLOCKED"
                   ]
                 },
                 "name": {
@@ -173437,7 +173493,8 @@
                     "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
-                    "LEARNING_PATH_WEEKLY_DIGEST"
+                    "LEARNING_PATH_WEEKLY_DIGEST",
+                    "MEDIA_UPLOAD_BLOCKED"
                   ]
                 },
                 "origin": {
@@ -173783,7 +173840,8 @@
                     "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
-                    "LEARNING_PATH_WEEKLY_DIGEST"
+                    "LEARNING_PATH_WEEKLY_DIGEST",
+                    "MEDIA_UPLOAD_BLOCKED"
                   ]
                 },
                 "origin": {
@@ -174095,7 +174153,8 @@
                     "SUBSCRIPTION_EXPIRED",
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
-                    "LEARNING_PATH_WEEKLY_DIGEST"
+                    "LEARNING_PATH_WEEKLY_DIGEST",
+                    "MEDIA_UPLOAD_BLOCKED"
                   ]
                 },
                 "origin": {
@@ -198014,7 +198073,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "name": {
@@ -201172,7 +201232,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "origin": {
@@ -207946,6 +208007,18 @@
           "sourceRegion",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "ReferralAnalyticsExistsResponse": {
+        "type": "object",
+        "properties": {
+          "exists": {
+            "description": "True when at least one person joined the workspace through a referral, whether or not they are still a member.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "exists"
         ]
       },
       "ReferralAnalyticsResponse": {
@@ -220854,7 +220927,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "origin": {
@@ -229182,7 +229256,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "name": {
@@ -234454,7 +234529,8 @@
               "SUBSCRIPTION_EXPIRED",
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
-              "LEARNING_PATH_WEEKLY_DIGEST"
+              "LEARNING_PATH_WEEKLY_DIGEST",
+              "MEDIA_UPLOAD_BLOCKED"
             ]
           },
           "origin": {
