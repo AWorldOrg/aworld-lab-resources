@@ -31041,10 +31041,10 @@
           {
             "name": "hidden",
             "in": "query",
-            "description": "Whether the new file is left out of the media library's listing and search (true or false).\n\nDefaults to false when a file is added. When replacing a file (mediaId set), the current value is kept unless this is sent.",
+            "description": "Whether the new file is left out of the media library's listing and search (true or false).\n\nDefaults to false when a file is added. When replacing a file (mediaId set), a value sent applies only once the new file replaces the old one: until then, or if the new file is never accepted, the media keeps its current value. Without one, the new file takes the value sent with an earlier upload URL for the same replacement, if any, and otherwise keeps the current value.",
             "required": false,
             "schema": {
-              "description": "Whether the new file is left out of the media library's listing and search (true or false).\n\nDefaults to false when a file is added. When replacing a file (mediaId set), the current value is kept unless this is sent.",
+              "description": "Whether the new file is left out of the media library's listing and search (true or false).\n\nDefaults to false when a file is added. When replacing a file (mediaId set), a value sent applies only once the new file replaces the old one: until then, or if the new file is never accepted, the media keeps its current value. Without one, the new file takes the value sent with an earlier upload URL for the same replacement, if any, and otherwise keeps the current value.",
               "type": "boolean"
             }
           },
@@ -31062,10 +31062,10 @@
           {
             "name": "metadata",
             "in": "query",
-            "description": "Metadata stored with the file, as a URL-encoded JSON object with the fields of the media's metadata.\n\nUnknown fields are dropped; invalid JSON or a field of the wrong type is rejected with 400. When replacing a file (mediaId set), metadata sent replaces the stored metadata; without it the stored metadata is kept.",
+            "description": "Metadata stored with the file, as a URL-encoded JSON object with the fields of the media's metadata.\n\nUnknown fields are dropped; invalid JSON or a field of the wrong type is rejected with 400. When replacing a file (mediaId set), metadata sent replaces the stored metadata once the new file replaces the old one: until then, or if the new file is never accepted, the stored metadata is kept. Without it, the new file takes the metadata sent with an earlier upload URL for the same replacement, if any, and otherwise keeps the stored metadata.",
             "required": false,
             "schema": {
-              "description": "Metadata stored with the file, as a URL-encoded JSON object with the fields of the media's metadata.\n\nUnknown fields are dropped; invalid JSON or a field of the wrong type is rejected with 400. When replacing a file (mediaId set), metadata sent replaces the stored metadata; without it the stored metadata is kept.",
+              "description": "Metadata stored with the file, as a URL-encoded JSON object with the fields of the media's metadata.\n\nUnknown fields are dropped; invalid JSON or a field of the wrong type is rejected with 400. When replacing a file (mediaId set), metadata sent replaces the stored metadata once the new file replaces the old one: until then, or if the new file is never accepted, the stored metadata is kept. Without it, the new file takes the metadata sent with an earlier upload URL for the same replacement, if any, and otherwise keeps the stored metadata.",
               "type": "string"
             }
           },
@@ -31100,6 +31100,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "The media to replace (mediaId) was not found"
           }
         },
         "tags": [
@@ -31155,7 +31158,7 @@
       "patch": {
         "operationId": "media/setVisibility",
         "summary": "Show or hide a media file",
-        "description": "Sets whether a media file is left out of the media library's listing and search.\n\nA hidden file keeps its URL and can still be read by id. Figures taken from documents attached to an AI generation are added hidden; set hidden to false when one is placed in a learning path so it appears in the library. Setting the current value again changes nothing. Only the workspace's own files: the common library is not affected.",
+        "description": "Sets whether a media file is left out of the media library's listing and search.\n\nA hidden file keeps its URL and can still be read by id. Figures taken from documents attached to an AI generation are added hidden; set hidden to false when one is placed in a learning path so it appears in the library. Setting the current value again changes nothing, unless a replace holds another value for its new file. During a replace, a value set here wins over a hidden value sent for the new file before it; one sent after it, with a new upload URL, wins in turn. Only the workspace's own files: the common library is not affected.",
         "parameters": [
           {
             "name": "mediaId",
