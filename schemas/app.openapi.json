@@ -26,10 +26,10 @@
           {
             "name": "x-idempotency-key",
             "in": "header",
-            "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid). Send a value that is unique per real-world event, and repeat it verbatim when retrying that same event.\n\nRetries to this endpoint are not de-duplicated: every accepted request is recorded as a separate activity log, including one that repeats an earlier request exactly. Submit each event once.\n\nFor a once-per-event guarantee that does not depend on timing, send `activityLogId` instead: a reuse carrying different data is rejected with a 409 and writes nothing.",
+            "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid).\n\nThe de-duplication key is always derived from the whole request: its validated body, path and query parameters, and declared headers. This header is one of those inputs — it is never the key on its own, and sending it does not change how the key is derived. It adds a value you control to the hash; omitting it leaves that value out.\n\nSend a value that is unique per real-world event, and repeat it unchanged when retrying that event. Two things follow from the key covering everything. A retry is recognised as a duplicate only if it repeats this header AND the rest of the request identically — reuse the key with any other field changed and it is a new request, which is processed and written separately. Conversely, with no header at all the request content is the only identity available, so two genuinely distinct events that happen to carry identical content are indistinguishable and the second is treated as a retry of the first.\n\nDe-duplication covers the first hour after a request is accepted. An identical request sent after that window is processed as a new one.\n\nA de-duplicated request is answered with the original response: HTTP 200 carrying the record the first request created, with its original identifier and timestamps. Nothing further is written and no error is returned. Neither the status code nor the response headers mark the response as a replay, so reconciling the returned identifier and timestamps against what was submitted is how a caller detects one.",
             "required": false,
             "schema": {
-              "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid). Send a value that is unique per real-world event, and repeat it verbatim when retrying that same event.\n\nRetries to this endpoint are not de-duplicated: every accepted request is recorded as a separate activity log, including one that repeats an earlier request exactly. Submit each event once.\n\nFor a once-per-event guarantee that does not depend on timing, send `activityLogId` instead: a reuse carrying different data is rejected with a 409 and writes nothing.",
+              "description": "Idempotency key for this request. Any string is accepted (for example a UUID or a nanoid).\n\nThe de-duplication key is always derived from the whole request: its validated body, path and query parameters, and declared headers. This header is one of those inputs — it is never the key on its own, and sending it does not change how the key is derived. It adds a value you control to the hash; omitting it leaves that value out.\n\nSend a value that is unique per real-world event, and repeat it unchanged when retrying that event. Two things follow from the key covering everything. A retry is recognised as a duplicate only if it repeats this header AND the rest of the request identically — reuse the key with any other field changed and it is a new request, which is processed and written separately. Conversely, with no header at all the request content is the only identity available, so two genuinely distinct events that happen to carry identical content are indistinguishable and the second is treated as a retry of the first.\n\nDe-duplication covers the first hour after a request is accepted. An identical request sent after that window is processed as a new one.\n\nA de-duplicated request is answered with the original response: HTTP 200 carrying the record the first request created, with its original identifier and timestamps. Nothing further is written and no error is returned. Neither the status code nor the response headers mark the response as a replay, so reconciling the returned identifier and timestamps against what was submitted is how a caller detects one.",
               "type": "string",
               "minLength": 1
             }
@@ -85,7 +85,7 @@
                     "additionalProperties": {}
                   },
                   "activityLogId": {
-                    "description": "Optional caller-supplied ID, stored verbatim; omit it for a generated one. Must be exactly 21 characters from the alphabet A-Za-z0-9_-, or the request is rejected with a 400. A deterministic value gives permanent once-per-content semantics, with no time limit: a reuse is rejected with a 409 and writes nothing, whether or not it carries the same data as the original. Derive it from the userId as well as the content — IDs need only be unique per user here, but must be unique per workspace downstream, so two users must never produce the same one. A base64url SHA-256 truncated to 21 characters fits.",
+                    "description": "Optional caller-supplied ID, stored verbatim; omit it for a generated one. Must be exactly 21 characters from the alphabet A-Za-z0-9_-, or the request is rejected with a 400. A deterministic value gives permanent once-per-content semantics: a reuse carrying different data is rejected with a 409 and writes nothing, while an identical retry replays the original response inside the de-duplication window and is rejected with a 409 after it. Derive it from the userId as well as the content — IDs need only be unique per user here, but must be unique per workspace downstream, so two users must never produce the same one. A base64url SHA-256 truncated to 21 characters fits.",
                     "type": "string",
                     "example": "V1StGXR8Z5jdHi6BmyT8k"
                   },
@@ -3727,8 +3727,10 @@
           {
             "name": "context",
             "in": "query",
+            "description": "Where the quiz is being played, in the form its submit takes: `learningGroupId:{id}`, `learningPathAssignmentId:{id}#attempt:{n}` or `assignmentId:{id}#attempt:{n}`. It scopes `progress` and `rewardsPreview` to that play, and the attempt it names sets the order of sorting and matching items in `translation`: each new attempt shows them in a different order, while every read within one attempt shows the same order.",
             "required": false,
             "schema": {
+              "description": "Where the quiz is being played, in the form its submit takes: `learningGroupId:{id}`, `learningPathAssignmentId:{id}#attempt:{n}` or `assignmentId:{id}#attempt:{n}`. It scopes `progress` and `rewardsPreview` to that play, and the attempt it names sets the order of sorting and matching items in `translation`: each new attempt shows them in a different order, while every read within one attempt shows the same order.",
               "type": "string"
             }
           },
@@ -4073,6 +4075,16 @@
         "summary": "Get quiz translation",
         "description": "Retrieve the translation for a specific quiz.",
         "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "description": "Where the quiz is being played, in the form its submit takes: `learningGroupId:{id}`, `learningPathAssignmentId:{id}#attempt:{n}` or `assignmentId:{id}#attempt:{n}`. The attempt it names sets the order of sorting and matching items: each new attempt shows them in a different order, while every read within one attempt shows the same order.",
+            "required": false,
+            "schema": {
+              "description": "Where the quiz is being played, in the form its submit takes: `learningGroupId:{id}`, `learningPathAssignmentId:{id}#attempt:{n}` or `assignmentId:{id}#attempt:{n}`. The attempt it names sets the order of sorting and matching items: each new attempt shows them in a different order, while every read within one attempt shows the same order.",
+              "type": "string"
+            }
+          },
           {
             "name": "quizId",
             "in": "path",
@@ -9217,12 +9229,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -9621,7 +9627,6 @@
         "required": [
           "userId",
           "principalId",
-          "accountId",
           "workspaceId",
           "createdAt",
           "updatedAt"
@@ -9898,12 +9903,6 @@
               "description": {
                 "type": "string"
               },
-              "accountId": {
-                "type": "string",
-                "maxLength": 10,
-                "minLength": 10,
-                "pattern": "^[A-Za-z0-9_-]{10}$"
-              },
               "sourceRegion": {
                 "$ref": "#/components/schemas/SourceRegion"
               },
@@ -9923,7 +9922,6 @@
               "learningGroupId",
               "lang",
               "title",
-              "accountId",
               "sourceRegion",
               "createdAt",
               "updatedAt"
@@ -10572,12 +10570,6 @@
               "description": {
                 "type": "string"
               },
-              "accountId": {
-                "type": "string",
-                "maxLength": 10,
-                "minLength": 10,
-                "pattern": "^[A-Za-z0-9_-]{10}$"
-              },
               "sourceRegion": {
                 "$ref": "#/components/schemas/SourceRegion"
               },
@@ -10597,7 +10589,6 @@
               "learningPathId",
               "lang",
               "title",
-              "accountId",
               "sourceRegion",
               "createdAt",
               "updatedAt"
@@ -12735,12 +12726,6 @@
               "isLocked": {
                 "type": "boolean"
               },
-              "accountId": {
-                "type": "string",
-                "maxLength": 10,
-                "minLength": 10,
-                "pattern": "^[A-Za-z0-9_-]{10}$"
-              },
               "sourceRegion": {
                 "$ref": "#/components/schemas/SourceRegion"
               },
@@ -12761,7 +12746,6 @@
               "lang",
               "title",
               "content",
-              "accountId",
               "sourceRegion",
               "createdAt",
               "updatedAt"
@@ -15066,7 +15050,7 @@
                 ]
               },
               "certificates": {
-                "description": "Completion certificates in the end-user app: the profile card and its page, and the certificate at the end of a learning path.",
+                "description": "Completion certificates: in the end-user app, the profile card and its page and the certificate at the end of a learning path; in the console, the download of a learner's certificate from analytics.",
                 "anyOf": [
                   {
                     "type": "boolean"
@@ -17822,12 +17806,6 @@
                     "description": {
                       "type": "string"
                     },
-                    "accountId": {
-                      "type": "string",
-                      "maxLength": 10,
-                      "minLength": 10,
-                      "pattern": "^[A-Za-z0-9_-]{10}$"
-                    },
                     "sourceRegion": {
                       "$ref": "#/components/schemas/SourceRegion"
                     },
@@ -17847,7 +17825,6 @@
                     "learningGroupId",
                     "lang",
                     "title",
-                    "accountId",
                     "sourceRegion",
                     "createdAt",
                     "updatedAt"
@@ -18433,12 +18410,6 @@
                     "description": {
                       "type": "string"
                     },
-                    "accountId": {
-                      "type": "string",
-                      "maxLength": 10,
-                      "minLength": 10,
-                      "pattern": "^[A-Za-z0-9_-]{10}$"
-                    },
                     "sourceRegion": {
                       "$ref": "#/components/schemas/SourceRegion"
                     },
@@ -18458,7 +18429,6 @@
                     "learningPathId",
                     "lang",
                     "title",
-                    "accountId",
                     "sourceRegion",
                     "createdAt",
                     "updatedAt"
@@ -20144,12 +20114,6 @@
                     "isLocked": {
                       "type": "boolean"
                     },
-                    "accountId": {
-                      "type": "string",
-                      "maxLength": 10,
-                      "minLength": 10,
-                      "pattern": "^[A-Za-z0-9_-]{10}$"
-                    },
                     "sourceRegion": {
                       "$ref": "#/components/schemas/SourceRegion"
                     },
@@ -20170,7 +20134,6 @@
                     "lang",
                     "title",
                     "content",
-                    "accountId",
                     "sourceRegion",
                     "createdAt",
                     "updatedAt"
@@ -20677,12 +20640,6 @@
                   "maxItems": 10,
                   "minItems": 1
                 },
-                "accountId": {
-                  "type": "string",
-                  "maxLength": 10,
-                  "minLength": 10,
-                  "pattern": "^[A-Za-z0-9_-]{10}$"
-                },
                 "workspaceId": {
                   "type": "string",
                   "maxLength": 10,
@@ -20729,12 +20686,6 @@
                         "type": "string",
                         "minLength": 1
                       },
-                      "accountId": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "minLength": 10,
-                        "pattern": "^[A-Za-z0-9_-]{10}$"
-                      },
                       "sourceRegion": {
                         "$ref": "#/components/schemas/SourceRegion"
                       },
@@ -20754,7 +20705,6 @@
                       "tagId",
                       "lang",
                       "label",
-                      "accountId",
                       "sourceRegion",
                       "createdAt",
                       "updatedAt"
@@ -20769,7 +20719,6 @@
                 "origin",
                 "defaultLang",
                 "langs",
-                "accountId",
                 "workspaceId",
                 "sourceRegion",
                 "createdAt",
@@ -21420,12 +21369,6 @@
             "default": 1,
             "minimum": 1
           },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -21456,7 +21399,6 @@
           "startsAt",
           "state",
           "visibility",
-          "accountId",
           "workspaceId",
           "sourceRegion",
           "createdAt",
@@ -21567,12 +21509,6 @@
             "default": 1,
             "minimum": 1
           },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -21602,7 +21538,6 @@
           "startsAt",
           "state",
           "visibility",
-          "accountId",
           "workspaceId",
           "sourceRegion",
           "createdAt",
@@ -21700,12 +21635,6 @@
                         "type": "string",
                         "minLength": 1
                       },
-                      "accountId": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "minLength": 10,
-                        "pattern": "^[A-Za-z0-9_-]{10}$"
-                      },
                       "sourceRegion": {
                         "$ref": "#/components/schemas/SourceRegion"
                       },
@@ -21725,7 +21654,6 @@
                       "tagId",
                       "lang",
                       "label",
-                      "accountId",
                       "sourceRegion",
                       "createdAt",
                       "updatedAt"
@@ -22482,12 +22410,6 @@
                     "description": {
                       "type": "string"
                     },
-                    "accountId": {
-                      "type": "string",
-                      "maxLength": 10,
-                      "minLength": 10,
-                      "pattern": "^[A-Za-z0-9_-]{10}$"
-                    },
                     "sourceRegion": {
                       "$ref": "#/components/schemas/SourceRegion"
                     },
@@ -22507,7 +22429,6 @@
                     "learningPathId",
                     "lang",
                     "title",
-                    "accountId",
                     "sourceRegion",
                     "createdAt",
                     "updatedAt"
@@ -23085,12 +23006,6 @@
           "completedAt": {
             "type": "string"
           },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -23119,7 +23034,6 @@
           "lang",
           "progress",
           "outcome",
-          "accountId",
           "workspaceId",
           "sourceRegion"
         ]
@@ -23165,12 +23079,6 @@
           "completedAt": {
             "type": "string"
           },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -23186,7 +23094,6 @@
           "userId",
           "lang",
           "progress",
-          "accountId",
           "workspaceId",
           "sourceRegion"
         ]
@@ -23250,12 +23157,6 @@
           "completedAt": {
             "type": "string"
           },
-          "accountId": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 10,
-            "pattern": "^[A-Za-z0-9_-]{10}$"
-          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -23271,7 +23172,6 @@
           "userId",
           "progress",
           "answers",
-          "accountId",
           "workspaceId",
           "sourceRegion"
         ]
