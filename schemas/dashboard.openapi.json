@@ -3996,6 +3996,21 @@
         "description": "Every badge of the workspace with its label, description and image, and how many people obtained it.\n\nEach person is counted once, however many times the badge was granted to them, and people who have left the workspace are not counted. A badge with levels counts as obtained only once its last level is reached.\n\nWho obtained a badge is listed by `GET /analytics/badges/{badgeConfigurationId}/holders`.",
         "parameters": [
           {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
+          {
             "name": "lang",
             "in": "query",
             "description": "Language for each badge's label and description. A badge with no text in it falls back to its default language.",
@@ -4017,6 +4032,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4030,8 +4048,23 @@
       "get": {
         "operationId": "analytics/content",
         "summary": "Get content analytics",
-        "description": "Retrieve content consumption metrics from slide reading data.",
+        "description": "Retrieve content consumption metrics from slide reading data. Pass `groupIds` to count only the members of those user groups.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "timeRange",
             "in": "query",
@@ -4059,6 +4092,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4072,8 +4108,23 @@
       "get": {
         "operationId": "analytics/economy",
         "summary": "Get economy analytics",
-        "description": "Retrieve economy metrics including points awarded, distribution over time, and top earners.",
+        "description": "Retrieve economy metrics including points awarded, distribution over time, and top earners. Pass `groupIds` to count only the members of those user groups.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "timeRange",
             "in": "query",
@@ -4101,6 +4152,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4114,8 +4168,23 @@
       "get": {
         "operationId": "analytics/engagement",
         "summary": "Get engagement analytics",
-        "description": "Retrieve engagement metrics including DAU/WAU/MAU, stickiness ratios, and activity over time.",
+        "description": "Retrieve engagement metrics including DAU/WAU/MAU, stickiness ratios, and activity over time. Pass `groupIds` to count only the members of those user groups.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "timeRange",
             "in": "query",
@@ -4143,6 +4212,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4156,8 +4228,23 @@
       "get": {
         "operationId": "analytics/gamification",
         "summary": "Get gamification analytics",
-        "description": "Retrieve gamification metrics focused on streak activity and distribution.",
+        "description": "Retrieve gamification metrics focused on streak activity and distribution. Pass `groupIds` to count only the members of those user groups.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "timeRange",
             "in": "query",
@@ -4185,6 +4272,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4200,6 +4290,21 @@
         "summary": "Get learning analytics",
         "description": "Workspace-wide learning KPIs (enrollments, completion rate, avg TTC, outcomes, funnel, daily completions) plus a paginated list of learning paths with their rolled-up KPIs. Mirrors `GET /analytics/users`.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "lang",
             "in": "query",
@@ -4276,6 +4381,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4289,7 +4397,24 @@
       "get": {
         "operationId": "analytics/overview",
         "summary": "Get analytics overview",
-        "description": "Retrieve aggregated KPIs from all analytics domains.",
+        "description": "Retrieve aggregated KPIs from all analytics domains. Pass `groupIds` to count only the members of those user groups; the catalogue totals stay workspace-wide.",
+        "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Overview retrieved successfully",
@@ -4300,6 +4425,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
           },
           "401": {
             "description": "Unauthorized"
@@ -4314,8 +4442,23 @@
       "get": {
         "operationId": "analytics/quiz",
         "summary": "Get quiz analytics",
-        "description": "Retrieve quiz performance metrics including success rates and difficulty breakdown.",
+        "description": "Retrieve quiz performance metrics including success rates and difficulty breakdown. Pass `groupIds` to count only the members of those user groups.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "timeRange",
             "in": "query",
@@ -4343,6 +4486,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4356,7 +4502,24 @@
       "get": {
         "operationId": "analytics/referrals",
         "summary": "Get referral analytics",
-        "description": "Retrieve how many users joined the workspace through a referral against all users, the weekly trend of signups, and the top referrers. People who joined through a referral and later left are reported apart.",
+        "description": "Retrieve how many users joined the workspace through a referral against all users, the weekly trend of signups, and the top referrers. People who joined through a referral and later left are reported apart. Pass `groupIds` to count only the people who joined within those user groups; the people who left are then not reported.",
+        "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Referral analytics retrieved successfully",
@@ -4367,6 +4530,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
           },
           "401": {
             "description": "Unauthorized"
@@ -4381,8 +4547,23 @@
       "get": {
         "operationId": "analytics/listSurveys",
         "summary": "Get survey analytics",
-        "description": "Workspace-wide survey KPIs (counts per stage, started/completed responses, average completion time, pooled response rate per origin, daily completions) plus a paginated list of surveys with their response figures.\n\nEvery stage is listed by default; narrow with `stage` / `origin`.\n\nAll figures are all-time except `dailyCompletions`, which honours `trendRange`.\n\n`assigned` and `responseRate` are null for a survey reached inside a learning group: groups have no per-user assignment, so its population is unknown rather than zero.",
+        "description": "Workspace-wide survey KPIs (counts per stage, started/completed responses, average completion time, pooled response rate per origin, daily completions) plus a paginated list of surveys with their response figures.\n\nEvery stage is listed by default; narrow with `stage` / `origin`.\n\nAll figures are all-time except `dailyCompletions`, which honours `trendRange`.\n\nPass `groupIds` to count only the members of those user groups; `assigned` then counts the assignments of those members. The counts per stage and the list itself stay workspace-wide.\n\n`assigned` and `responseRate` are null for a survey reached inside a learning group: groups have no per-user assignment, so its population is unknown rather than zero.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "lang",
             "in": "query",
@@ -4500,6 +4681,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4515,6 +4699,21 @@
         "summary": "List user analytics",
         "description": "Paginated list of workspace users with rolled-up LP analytics (assigned, completed, avg percentage, pass rate, last access).",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "lang",
             "in": "query",
@@ -4590,6 +4789,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4637,6 +4839,21 @@
             "schema": {
               "type": "string",
               "format": "date"
+            }
+          },
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
             }
           },
           {
@@ -4736,6 +4953,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4774,8 +4994,23 @@
       "get": {
         "operationId": "analytics/getSurveyDetail",
         "summary": "Get one survey's analytics",
-        "description": "KPIs, the assigned → started → completed funnel, where responses were abandoned by page, and the response distribution for every question.\n\nQuestion order, labels and options follow the survey's own definition, so `options` includes the ones **nobody chose**. `skipped` is `completed − answered`: someone who skipped leaves no key in the answers at all.\n\nTwo shapes a client has to render carefully: `aggregatable: false` marks a question whose answers nest too deeply to flatten in one pass (matrixdropdown, matrixdynamic, paneldynamic) — reported rather than omitted, so the client can say why there is no chart; and for MULTI_CHOICE the option shares do **not** sum to 100, because a respondent picks several.\n\nFree text is counted here but not listed — `GET /analytics/surveys/{surveyId}/answers` lists it. A survey with no history row returns zeros and `definitionAvailable: false` rather than a 404: its responses are real even when the survey itself is no longer recoverable.",
+        "description": "KPIs, the assigned → started → completed funnel, where responses were abandoned by page, and the response distribution for every question.\n\nQuestion order, labels and options follow the survey's own definition, so `options` includes the ones **nobody chose**. `skipped` is `completed − answered`: someone who skipped leaves no key in the answers at all.\n\nTwo shapes a client has to render carefully: `aggregatable: false` marks a question whose answers nest too deeply to flatten in one pass (matrixdropdown, matrixdynamic, paneldynamic) — reported rather than omitted, so the client can say why there is no chart; and for MULTI_CHOICE the option shares do **not** sum to 100, because a respondent picks several.\n\nPass `groupIds` to report only the responses of the members of those user groups; the funnel's `assigned` then counts their assignments.\n\nFree text is counted here but not listed — `GET /analytics/surveys/{surveyId}/answers` lists it. A survey with no history row returns zeros and `definitionAvailable: false` rather than a 404: its responses are real even when the survey itself is no longer recoverable.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "lang",
             "in": "query",
@@ -4806,6 +5041,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -4819,7 +5057,7 @@
       "get": {
         "operationId": "analytics/getUserDetail",
         "summary": "Get user detail analytics",
-        "description": "KPIs for a single user plus a paginated per-LP progress breakdown.",
+        "description": "KPIs for a single user plus a paginated per-LP progress breakdown. When `groupIds` is set and the user belongs to none of those groups, the response is 404.",
         "parameters": [
           {
             "name": "from",
@@ -4828,6 +5066,21 @@
             "schema": {
               "type": "string",
               "format": "date"
+            }
+          },
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
             }
           },
           {
@@ -4916,8 +5169,14 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "The user is not in the selected groups"
           }
         },
         "tags": [
@@ -4939,6 +5198,21 @@
             "schema": {
               "description": "Unique identifier for the badge configuration (NanoID).",
               "type": "string"
+            }
+          },
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
             }
           },
           {
@@ -5013,6 +5287,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -5026,8 +5303,23 @@
       "get": {
         "operationId": "analytics/listSurveyAnswers",
         "summary": "List one question's answers verbatim",
-        "description": "What people wrote to one question, newest first, searchable and paginated. This is the surface for free text, which `GET /analytics/surveys/{surveyId}` counts but cannot chart.\n\n`questionKey` is the question's SurveyJS `name`. A `<name>-Comment` key is valid too and reads the free text behind an \"other\" option on a choice question.\n\nCompleted responses only, and blank answers are excluded — SurveyJS records an empty string for a text box that was focused and left. So `total` here can be lower than the question's `answered` count from the detail endpoint, which counts the key being present.\n\nNumeric answers are in scope: a `text` question with a numeric input type stores a number.\n\nA `multipletext` question answers with several sub-fields at once, so it yields ONE ROW PER SUB-FIELD, each prefixed with that sub-field's own name. Its `total` therefore counts sub-answers, where the detail endpoint's `answered` counts respondents.",
+        "description": "What people wrote to one question, newest first, searchable and paginated. This is the surface for free text, which `GET /analytics/surveys/{surveyId}` counts but cannot chart.\n\n`questionKey` is the question's SurveyJS `name`. A `<name>-Comment` key is valid too and reads the free text behind an \"other\" option on a choice question.\n\nCompleted responses only, and blank answers are excluded — SurveyJS records an empty string for a text box that was focused and left. So `total` here can be lower than the question's `answered` count from the detail endpoint, which counts the key being present.\n\nPass `groupIds` to list only the answers of the members of those user groups.\n\nNumeric answers are in scope: a `text` question with a numeric input type stores a number.\n\nA `multipletext` question answers with several sub-fields at once, so it yields ONE ROW PER SUB-FIELD, each prefixed with that sub-field's own name. Its `total` therefore counts sub-answers, where the detail endpoint's `answered` counts respondents.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "limit",
             "in": "query",
@@ -5092,6 +5384,9 @@
               }
             }
           },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -5105,8 +5400,23 @@
       "get": {
         "operationId": "analytics/listSurveyRespondents",
         "summary": "List one survey's respondents",
-        "description": "Who answered a survey, by name: identity, whether the response was completed or abandoned, the page it reached, its attempt, and how long it took. Searchable by nickname or email, sortable, paginated.\n\nOne row per RESPONSE, not per person: a user assigned the same survey twice holds two rows, and `context` names the assignment each belongs to — or is `default` when the survey was opened outside one.\n\n`pageNo` is 1-based; pair it with `pageCount` from `GET /analytics/surveys/{surveyId}` to read it as progress. `total` counts every row matching the current filters, so a client can say what an export covers.\n\nAggregates are not here: they belong to `GET /analytics/surveys/{surveyId}`.",
+        "description": "Who answered a survey, by name: identity, whether the response was completed or abandoned, the page it reached, its attempt, and how long it took. Searchable by nickname or email, sortable, paginated.\n\nOne row per RESPONSE, not per person: a user assigned the same survey twice holds two rows, and `context` names the assignment each belongs to — or is `default` when the survey was opened outside one.\n\n`pageNo` is 1-based; pair it with `pageCount` from `GET /analytics/surveys/{surveyId}` to read it as progress. `total` counts every row matching the current filters, so a client can say what an export covers.\n\nPass `groupIds` to list only the responses of the members of those user groups.\n\nAggregates are not here: they belong to `GET /analytics/surveys/{surveyId}`.",
         "parameters": [
+          {
+            "name": "groupIds",
+            "in": "query",
+            "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+            "required": false,
+            "schema": {
+              "description": "Ids of user groups (up to 5). When set, only users who belong to at least one of the groups are counted; a user in several of them counts once. Leave it out for the whole workspace.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 5
+            }
+          },
           {
             "name": "lang",
             "in": "query",
@@ -5208,6 +5518,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A group id is not a user group of the workspace"
           },
           "401": {
             "description": "Unauthorized"
@@ -5433,6 +5746,10 @@
                     "description": "Caps how many items a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select items with targetsMatchCondition rather than unlockTargetId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching items, skipping items the user has already completed, in the order of the assignments' priority with ties broken by item ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one item at a time.",
                     "type": "integer",
                     "exclusiveMinimum": 0
+                  },
+                  "applyToPastActivity": {
+                    "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+                    "type": "boolean"
                   },
                   "groupId": {
                     "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
@@ -6429,6 +6746,10 @@
                     "description": "Caps how many items a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select items with targetsMatchCondition rather than unlockTargetId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching items, skipping items the user has already completed, in the order of the assignments' priority with ties broken by item ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one item at a time.",
                     "type": "integer",
                     "exclusiveMinimum": 0
+                  },
+                  "applyToPastActivity": {
+                    "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+                    "type": "boolean"
                   },
                   "groupId": {
                     "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
@@ -17221,7 +17542,8 @@
                 "ALERT",
                 "LEARNING_PATH_ASSIGNED",
                 "LEARNING_PATH_WEEKLY_DIGEST",
-                "MEDIA_UPLOAD_BLOCKED"
+                "MEDIA_UPLOAD_BLOCKED",
+                "ORGANIZATION_INVITATION"
               ]
             }
           },
@@ -21576,6 +21898,17 @@
         "description": "Updates a learning group with new data and translations. Creates a DRAFT version that must be published separately.",
         "parameters": [
           {
+            "name": "expectedLatestVersion",
+            "in": "query",
+            "description": "The `latestVersion` the caller read the learning group at (from `GET /learning-groups/{learningGroupId}/history/latest`). When the learning group has been saved since, the update is refused with 409 and nothing is written.",
+            "required": false,
+            "schema": {
+              "description": "The `latestVersion` the caller read the learning group at (from `GET /learning-groups/{learningGroupId}/history/latest`). When the learning group has been saved since, the update is refused with 409 and nothing is written.",
+              "type": "integer",
+              "exclusiveMinimum": 0
+            }
+          },
+          {
             "name": "learningGroupId",
             "in": "path",
             "required": true,
@@ -23663,6 +23996,10 @@
                     "type": "integer",
                     "exclusiveMinimum": 0
                   },
+                  "applyToPastActivity": {
+                    "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+                    "type": "boolean"
+                  },
                   "groupId": {
                     "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                     "type": "string",
@@ -24654,6 +24991,10 @@
                     "description": "Caps how many learning paths a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select learning paths with learningPathsMatchCondition rather than unlockLearningPathId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching learning paths, skipping learning paths the user has already completed, in the order of the assignments' priority with ties broken by learning path ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one learning path at a time.",
                     "type": "integer",
                     "exclusiveMinimum": 0
+                  },
+                  "applyToPastActivity": {
+                    "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+                    "type": "boolean"
                   },
                   "groupId": {
                     "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
@@ -39425,7 +39766,8 @@
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
                       "LEARNING_PATH_WEEKLY_DIGEST",
-                      "MEDIA_UPLOAD_BLOCKED"
+                      "MEDIA_UPLOAD_BLOCKED",
+                      "ORGANIZATION_INVITATION"
                     ]
                   },
                   "notificationRuleId": {
@@ -39686,7 +40028,8 @@
                       "ALERT",
                       "LEARNING_PATH_ASSIGNED",
                       "LEARNING_PATH_WEEKLY_DIGEST",
-                      "MEDIA_UPLOAD_BLOCKED"
+                      "MEDIA_UPLOAD_BLOCKED",
+                      "ORGANIZATION_INVITATION"
                     ]
                   },
                   "translations": {
@@ -54075,6 +54418,17 @@
         "summary": "Update slide",
         "description": "Updates a slide with new configuration and translations. Creates a DRAFT version that must be published separately.",
         "parameters": [
+          {
+            "name": "expectedLatestVersion",
+            "in": "query",
+            "description": "The `latestVersion` the caller read the slide at (from `GET /slides/{slideId}/history/latest`). When the slide has been saved since, the update is refused with 409 and nothing is written.",
+            "required": false,
+            "schema": {
+              "description": "The `latestVersion` the caller read the slide at (from `GET /slides/{slideId}/history/latest`). When the slide has been saved since, the update is refused with 409 and nothing is written.",
+              "type": "integer",
+              "exclusiveMinimum": 0
+            }
+          },
           {
             "name": "slideId",
             "in": "path",
@@ -74000,6 +74354,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
             "type": "string",
@@ -76269,6 +76627,10 @@
             "description": "Caps how many learning paths a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select learning paths with learningPathsMatchCondition rather than unlockLearningPathId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching learning paths, skipping learning paths the user has already completed, in the order of the assignments' priority with ties broken by learning path ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one learning path at a time.",
             "type": "integer",
             "exclusiveMinimum": 0
+          },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+            "type": "boolean"
           },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
@@ -78713,7 +79075,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "origin": {
@@ -86312,6 +86675,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
             "type": "string",
@@ -91347,6 +91714,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
@@ -95431,7 +95802,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "origin": {
@@ -109522,6 +109894,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
             "type": "string",
@@ -110524,6 +110900,10 @@
             "description": "Caps how many items a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select items with targetsMatchCondition rather than unlockTargetId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching items, skipping items the user has already completed, in the order of the assignments' priority with ties broken by item ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one item at a time.",
             "type": "integer",
             "exclusiveMinimum": 0
+          },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+            "type": "boolean"
           },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
@@ -115466,7 +115846,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "lang": {
@@ -120619,6 +121000,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
@@ -121609,6 +121994,10 @@
             "description": "Caps how many learning paths a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select learning paths with learningPathsMatchCondition rather than unlockLearningPathId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching learning paths, skipping learning paths the user has already completed, in the order of the assignments' priority with ties broken by learning path ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one learning path at a time.",
             "type": "integer",
             "exclusiveMinimum": 0
+          },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+            "type": "boolean"
           },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
@@ -127283,7 +127672,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "origin": {
@@ -127563,7 +127953,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "origin": {
@@ -149034,6 +149425,10 @@
                   "type": "integer",
                   "exclusiveMinimum": 0
                 },
+                "applyToPastActivity": {
+                  "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+                  "type": "boolean"
+                },
                 "groupId": {
                   "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
                   "type": "string",
@@ -150090,6 +150485,10 @@
                   "type": "integer",
                   "exclusiveMinimum": 0
                 },
+                "applyToPastActivity": {
+                  "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+                  "type": "boolean"
+                },
                 "groupId": {
                   "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
                   "type": "string",
@@ -151111,6 +151510,10 @@
                   "description": "Caps how many items a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select items with targetsMatchCondition rather than unlockTargetId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching items, skipping items the user has already completed, in the order of the assignments' priority with ties broken by item ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one item at a time.",
                   "type": "integer",
                   "exclusiveMinimum": 0
+                },
+                "applyToPastActivity": {
+                  "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+                  "type": "boolean"
                 },
                 "groupId": {
                   "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
@@ -152361,6 +152764,11 @@
                     "M2M_CLIENT_SECRET_RETIRED",
                     "M2M_CLIENT_SECRET_REVEALED",
                     "M2M_CLIENT_REVOKED",
+                    "ACCOUNT_MEMBER_ADDED",
+                    "ACCOUNT_MEMBER_REMOVED",
+                    "ACCOUNT_INVITATION_CREATED",
+                    "ACCOUNT_INVITATION_ACCEPTED",
+                    "ACCOUNT_INVITATION_REVOKED",
                     "INVITATION_CREATED",
                     "INVITATION_ACCEPTED",
                     "INVITATION_REVOKED",
@@ -161924,6 +162332,10 @@
                   "type": "integer",
                   "exclusiveMinimum": 0
                 },
+                "applyToPastActivity": {
+                  "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+                  "type": "boolean"
+                },
                 "groupId": {
                   "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                   "type": "string",
@@ -162968,6 +163380,10 @@
                   "type": "integer",
                   "exclusiveMinimum": 0
                 },
+                "applyToPastActivity": {
+                  "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+                  "type": "boolean"
+                },
                 "groupId": {
                   "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
                   "type": "string",
@@ -163977,6 +164393,10 @@
                   "description": "Caps how many learning paths a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select learning paths with learningPathsMatchCondition rather than unlockLearningPathId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching learning paths, skipping learning paths the user has already completed, in the order of the assignments' priority with ties broken by learning path ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one learning path at a time.",
                   "type": "integer",
                   "exclusiveMinimum": 0
+                },
+                "applyToPastActivity": {
+                  "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+                  "type": "boolean"
                 },
                 "groupId": {
                   "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
@@ -172043,7 +172463,8 @@
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST",
-                    "MEDIA_UPLOAD_BLOCKED"
+                    "MEDIA_UPLOAD_BLOCKED",
+                    "ORGANIZATION_INVITATION"
                   ]
                 },
                 "origin": {
@@ -172376,7 +172797,8 @@
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST",
-                    "MEDIA_UPLOAD_BLOCKED"
+                    "MEDIA_UPLOAD_BLOCKED",
+                    "ORGANIZATION_INVITATION"
                   ]
                 },
                 "origin": {
@@ -172675,7 +173097,8 @@
                     "ALERT",
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST",
-                    "MEDIA_UPLOAD_BLOCKED"
+                    "MEDIA_UPLOAD_BLOCKED",
+                    "ORGANIZATION_INVITATION"
                   ]
                 },
                 "origin": {
@@ -194149,6 +194572,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
             "type": "string",
@@ -196562,6 +196989,10 @@
             "description": "Caps how many learning paths a pool-form UNLOCK rule unlocks each time its event matches.\n\nOnly valid on UNLOCK rules that select learning paths with learningPathsMatchCondition rather than unlockLearningPathId. The rule then unlocks up to this many of the user's LOCKED assignments among the matching learning paths, skipping learning paths the user has already completed, in the order of the assignments' priority with ties broken by learning path ID. Without it, every matching LOCKED assignment is unlocked. Set it to 1 to open one learning path at a time.",
             "type": "integer",
             "exclusiveMinimum": 0
+          },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+            "type": "boolean"
           },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
@@ -199023,7 +199454,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "origin": {
@@ -205719,7 +206151,7 @@
                 "type": "number"
               },
               "removedReferrals": {
-                "description": "People who joined through a referral and have since left the workspace; the referrers' counts include them",
+                "description": "People who joined through a referral and have since left the workspace; the referrers' counts include them. Always 0 when `groupIds` is set, because a person who left has no group.",
                 "type": "number"
               }
             },
@@ -205781,11 +206213,11 @@
                   "type": "string"
                 },
                 "referredCount": {
-                  "description": "People who joined through this user's referral, ever",
+                  "description": "People who joined through this user's referral, ever. With `groupIds`, only the people in those groups who are still in the workspace; referrers with none are left out.",
                   "type": "number"
                 },
                 "removed": {
-                  "description": "Of those, how many have since left the workspace",
+                  "description": "Of those, how many have since left the workspace. Always 0 when `groupIds` is set.",
                   "type": "number"
                 }
               },
@@ -215091,6 +215523,11 @@
                     "M2M_CLIENT_SECRET_RETIRED",
                     "M2M_CLIENT_SECRET_REVEALED",
                     "M2M_CLIENT_REVOKED",
+                    "ACCOUNT_MEMBER_ADDED",
+                    "ACCOUNT_MEMBER_REMOVED",
+                    "ACCOUNT_INVITATION_CREATED",
+                    "ACCOUNT_INVITATION_ACCEPTED",
+                    "ACCOUNT_INVITATION_REVOKED",
                     "INVITATION_CREATED",
                     "INVITATION_ACCEPTED",
                     "INVITATION_REVOKED",
@@ -226107,7 +226544,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "origin": {
@@ -230951,6 +231389,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous item before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockTargetId is LOCKED, and who has already completed the item the rule waits for, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockTargetId, react to the completion log of the rule's own targetType with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous item completed.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its items in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it.",
             "type": "string",
@@ -235373,6 +235815,10 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "applyToPastActivity": {
+            "description": "Lets an UNLOCK rule also unlock for users who completed the previous learning path before the rule existed.\n\nDefaults to false, where the rule reacts only to completions saved after it. When true, a user whose assignment for unlockLearningPathId is LOCKED, and who has already completed the learning path the rule waits for with the result it requires, gets that assignment UNLOCKED the next time their assignments are evaluated. It only unlocks, never locks, and it does not count as a new completion, so nothing else that reacts to learning path progress fires again. Accepted only on UNLOCK rules in EVENT assignmentMode that pin unlockLearningPathId, react to LearningPathLog with an ENTITY eventMatchType and no postMatchCondition, and whose eventMatchCondition is the one the console writes for a sequence step: the previous learning path completed, optionally with a passed or mastered result.",
+            "type": "boolean"
+          },
           "groupId": {
             "description": "Labels related rules as one group, such as an ASSIGN rule and the UNLOCK rules that open its learning paths in sequence.\n\nIt does not affect how the rule is evaluated. It is copied onto assignments when the rule creates them, and the console groups rules that share it. When the workspace's `layout.assignedLearningPathsView` is `byPlanCards` or `byPlanTimeline`, the end-user app also shows those assignments together, as one plan.",
             "type": "string",
@@ -239379,7 +239825,8 @@
               "ALERT",
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
-              "MEDIA_UPLOAD_BLOCKED"
+              "MEDIA_UPLOAD_BLOCKED",
+              "ORGANIZATION_INVITATION"
             ]
           },
           "origin": {
