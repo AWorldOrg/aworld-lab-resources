@@ -9903,6 +9903,48 @@
               "description": {
                 "type": "string"
               },
+              "audioContent": {
+                "type": "object",
+                "properties": {
+                  "media": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "description": "CDN URL",
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "mediaId": {
+                        "description": "The unique ID of the media file",
+                        "type": "string",
+                        "example": "FUMzPf00hz_kcj2R2Hlzq"
+                      },
+                      "contentType": {
+                        "description": "MIME type",
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                      }
+                    },
+                    "required": [
+                      "url",
+                      "contentType"
+                    ]
+                  },
+                  "sourceTextHash": {
+                    "type": "string"
+                  },
+                  "generatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "media",
+                  "sourceTextHash",
+                  "generatedAt"
+                ]
+              },
               "sourceRegion": {
                 "$ref": "#/components/schemas/SourceRegion"
               },
@@ -10161,6 +10203,48 @@
           },
           "description": {
             "type": "string"
+          },
+          "audioContent": {
+            "type": "object",
+            "properties": {
+              "media": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "description": "CDN URL",
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "mediaId": {
+                    "description": "The unique ID of the media file",
+                    "type": "string",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
+                  },
+                  "contentType": {
+                    "description": "MIME type",
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                  }
+                },
+                "required": [
+                  "url",
+                  "contentType"
+                ]
+              },
+              "sourceTextHash": {
+                "type": "string"
+              },
+              "generatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "media",
+              "sourceTextHash",
+              "generatedAt"
+            ]
           },
           "createdAt": {
             "description": "Creation date in ISO format (UTC Timezone)",
@@ -17805,6 +17889,48 @@
                     },
                     "description": {
                       "type": "string"
+                    },
+                    "audioContent": {
+                      "type": "object",
+                      "properties": {
+                        "media": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "description": "CDN URL",
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "mediaId": {
+                              "description": "The unique ID of the media file",
+                              "type": "string",
+                              "example": "FUMzPf00hz_kcj2R2Hlzq"
+                            },
+                            "contentType": {
+                              "description": "MIME type",
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "contentType"
+                          ]
+                        },
+                        "sourceTextHash": {
+                          "type": "string"
+                        },
+                        "generatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "media",
+                        "sourceTextHash",
+                        "generatedAt"
+                      ]
                     },
                     "sourceRegion": {
                       "$ref": "#/components/schemas/SourceRegion"

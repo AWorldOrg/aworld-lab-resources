@@ -388,7 +388,7 @@
       "post": {
         "operationId": "ai/generateImage",
         "summary": "Generate an image with AI",
-        "description": "Generates an image from a text prompt, optionally using an existing image as reference for editing.",
+        "description": "Generates an image from a text prompt, optionally using an existing image as reference for editing: by URL, or an earlier generation by its id.",
         "requestBody": {
           "required": true,
           "content": {
@@ -404,8 +404,51 @@
                     "type": "string"
                   },
                   "originalImageUrl": {
+                    "description": "An image to edit or take as reference, by URL. Not with referenceGenerationId.",
                     "type": "string",
                     "format": "uri"
+                  },
+                  "referenceGenerationId": {
+                    "description": "An earlier image generation of this workspace, by its id, whose image to edit or take as reference. Not with originalImageUrl.\n\nWith forbidExternalImages, the only kind of reference taken.",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "videoAvatarIds": {
+                    "description": "Avatars of this workspace to draw in the image, each with the face of its portrait.\n\nAvatars the prompt names (their whole name, as a word of its own) are drawn the same way without being listed here, unless listed in excludedVideoAvatarIds; up to four in all, the listed ones first. Each must be an avatar of this workspace with a portrait. Not with the forbidExternalImages restriction, nor with the videoAvatar purpose: an avatar's portrait draws no other avatar.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "The unique ID of the videoAvatar",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    "maxItems": 4
+                  },
+                  "excludedVideoAvatarIds": {
+                    "description": "Avatars the prompt names that are not to be drawn with their portrait's face.\n\nFor a name that means someone other than the avatar: that person is drawn from the words alone.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "The unique ID of the videoAvatar",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    "maxItems": 20
+                  },
+                  "purpose": {
+                    "description": "What the image is for. The server applies the rules that go with it, as the workspace's settings require.\n\n- videoAvatar: an avatar's portrait. The generation gets the forbidExternalImages restriction, as if the request had sent it, and only such a generation can become an avatar's image. Where the workspace allows custom avatar images, a request that takes in an image of its own (an image URL, a link in the prompt, or a reference made without the restriction) runs without it.",
+                    "type": "string",
+                    "enum": [
+                      "videoAvatar"
+                    ]
+                  },
+                  "restrictions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "forbidExternalImages"
+                      ],
+                      "description": "A rule the generation must follow. A request that breaks it is refused before anything is generated.\n\n- forbidExternalImages: the generation takes no image from outside: no originalImageUrl, no avatars and no link in the prompt. Its only reference can be an earlier generation of this workspace made with forbidExternalImages, sent as referenceGenerationId, to refine it. Unless the workspace allows custom avatar images, an avatar takes its image only from such a generation."
+                    }
                   },
                   "language": {
                     "type": "string"
@@ -720,7 +763,7 @@
                     "default": false
                   },
                   "scope": {
-                    "description": "Narrow the job to specific slide/quiz IDs (per-item regenerate)",
+                    "description": "Narrow the job to specific learning group, slide or quiz IDs (per-item regenerate)",
                     "type": "object",
                     "properties": {
                       "slideIds": {
@@ -734,8 +777,27 @@
                         "items": {
                           "type": "string"
                         }
+                      },
+                      "learningGroupIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       }
                     }
+                  },
+                  "contentTypes": {
+                    "description": "The kinds of content to narrate across the learning path. Omit to narrate all of them.\n\n- `learningGroup`: each learning group's title and description\n- `slide`: each slide's text\n- `quiz`: each quiz and exercise",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "learningGroup",
+                        "slide",
+                        "quiz"
+                      ]
+                    },
+                    "minItems": 1
                   },
                   "voice": {
                     "description": "Public voiceId from the /ai/voices catalogue. Omit to use the default voice. Forwarded verbatim to the agent.",
@@ -2178,7 +2240,7 @@
             }
           },
           "400": {
-            "description": "A target is not part of the learning path"
+            "description": "A target is not part of the learning path, or a picked avatar has no portrait in this workspace"
           },
           "401": {
             "description": "Unauthorized"
@@ -19858,6 +19920,62 @@
                         },
                         "description": {
                           "type": "string"
+                        },
+                        "audioContent": {
+                          "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                          "type": "object",
+                          "properties": {
+                            "media": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "description": "CDN URL",
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "mediaId": {
+                                  "description": "The unique ID of the media file",
+                                  "type": "string",
+                                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                },
+                                "contentType": {
+                                  "description": "MIME type",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "contentType"
+                              ]
+                            },
+                            "sourceTextHash": {
+                              "type": "string"
+                            },
+                            "generatedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "needsReview": {
+                              "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                              "type": "boolean"
+                            },
+                            "reviewedBy": {
+                              "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                              "type": "string"
+                            },
+                            "reviewedAt": {
+                              "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "media",
+                            "sourceTextHash",
+                            "generatedAt"
+                          ]
                         }
                       },
                       "required": [
@@ -20908,6 +21026,62 @@
                                   },
                                   "description": {
                                     "type": "string"
+                                  },
+                                  "audioContent": {
+                                    "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                                    "type": "object",
+                                    "properties": {
+                                      "media": {
+                                        "type": "object",
+                                        "properties": {
+                                          "url": {
+                                            "description": "CDN URL",
+                                            "type": "string",
+                                            "format": "uri"
+                                          },
+                                          "mediaId": {
+                                            "description": "The unique ID of the media file",
+                                            "type": "string",
+                                            "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                          },
+                                          "contentType": {
+                                            "description": "MIME type",
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                                          }
+                                        },
+                                        "required": [
+                                          "url",
+                                          "contentType"
+                                        ]
+                                      },
+                                      "sourceTextHash": {
+                                        "type": "string"
+                                      },
+                                      "generatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      },
+                                      "needsReview": {
+                                        "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                        "type": "boolean"
+                                      },
+                                      "reviewedBy": {
+                                        "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                        "type": "string"
+                                      },
+                                      "reviewedAt": {
+                                        "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "required": [
+                                      "media",
+                                      "sourceTextHash",
+                                      "generatedAt"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -27252,6 +27426,62 @@
                                   },
                                   "description": {
                                     "type": "string"
+                                  },
+                                  "audioContent": {
+                                    "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                                    "type": "object",
+                                    "properties": {
+                                      "media": {
+                                        "type": "object",
+                                        "properties": {
+                                          "url": {
+                                            "description": "CDN URL",
+                                            "type": "string",
+                                            "format": "uri"
+                                          },
+                                          "mediaId": {
+                                            "description": "The unique ID of the media file",
+                                            "type": "string",
+                                            "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                          },
+                                          "contentType": {
+                                            "description": "MIME type",
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                                          }
+                                        },
+                                        "required": [
+                                          "url",
+                                          "contentType"
+                                        ]
+                                      },
+                                      "sourceTextHash": {
+                                        "type": "string"
+                                      },
+                                      "generatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      },
+                                      "needsReview": {
+                                        "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                        "type": "boolean"
+                                      },
+                                      "reviewedBy": {
+                                        "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                        "type": "string"
+                                      },
+                                      "reviewedAt": {
+                                        "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "required": [
+                                      "media",
+                                      "sourceTextHash",
+                                      "generatedAt"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -28302,6 +28532,62 @@
                                             },
                                             "description": {
                                               "type": "string"
+                                            },
+                                            "audioContent": {
+                                              "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                                              "type": "object",
+                                              "properties": {
+                                                "media": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "url": {
+                                                      "description": "CDN URL",
+                                                      "type": "string",
+                                                      "format": "uri"
+                                                    },
+                                                    "mediaId": {
+                                                      "description": "The unique ID of the media file",
+                                                      "type": "string",
+                                                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                                    },
+                                                    "contentType": {
+                                                      "description": "MIME type",
+                                                      "type": "string",
+                                                      "minLength": 1,
+                                                      "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "url",
+                                                    "contentType"
+                                                  ]
+                                                },
+                                                "sourceTextHash": {
+                                                  "type": "string"
+                                                },
+                                                "generatedAt": {
+                                                  "type": "string",
+                                                  "format": "date-time"
+                                                },
+                                                "needsReview": {
+                                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                                  "type": "boolean"
+                                                },
+                                                "reviewedBy": {
+                                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                                  "type": "string"
+                                                },
+                                                "reviewedAt": {
+                                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                                  "type": "string",
+                                                  "format": "date-time"
+                                                }
+                                              },
+                                              "required": [
+                                                "media",
+                                                "sourceTextHash",
+                                                "generatedAt"
+                                              ]
                                             }
                                           },
                                           "required": [
@@ -31239,6 +31525,87 @@
                             "lang",
                             "audioContent"
                           ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "entityType": {
+                              "type": "string",
+                              "enum": [
+                                "learningGroup"
+                              ]
+                            },
+                            "entityId": {
+                              "type": "string"
+                            },
+                            "lang": {
+                              "$ref": "#/components/schemas/Lang"
+                            },
+                            "audioContent": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "media": {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "description": "CDN URL",
+                                      "type": "string",
+                                      "format": "uri"
+                                    },
+                                    "mediaId": {
+                                      "description": "The unique ID of the media file",
+                                      "type": "string",
+                                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                    },
+                                    "contentType": {
+                                      "description": "MIME type",
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                                    }
+                                  },
+                                  "required": [
+                                    "url",
+                                    "contentType"
+                                  ]
+                                },
+                                "sourceTextHash": {
+                                  "type": "string"
+                                },
+                                "generatedAt": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                },
+                                "needsReview": {
+                                  "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                                  "type": "boolean"
+                                },
+                                "reviewedBy": {
+                                  "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                                  "type": "string"
+                                },
+                                "reviewedAt": {
+                                  "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                                  "type": "string",
+                                  "format": "date-time"
+                                }
+                              },
+                              "required": [
+                                "media",
+                                "sourceTextHash",
+                                "generatedAt"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "entityType",
+                            "entityId",
+                            "lang",
+                            "audioContent"
+                          ]
                         }
                       ]
                     },
@@ -31319,6 +31686,34 @@
                         "type": "string",
                         "enum": [
                           "quiz"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string"
+                      },
+                      "lang": {
+                        "$ref": "#/components/schemas/Lang"
+                      },
+                      "generatedAt": {
+                        "description": "The `generatedAt` of the narration that was listened to. The review is refused when the narration was generated again since.",
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId",
+                      "lang",
+                      "generatedAt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "learningGroup"
                         ]
                       },
                       "entityId": {
@@ -68655,6 +69050,11 @@
                     "type": "string",
                     "example": "FUMzPf00hz_kcj2R2Hlzq"
                   },
+                  "imageGenerationId": {
+                    "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                    "type": "string",
+                    "minLength": 1
+                  },
                   "defaultVoiceId": {
                     "type": "string"
                   },
@@ -68957,6 +69357,11 @@
                     "description": "The unique ID of the media file",
                     "type": "string",
                     "example": "FUMzPf00hz_kcj2R2Hlzq"
+                  },
+                  "imageGenerationId": {
+                    "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                    "type": "string",
+                    "minLength": 1
                   },
                   "defaultVoiceId": {
                     "type": "string"
@@ -83302,6 +83707,19 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
+          },
           "defaultVoiceId": {
             "type": "string"
           },
@@ -83514,6 +83932,35 @@
                       "type": "string",
                       "enum": [
                         "quiz"
+                      ]
+                    },
+                    "entityId": {
+                      "type": "string"
+                    },
+                    "lang": {
+                      "$ref": "#/components/schemas/Lang"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId",
+                    "lang",
+                    "success"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "enum": [
+                        "learningGroup"
                       ]
                     },
                     "entityId": {
@@ -85680,6 +86127,19 @@
             "description": "The unique ID of the media file",
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
           },
           "defaultVoiceId": {
             "type": "string"
@@ -102828,6 +103288,19 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
+          },
           "defaultVoiceId": {
             "type": "string"
           },
@@ -114629,6 +115102,19 @@
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
+                "imageGenerationId": {
+                  "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "imageSource": {
+                  "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+                  "type": "string",
+                  "enum": [
+                    "aiGenerated",
+                    "catalog"
+                  ]
+                },
                 "defaultVoiceId": {
                   "type": "string"
                 },
@@ -118323,6 +118809,62 @@
                 "description": {
                   "type": "string"
                 },
+                "audioContent": {
+                  "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "description": "CDN URL",
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "mediaId": {
+                          "description": "The unique ID of the media file",
+                          "type": "string",
+                          "example": "FUMzPf00hz_kcj2R2Hlzq"
+                        },
+                        "contentType": {
+                          "description": "MIME type",
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                        }
+                      },
+                      "required": [
+                        "url",
+                        "contentType"
+                      ]
+                    },
+                    "sourceTextHash": {
+                      "type": "string"
+                    },
+                    "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "media",
+                    "sourceTextHash",
+                    "generatedAt"
+                  ]
+                },
                 "sourceRegion": {
                   "$ref": "#/components/schemas/SourceRegion"
                 },
@@ -118716,6 +119258,62 @@
                 "description": {
                   "type": "string"
                 },
+                "audioContent": {
+                  "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "description": "CDN URL",
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "mediaId": {
+                          "description": "The unique ID of the media file",
+                          "type": "string",
+                          "example": "FUMzPf00hz_kcj2R2Hlzq"
+                        },
+                        "contentType": {
+                          "description": "MIME type",
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                        }
+                      },
+                      "required": [
+                        "url",
+                        "contentType"
+                      ]
+                    },
+                    "sourceTextHash": {
+                      "type": "string"
+                    },
+                    "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "media",
+                    "sourceTextHash",
+                    "generatedAt"
+                  ]
+                },
                 "sourceRegion": {
                   "$ref": "#/components/schemas/SourceRegion"
                 },
@@ -119021,6 +119619,62 @@
                 },
                 "description": {
                   "type": "string"
+                },
+                "audioContent": {
+                  "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "description": "CDN URL",
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "mediaId": {
+                          "description": "The unique ID of the media file",
+                          "type": "string",
+                          "example": "FUMzPf00hz_kcj2R2Hlzq"
+                        },
+                        "contentType": {
+                          "description": "MIME type",
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                        }
+                      },
+                      "required": [
+                        "url",
+                        "contentType"
+                      ]
+                    },
+                    "sourceTextHash": {
+                      "type": "string"
+                    },
+                    "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "media",
+                    "sourceTextHash",
+                    "generatedAt"
+                  ]
                 },
                 "sourceRegion": {
                   "$ref": "#/components/schemas/SourceRegion"
@@ -143018,6 +143672,19 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
+          },
           "defaultVoiceId": {
             "type": "string"
           },
@@ -143202,6 +143869,19 @@
             "description": "The unique ID of the media file",
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
           },
           "defaultVoiceId": {
             "type": "string"
@@ -146210,6 +146890,16 @@
                     "labelKey"
                   ]
                 }
+              }
+            }
+          },
+          "restrictedFeatures": {
+            "description": "Features enabled for the workspace by AWorld. Read-only: no configuration update changes them.",
+            "type": "object",
+            "properties": {
+              "customAvatarImages": {
+                "description": "Whether an avatar's portrait can be an image the workspace supplies: an upload, a library file, a link, or an AI image generated from a reference image.\n\nWhen off or absent, an avatar's portrait must be an image generated with AI from a prompt in this workspace, optionally refined from an earlier such generation, or come with an avatar copied from the catalog. Avatars whose portrait does not meet this cannot be used to render a video.",
+                "type": "boolean"
               }
             }
           },
@@ -159082,6 +159772,62 @@
                       "description": {
                         "type": "string"
                       },
+                      "audioContent": {
+                        "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                        "type": "object",
+                        "properties": {
+                          "media": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "description": "CDN URL",
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "mediaId": {
+                                "description": "The unique ID of the media file",
+                                "type": "string",
+                                "example": "FUMzPf00hz_kcj2R2Hlzq"
+                              },
+                              "contentType": {
+                                "description": "MIME type",
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                              }
+                            },
+                            "required": [
+                              "url",
+                              "contentType"
+                            ]
+                          },
+                          "sourceTextHash": {
+                            "type": "string"
+                          },
+                          "generatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "media",
+                          "sourceTextHash",
+                          "generatedAt"
+                        ]
+                      },
                       "sourceRegion": {
                         "$ref": "#/components/schemas/SourceRegion"
                       },
@@ -159479,6 +160225,62 @@
                       "description": {
                         "type": "string"
                       },
+                      "audioContent": {
+                        "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                        "type": "object",
+                        "properties": {
+                          "media": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "description": "CDN URL",
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "mediaId": {
+                                "description": "The unique ID of the media file",
+                                "type": "string",
+                                "example": "FUMzPf00hz_kcj2R2Hlzq"
+                              },
+                              "contentType": {
+                                "description": "MIME type",
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                              }
+                            },
+                            "required": [
+                              "url",
+                              "contentType"
+                            ]
+                          },
+                          "sourceTextHash": {
+                            "type": "string"
+                          },
+                          "generatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "media",
+                          "sourceTextHash",
+                          "generatedAt"
+                        ]
+                      },
                       "sourceRegion": {
                         "$ref": "#/components/schemas/SourceRegion"
                       },
@@ -159833,6 +160635,62 @@
                       "description": {
                         "type": "string"
                       },
+                      "audioContent": {
+                        "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                        "type": "object",
+                        "properties": {
+                          "media": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "description": "CDN URL",
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "mediaId": {
+                                "description": "The unique ID of the media file",
+                                "type": "string",
+                                "example": "FUMzPf00hz_kcj2R2Hlzq"
+                              },
+                              "contentType": {
+                                "description": "MIME type",
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                              }
+                            },
+                            "required": [
+                              "url",
+                              "contentType"
+                            ]
+                          },
+                          "sourceTextHash": {
+                            "type": "string"
+                          },
+                          "generatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "media",
+                          "sourceTextHash",
+                          "generatedAt"
+                        ]
+                      },
                       "sourceRegion": {
                         "$ref": "#/components/schemas/SourceRegion"
                       },
@@ -160138,6 +160996,62 @@
                 },
                 "description": {
                   "type": "string"
+                },
+                "audioContent": {
+                  "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "description": "CDN URL",
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "mediaId": {
+                          "description": "The unique ID of the media file",
+                          "type": "string",
+                          "example": "FUMzPf00hz_kcj2R2Hlzq"
+                        },
+                        "contentType": {
+                          "description": "MIME type",
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                        }
+                      },
+                      "required": [
+                        "url",
+                        "contentType"
+                      ]
+                    },
+                    "sourceTextHash": {
+                      "type": "string"
+                    },
+                    "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "needsReview": {
+                      "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                      "type": "boolean"
+                    },
+                    "reviewedBy": {
+                      "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "media",
+                    "sourceTextHash",
+                    "generatedAt"
+                  ]
                 },
                 "sourceRegion": {
                   "$ref": "#/components/schemas/SourceRegion"
@@ -192269,6 +193183,19 @@
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
+                "imageGenerationId": {
+                  "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "imageSource": {
+                  "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+                  "type": "string",
+                  "enum": [
+                    "aiGenerated",
+                    "catalog"
+                  ]
+                },
                 "defaultVoiceId": {
                   "type": "string"
                 },
@@ -192507,6 +193434,19 @@
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
+                "imageGenerationId": {
+                  "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "imageSource": {
+                  "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+                  "type": "string",
+                  "enum": [
+                    "aiGenerated",
+                    "catalog"
+                  ]
+                },
                 "defaultVoiceId": {
                   "type": "string"
                 },
@@ -192710,6 +193650,19 @@
                   "description": "The unique ID of the media file",
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "imageGenerationId": {
+                  "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "imageSource": {
+                  "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+                  "type": "string",
+                  "enum": [
+                    "aiGenerated",
+                    "catalog"
+                  ]
                 },
                 "defaultVoiceId": {
                   "type": "string"
@@ -203679,6 +204632,19 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
+          },
           "defaultVoiceId": {
             "type": "string"
           },
@@ -205813,6 +206779,16 @@
               }
             }
           },
+          "restrictedFeatures": {
+            "description": "Features enabled for the workspace by AWorld. Read-only: no configuration update changes them.",
+            "type": "object",
+            "properties": {
+              "customAvatarImages": {
+                "description": "Whether an avatar's portrait can be an image the workspace supplies: an upload, a library file, a link, or an AI image generated from a reference image.\n\nWhen off or absent, an avatar's portrait must be an image generated with AI from a prompt in this workspace, optionally refined from an earlier such generation, or come with an avatar copied from the catalog. Avatars whose portrait does not meet this cannot be used to render a video.",
+                "type": "boolean"
+              }
+            }
+          },
           "workspaceId": {
             "type": "string",
             "maxLength": 10,
@@ -207252,6 +208228,62 @@
                         },
                         "description": {
                           "type": "string"
+                        },
+                        "audioContent": {
+                          "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                          "type": "object",
+                          "properties": {
+                            "media": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "description": "CDN URL",
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "mediaId": {
+                                  "description": "The unique ID of the media file",
+                                  "type": "string",
+                                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                },
+                                "contentType": {
+                                  "description": "MIME type",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "contentType"
+                              ]
+                            },
+                            "sourceTextHash": {
+                              "type": "string"
+                            },
+                            "generatedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "needsReview": {
+                              "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                              "type": "boolean"
+                            },
+                            "reviewedBy": {
+                              "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                              "type": "string"
+                            },
+                            "reviewedAt": {
+                              "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "media",
+                            "sourceTextHash",
+                            "generatedAt"
+                          ]
                         }
                       },
                       "required": [
@@ -210012,6 +211044,32 @@
                   "defaultLang",
                   "translations"
                 ]
+              },
+              "blockSources": {
+                "description": "For each language, the slide block each content block of `after` keeps, in order: its position in `before`, or null for a block the change writes. An image this change set puts on the slide is kept through it.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "lang": {
+                      "$ref": "#/components/schemas/Lang"
+                    },
+                    "blocks": {
+                      "type": "array",
+                      "items": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "required": [
+                    "lang",
+                    "blocks"
+                  ]
+                }
               }
             },
             "required": [
@@ -211963,6 +213021,10 @@
               "beforeUrl": {
                 "type": "string"
               },
+              "addsOnly": {
+                "description": "True when none of the languages the image is set in has an image yet, so the change only adds one.",
+                "type": "boolean"
+              },
               "afterUrl": {
                 "type": "string"
               },
@@ -211973,6 +213035,42 @@
               },
               "prompt": {
                 "type": "string"
+              },
+              "style": {
+                "description": "The style a generated image was drawn in: written with a slide's image, next to its prompt.",
+                "type": "string"
+              },
+              "figure": {
+                "description": "The document figure the image is, when it is one: written with a slide's image, which is then marked as taken from a document.",
+                "type": "object",
+                "properties": {
+                  "figureId": {
+                    "description": "The figure's identifier within the documents of the generation, unique across them. Set only when source is document.",
+                    "type": "string"
+                  },
+                  "figureMediaId": {
+                    "description": "The media id of the figure's own image in the media library. Set only when source is document.",
+                    "type": "string",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
+                  },
+                  "sourceMediaId": {
+                    "description": "The media id of the document the figure was taken from. Set only when source is document.",
+                    "type": "string",
+                    "example": "FUMzPf00hz_kcj2R2Hlzq"
+                  },
+                  "sourceFileIndex": {
+                    "description": "The position of that document among the files of the generation request, from 0. Set only when source is document.",
+                    "type": "integer"
+                  },
+                  "page": {
+                    "description": "The page of the document the figure is on, from 1. Set only when source is document.",
+                    "type": "integer"
+                  },
+                  "description": {
+                    "description": "What the image shows, in one or two sentences: the end-user app reads it as the image's accessible text. Set by AI generation when source is document.",
+                    "type": "string"
+                  }
+                }
               }
             },
             "required": [
@@ -212027,6 +213125,12 @@
                 }
               },
               "quizIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "learningGroupIds": {
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -212905,6 +214009,62 @@
                         },
                         "description": {
                           "type": "string"
+                        },
+                        "audioContent": {
+                          "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                          "type": "object",
+                          "properties": {
+                            "media": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "description": "CDN URL",
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "mediaId": {
+                                  "description": "The unique ID of the media file",
+                                  "type": "string",
+                                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                                },
+                                "contentType": {
+                                  "description": "MIME type",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "contentType"
+                              ]
+                            },
+                            "sourceTextHash": {
+                              "type": "string"
+                            },
+                            "generatedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "needsReview": {
+                              "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                              "type": "boolean"
+                            },
+                            "reviewedBy": {
+                              "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                              "type": "string"
+                            },
+                            "reviewedAt": {
+                              "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "media",
+                            "sourceTextHash",
+                            "generatedAt"
+                          ]
                         }
                       },
                       "required": [
@@ -213879,6 +215039,26 @@
               "fromCurrent": {
                 "type": "boolean"
               },
+              "videoAvatarIds": {
+                "description": "Avatars of this workspace to draw in the image, each with the face of its portrait.\n\nAvatars the image's prompt names (their whole name, as a word of its own) are drawn the same way without being listed here, unless listed in excludedVideoAvatarIds; up to four in all, the listed ones first. Each must be an avatar of this workspace with a portrait.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "The unique ID of the videoAvatar",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "maxItems": 4
+              },
+              "excludedVideoAvatarIds": {
+                "description": "Avatars the prompt names that are not to be drawn with their portrait's face.\n\nFor a name that means someone other than the avatar: that person is drawn from the words alone.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "The unique ID of the videoAvatar",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "maxItems": 20
+              },
               "otherLanguages": {
                 "description": "What the learning path's other languages get:\n- `same`: the same image\n- `translate`: the image with the text in it translated\n- `currentOnly`: nothing; only the current language changes",
                 "type": "string",
@@ -213926,6 +215106,19 @@
                   "chapter",
                   "path"
                 ]
+              },
+              "contentTypes": {
+                "description": "The kinds of content narrated within the scope. Omit to narrate all of them.\n- `learningGroup`: each learning group's title and description\n- `slide`: each slide's text\n- `quiz`: each quiz and exercise",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "learningGroup",
+                    "slide",
+                    "quiz"
+                  ]
+                },
+                "minItems": 1
               }
             }
           },
@@ -214210,10 +215403,11 @@
                 ]
               },
               "entityType": {
-                "description": "Whose narration:\n- `learningPath`: the learning path as a whole\n- `slide`: one slide\n- `quiz`: one quiz",
+                "description": "Whose narration:\n- `learningPath`: the learning path as a whole\n- `learningGroup`: one learning group's title and description\n- `slide`: one slide\n- `quiz`: one quiz",
                 "type": "string",
                 "enum": [
                   "learningPath",
+                  "learningGroup",
                   "slide",
                   "quiz"
                 ]
@@ -216995,6 +218189,62 @@
                       },
                       "description": {
                         "type": "string"
+                      },
+                      "audioContent": {
+                        "description": "The narration of the learning group's title and description in this language. Generated by the narration job; an update leaves it as it is.",
+                        "type": "object",
+                        "properties": {
+                          "media": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "description": "CDN URL",
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "mediaId": {
+                                "description": "The unique ID of the media file",
+                                "type": "string",
+                                "example": "FUMzPf00hz_kcj2R2Hlzq"
+                              },
+                              "contentType": {
+                                "description": "MIME type",
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[a-z]+\\/[a-z0-9.+-]+(?:;.*)?$/i"
+                              }
+                            },
+                            "required": [
+                              "url",
+                              "contentType"
+                            ]
+                          },
+                          "sourceTextHash": {
+                            "type": "string"
+                          },
+                          "generatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "needsReview": {
+                            "description": "True when the narration may skip, repeat or change words of the text: an automatic check found it did not read the text as written, even after it was generated again. Listen to it, and generate it again if needed. Absent otherwise.",
+                            "type": "boolean"
+                          },
+                          "reviewedBy": {
+                            "description": "The user who listened to the narration and marked it as reviewed, after the automatic check had flagged it.",
+                            "type": "string"
+                          },
+                          "reviewedAt": {
+                            "description": "When the narration was marked as reviewed, as an ISO 8601 timestamp.",
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "media",
+                          "sourceTextHash",
+                          "generatedAt"
+                        ]
                       },
                       "sourceRegion": {
                         "$ref": "#/components/schemas/SourceRegion"
@@ -221200,6 +222450,19 @@
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                 },
+                "imageGenerationId": {
+                  "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "imageSource": {
+                  "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+                  "type": "string",
+                  "enum": [
+                    "aiGenerated",
+                    "catalog"
+                  ]
+                },
                 "defaultVoiceId": {
                   "type": "string"
                 },
@@ -221408,6 +222671,19 @@
                   "description": "The unique ID of the media file",
                   "type": "string",
                   "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "imageGenerationId": {
+                  "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "imageSource": {
+                  "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+                  "type": "string",
+                  "enum": [
+                    "aiGenerated",
+                    "catalog"
+                  ]
                 },
                 "defaultVoiceId": {
                   "type": "string"
@@ -230772,6 +232048,19 @@
             "description": "The unique ID of the media file",
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
+          },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
           },
           "defaultVoiceId": {
             "type": "string"
@@ -246541,6 +247830,19 @@
             "type": "string",
             "example": "FUMzPf00hz_kcj2R2Hlzq"
           },
+          "imageGenerationId": {
+            "description": "The AI image generation the portrait comes from.\n\nWhen sent, the portrait is that generation's image: imageUrl and imageMediaId are taken from it. On update, the avatar's own imageGenerationId names the portrait it has: sent with the same imageUrl it keeps it, sent with another imageUrl it is ignored and the new URL is taken as an image of its own. Unless the workspace allows custom avatar images, a new portrait must come from a generation made with the forbidExternalImages restriction: send purpose videoAvatar when generating it, and the restriction is added for you.",
+            "type": "string",
+            "minLength": 1
+          },
+          "imageSource": {
+            "description": "Where the avatar's portrait comes from. Set by the server, never by a request.\n\n- aiGenerated: generated with AI from a prompt in this workspace, with no reference image other than an earlier such generation.\n- catalog: copied from a catalog avatar whose portrait had a source of its own. A catalog avatar without one is copied without one.\n\nAbsent for a portrait from anywhere else. Unless the workspace allows custom avatar images, an avatar without it cannot render a video.",
+            "type": "string",
+            "enum": [
+              "aiGenerated",
+              "catalog"
+            ]
+          },
           "defaultVoiceId": {
             "type": "string"
           },
@@ -248927,6 +250229,16 @@
                     "labelKey"
                   ]
                 }
+              }
+            }
+          },
+          "restrictedFeatures": {
+            "description": "Features enabled for the workspace by AWorld. Read-only: no configuration update changes them.",
+            "type": "object",
+            "properties": {
+              "customAvatarImages": {
+                "description": "Whether an avatar's portrait can be an image the workspace supplies: an upload, a library file, a link, or an AI image generated from a reference image.\n\nWhen off or absent, an avatar's portrait must be an image generated with AI from a prompt in this workspace, optionally refined from an earlier such generation, or come with an avatar copied from the catalog. Avatars whose portrait does not meet this cannot be used to render a video.",
+                "type": "boolean"
               }
             }
           },
@@ -251862,6 +253174,16 @@
                     "labelKey"
                   ]
                 }
+              }
+            }
+          },
+          "restrictedFeatures": {
+            "description": "Features enabled for the workspace by AWorld. Read-only: no configuration update changes them.",
+            "type": "object",
+            "properties": {
+              "customAvatarImages": {
+                "description": "Whether an avatar's portrait can be an image the workspace supplies: an upload, a library file, a link, or an AI image generated from a reference image.\n\nWhen off or absent, an avatar's portrait must be an image generated with AI from a prompt in this workspace, optionally refined from an earlier such generation, or come with an avatar copied from the catalog. Avatars whose portrait does not meet this cannot be used to render a video.",
+                "type": "boolean"
               }
             }
           },
