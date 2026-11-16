@@ -147215,6 +147215,21 @@
                 "type": "string",
                 "format": "date-time"
               },
+              "deletionRequestedBy": {
+                "description": "The person who asked for the workspace to be deleted. Absent when nobody did, for example when the subscription reached SOFT_DELETED by expiring.",
+                "type": "string"
+              },
+              "statusBeforeDeletion": {
+                "description": "The status the subscription had when someone asked for the workspace to be deleted.",
+                "type": "string",
+                "enum": [
+                  "PROVISIONING",
+                  "ACTIVE",
+                  "EXPIRED",
+                  "GRACE",
+                  "SOFT_DELETED"
+                ]
+              },
               "activatedAt": {
                 "description": "Set once (idempotently) when the first invited customer accepts the invitation and their user record is created. Conversion-analytics signal.",
                 "type": "string",
@@ -147360,6 +147375,21 @@
           "deleteAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "deletionRequestedBy": {
+            "description": "The person who asked for the workspace to be deleted. Absent when nobody did, for example when the subscription reached SOFT_DELETED by expiring.",
+            "type": "string"
+          },
+          "statusBeforeDeletion": {
+            "description": "The status the subscription had when someone asked for the workspace to be deleted.",
+            "type": "string",
+            "enum": [
+              "PROVISIONING",
+              "ACTIVE",
+              "EXPIRED",
+              "GRACE",
+              "SOFT_DELETED"
+            ]
           },
           "activatedAt": {
             "description": "Set once (idempotently) when the first invited customer accepts the invitation and their user record is created. Conversion-analytics signal.",
@@ -213152,6 +213182,10 @@
               "regenerateExisting": {
                 "description": "Whether narration that is already up to date with its text is made again. When false or absent, only missing or outdated narration is made.",
                 "type": "boolean"
+              },
+              "addsOnly": {
+                "description": "True when nothing the change covers has narration yet in any of its languages, so the change only adds narration.",
+                "type": "boolean"
               }
             },
             "required": [
@@ -215003,7 +215037,7 @@
               },
               "prompt": {
                 "type": "string",
-                "maxLength": 1000,
+                "maxLength": 4000,
                 "minLength": 1
               },
               "audioVoiceId": {
@@ -215034,7 +215068,7 @@
               },
               "prompt": {
                 "type": "string",
-                "maxLength": 2000
+                "maxLength": 4000
               },
               "fromCurrent": {
                 "type": "boolean"
@@ -215096,7 +215130,7 @@
               },
               "notes": {
                 "type": "string",
-                "maxLength": 1000
+                "maxLength": 4000
               },
               "scope": {
                 "description": "What to narrate:\n- `targets`: the selected parts only\n- `chapter`: the learning groups of the selected parts\n- `path`: the whole learning path",
@@ -215132,7 +215166,7 @@
               },
               "prompt": {
                 "type": "string",
-                "maxLength": 1000
+                "maxLength": 4000
               },
               "lang": {
                 "$ref": "#/components/schemas/Lang"
