@@ -14271,6 +14271,13 @@
                     "type": "string"
                   }
                 },
+                "eventExhibitIds": {
+                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time"
@@ -34350,6 +34357,13 @@
                     "type": "string"
                   }
                 },
+                "eventExhibitIds": {
+                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time"
@@ -35536,7 +35550,8 @@
               "Quiz",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "RolePlay"
             ]
           },
           "sourceId": {

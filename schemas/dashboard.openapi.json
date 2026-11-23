@@ -1039,6 +1039,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "409": {
+            "description": "`media/not_ready`: the slide's narration file is still being processed or was blocked, so no video is started. Without `audioVoice` only."
           }
         },
         "tags": [
@@ -4185,8 +4188,19 @@
       "get": {
         "operationId": "analytics/listBadges",
         "summary": "List the workspace's badges with how many people obtained them",
-        "description": "Every badge of the workspace with its label, description and image, and how many people obtained it.\n\nEach person is counted once, however many times the badge was granted to them, and people who have left the workspace are not counted. A badge with levels counts as obtained only once its last level is reached.\n\nWho obtained a badge is listed by `GET /analytics/badges/{badgeConfigurationId}/holders`.",
+        "description": "Every badge of the workspace with its label, description and image, and how many people obtained it.\n\nEach person is counted once, however many times the badge was granted to them, and people who have left the workspace are not counted. A badge with levels counts as obtained only once its last level is reached.\n\nWho obtained a badge is listed by `GET /analytics/badges/{badgeConfigurationId}/holders`.\n\nPass `from` and/or `to` (`YYYY-MM-DD`, inclusive) to count only the people who first obtained a badge in that period. Every badge stays on the list, with 0 where nobody did.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4211,6 +4225,28 @@
               "description": "Language for each badge's label and description. A badge with no text in it falls back to its default language.",
               "type": "string"
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -4225,7 +4261,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4240,8 +4276,19 @@
       "get": {
         "operationId": "analytics/content",
         "summary": "Get content analytics",
-        "description": "Retrieve content consumption metrics from slide reading data. Pass `groupIds` to count only the members of those user groups.",
+        "description": "Retrieve content consumption metrics from slide reading data. Pass `groupIds` to count only the members of those user groups. Pass `from` and/or `to` to count only the readings in that period instead of the `timeRange` window.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4270,6 +4317,28 @@
                 "60d",
                 "90d"
               ]
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
             }
           }
         ],
@@ -4285,7 +4354,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4300,8 +4369,19 @@
       "get": {
         "operationId": "analytics/economy",
         "summary": "Get economy analytics",
-        "description": "Retrieve economy metrics including points awarded, distribution over time, and top earners. Pass `groupIds` to count only the members of those user groups.",
+        "description": "Retrieve economy metrics including points awarded, distribution over time, and top earners. Pass `groupIds` to count only the members of those user groups. Pass `from` and/or `to` to count only the points awarded in that period; the daily series covers it instead of the `timeRange` window.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4330,6 +4410,28 @@
                 "60d",
                 "90d"
               ]
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
             }
           }
         ],
@@ -4345,7 +4447,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4360,8 +4462,19 @@
       "get": {
         "operationId": "analytics/engagement",
         "summary": "Get engagement analytics",
-        "description": "Retrieve engagement metrics including DAU/WAU/MAU, stickiness ratios, and activity over time. Pass `groupIds` to count only the members of those user groups.",
+        "description": "Retrieve engagement metrics including DAU/WAU/MAU, stickiness ratios, and activity over time. Pass `groupIds` to count only the members of those user groups. Pass `from` and/or `to` to count only what happened in that period: the daily activity covers it instead of the `timeRange` window, and the day, week and month of active users are measured back from `to`. The number of registered users is not affected.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4391,6 +4504,28 @@
                 "90d"
               ]
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -4405,7 +4540,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4480,8 +4615,19 @@
       "get": {
         "operationId": "analytics/listLearning",
         "summary": "Get learning analytics",
-        "description": "Workspace-wide learning KPIs (enrollments, completion rate, avg TTC, outcomes, funnel, daily completions) plus a paginated list of learning paths with their rolled-up KPIs. Mirrors `GET /analytics/users`.",
+        "description": "Workspace-wide learning KPIs (enrollments, completion rate, avg TTC, outcomes, funnel, daily completions) plus a paginated list of learning paths with their rolled-up KPIs. Mirrors `GET /analytics/users`. Pass `groupIds` to count only the members of those user groups, and `from`/`to` to count only what happened in that period: the assigned and enrolled figures and the list of paths stay as they are today, while the progress, outcome and training-time figures follow the period.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4560,6 +4706,28 @@
                 "passRate"
               ]
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -4574,7 +4742,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4589,8 +4757,19 @@
       "get": {
         "operationId": "analytics/overview",
         "summary": "Get analytics overview",
-        "description": "Retrieve aggregated KPIs from all analytics domains. Pass `groupIds` to count only the members of those user groups; the catalogue totals stay workspace-wide.",
+        "description": "Retrieve aggregated KPIs from all analytics domains. Pass `groupIds` to count only the members of those user groups; the catalogue totals stay workspace-wide. Pass `from` and/or `to` to count only what happened in that period; the number of registered users and the catalogue totals are not affected, and the day, week and month of active users are measured back from `to`.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4604,6 +4783,28 @@
                 "minLength": 1
               },
               "maxItems": 5
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
             }
           }
         ],
@@ -4619,7 +4820,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4634,8 +4835,19 @@
       "get": {
         "operationId": "analytics/quiz",
         "summary": "Get quiz analytics",
-        "description": "Retrieve quiz performance metrics including success rates and difficulty breakdown. Pass `groupIds` to count only the members of those user groups.",
+        "description": "Retrieve quiz performance metrics including success rates and difficulty breakdown. Pass `groupIds` to count only the members of those user groups. Pass `from` and/or `to` to count only the attempts in that period instead of the `timeRange` window.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4665,6 +4877,28 @@
                 "90d"
               ]
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -4679,7 +4913,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4694,8 +4928,19 @@
       "get": {
         "operationId": "analytics/referrals",
         "summary": "Get referral analytics",
-        "description": "Retrieve how many users joined the workspace through a referral against all users, the weekly trend of signups, and the top referrers. People who joined through a referral and later left are reported apart. Pass `groupIds` to count only the people who joined within those user groups; the people who left are then not reported.",
+        "description": "Retrieve how many users joined the workspace through a referral against all users, the weekly trend of signups, and the top referrers. People who joined through a referral and later left are reported apart. Pass `groupIds` to count only the people who joined within those user groups; the people who left are then not reported. Pass `from` and/or `to` to count only the people who joined in that period; the weekly trend then covers it, and the people who left are not reported either.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4709,6 +4954,28 @@
                 "minLength": 1
               },
               "maxItems": 5
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
             }
           }
         ],
@@ -4724,7 +4991,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4739,8 +5006,19 @@
       "get": {
         "operationId": "analytics/listSurveys",
         "summary": "Get survey analytics",
-        "description": "Workspace-wide survey KPIs (counts per stage, started/completed responses, average completion time, pooled response rate per origin, daily completions) plus a paginated list of surveys with their response figures.\n\nEvery stage is listed by default; narrow with `stage` / `origin`.\n\nAll figures are all-time except `dailyCompletions`, which honours `trendRange`.\n\nPass `groupIds` to count only the members of those user groups; `assigned` then counts the assignments of those members. The counts per stage and the list itself stay workspace-wide.\n\n`assigned` and `responseRate` are null for a survey reached inside a learning group: groups have no per-user assignment, so its population is unknown rather than zero.",
+        "description": "Workspace-wide survey KPIs (counts per stage, started/completed responses, average completion time, pooled response rate per origin, daily completions) plus a paginated list of surveys with their response figures.\n\nEvery stage is listed by default; narrow with `stage` / `origin`.\n\nAll figures are all-time except `dailyCompletions`, which honours `trendRange`.\n\nPass `groupIds` to count only the members of those user groups; `assigned` then counts the assignments of those members. The counts per stage and the list itself stay workspace-wide.\n\n`assigned` and `responseRate` are null for a survey reached inside a learning group: groups have no per-user assignment, so its population is unknown rather than zero.\n\nPass `from` and/or `to` (`YYYY-MM-DD`, inclusive) to count only the responses of that period: a response counts on the day it was completed, or on the day it was opened if it never was. Every survey stays on the list with its figures narrowed, `dailyCompletions` then covers the period instead of `trendRange`, and the counts per stage and `assigned` do not change.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4845,12 +5123,23 @@
             }
           },
           {
-            "name": "trendRange",
+            "name": "to",
             "in": "query",
-            "description": "Window for `dailyCompletions` ONLY. Every other figure is all-time: a closed survey's responses are all in the past, so a windowed default would render it empty.",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
             "required": false,
             "schema": {
-              "description": "Window for `dailyCompletions` ONLY. Every other figure is all-time: a closed survey's responses are all in the past, so a windowed default would render it empty.",
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "trendRange",
+            "in": "query",
+            "description": "Window for `dailyCompletions` ONLY, and only when no `from`/`to` is set. Every other figure is all-time unless `from`/`to` is set: a closed survey's responses are all in the past, so a windowed default would render it empty.",
+            "required": false,
+            "schema": {
+              "description": "Window for `dailyCompletions` ONLY, and only when no `from`/`to` is set. Every other figure is all-time unless `from`/`to` is set: a closed survey's responses are all in the past, so a windowed default would render it empty.",
               "type": "string",
               "default": "30d",
               "enum": [
@@ -4859,6 +5148,17 @@
                 "60d",
                 "90d"
               ]
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
             }
           }
         ],
@@ -4874,7 +5174,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -4889,8 +5189,19 @@
       "get": {
         "operationId": "analytics/listUsers",
         "summary": "List user analytics",
-        "description": "Paginated list of workspace users with rolled-up LP analytics (assigned, completed, avg percentage, pass rate, last access).",
+        "description": "Paginated list of workspace users with rolled-up LP analytics (assigned, completed, avg percentage, pass rate, last access). Pass `from`/`to` to count only the progress and outcomes that happened in that period: every user and every assignment is still listed, with zeros where nothing happened.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -4968,6 +5279,28 @@
                 "lastAccessAt"
               ]
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -4982,7 +5315,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -5022,13 +5355,15 @@
       "get": {
         "operationId": "analytics/getLearningDetail",
         "summary": "Get learning-path detail analytics",
-        "description": "KPIs for a single learning path plus a paginated per-user progress breakdown.",
+        "description": "KPIs for a single learning path plus a paginated per-user progress breakdown. Pass `from`/`to` to count only the progress that happened in that period (both days inclusive): the enrolled counts stay as they are, and every assignment stays in the breakdown, its status read on the progress inside the period.",
         "parameters": [
           {
             "name": "from",
             "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
             "required": false,
             "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
               "type": "string",
               "format": "date"
             }
@@ -5127,10 +5462,23 @@
           {
             "name": "to",
             "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
             "required": false,
             "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
               "type": "string",
               "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
             }
           }
         ],
@@ -5146,7 +5494,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -5186,8 +5534,19 @@
       "get": {
         "operationId": "analytics/getSurveyDetail",
         "summary": "Get one survey's analytics",
-        "description": "KPIs, the assigned → started → completed funnel, where responses were abandoned by page, and the response distribution for every question.\n\nQuestion order, labels and options follow the survey's own definition, so `options` includes the ones **nobody chose**. `skipped` is `completed − answered`: someone who skipped leaves no key in the answers at all.\n\nTwo shapes a client has to render carefully: `aggregatable: false` marks a question whose answers nest too deeply to flatten in one pass (matrixdropdown, matrixdynamic, paneldynamic) — reported rather than omitted, so the client can say why there is no chart; and for MULTI_CHOICE the option shares do **not** sum to 100, because a respondent picks several.\n\nPass `groupIds` to report only the responses of the members of those user groups; the funnel's `assigned` then counts their assignments.\n\nFree text is counted here but not listed — `GET /analytics/surveys/{surveyId}/answers` lists it. A survey with no history row returns zeros and `definitionAvailable: false` rather than a 404: its responses are real even when the survey itself is no longer recoverable.",
+        "description": "KPIs, the assigned → started → completed funnel, where responses were abandoned by page, and the response distribution for every question.\n\nQuestion order, labels and options follow the survey's own definition, so `options` includes the ones **nobody chose**. `skipped` is `completed − answered`: someone who skipped leaves no key in the answers at all.\n\nTwo shapes a client has to render carefully: `aggregatable: false` marks a question whose answers nest too deeply to flatten in one pass (matrixdropdown, matrixdynamic, paneldynamic) — reported rather than omitted, so the client can say why there is no chart; and for MULTI_CHOICE the option shares do **not** sum to 100, because a respondent picks several.\n\nPass `groupIds` to report only the responses of the members of those user groups; the funnel's `assigned` then counts their assignments.\n\nFree text is counted here but not listed — `GET /analytics/surveys/{surveyId}/answers` lists it. A survey with no history row returns zeros and `definitionAvailable: false` rather than a 404: its responses are real even when the survey itself is no longer recoverable.\n\nPass `from` and/or `to` (`YYYY-MM-DD`, inclusive) to report only the responses of that period: a response counts on the day it was completed, or on the day it was opened if it never was. The survey definition and `assigned` do not change.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -5220,6 +5579,28 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -5234,7 +5615,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -5249,13 +5630,15 @@
       "get": {
         "operationId": "analytics/getUserDetail",
         "summary": "Get user detail analytics",
-        "description": "KPIs for a single user plus a paginated per-LP progress breakdown. When `groupIds` is set and the user belongs to none of those groups, the response is 404.",
+        "description": "KPIs for a single user plus a paginated per-LP progress breakdown. When `groupIds` is set and the user belongs to none of those groups, the response is 404. Pass `from`/`to` to count only the progress that happened in that period (both days inclusive): the assigned counts stay as they are, and every assignment stays in the breakdown, its status read on the progress inside the period.",
         "parameters": [
           {
             "name": "from",
             "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
             "required": false,
             "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
               "type": "string",
               "format": "date"
             }
@@ -5335,10 +5718,23 @@
           {
             "name": "to",
             "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
             "required": false,
             "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
               "type": "string",
               "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
             }
           },
           {
@@ -5362,7 +5758,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -5380,7 +5776,7 @@
       "get": {
         "operationId": "analytics/listBadgeHolders",
         "summary": "List the people who obtained one badge",
-        "description": "Who obtained a badge, by name, with when they first obtained it. Searchable by nickname or email, sortable, paginated.\n\nOne row per person, however many times the badge was granted to them; people who have left the workspace are not listed. A badge with levels lists only the people who reached its last level. `total` counts every row matching the current search, so a client can say what an export covers.\n\nA badge that is not this workspace's returns an empty list.",
+        "description": "Who obtained a badge, by name, with when they first obtained it. Searchable by nickname or email, sortable, paginated.\n\nOne row per person, however many times the badge was granted to them; people who have left the workspace are not listed. A badge with levels lists only the people who reached its last level. `total` counts every row matching the current search, so a client can say what an export covers.\n\nA badge that is not this workspace's returns an empty list.\n\nPass `from` and/or `to` (`YYYY-MM-DD`, inclusive) to list only the people who first obtained the badge in that period.",
         "parameters": [
           {
             "name": "badgeConfigurationId",
@@ -5390,6 +5786,17 @@
             "schema": {
               "description": "Unique identifier for the badge configuration (NanoID).",
               "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
             }
           },
           {
@@ -5466,6 +5873,28 @@
                 "nickname"
               ]
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -5480,7 +5909,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -5495,8 +5924,19 @@
       "get": {
         "operationId": "analytics/listSurveyAnswers",
         "summary": "List one question's answers verbatim",
-        "description": "What people wrote to one question, newest first, searchable and paginated. This is the surface for free text, which `GET /analytics/surveys/{surveyId}` counts but cannot chart.\n\n`questionKey` is the question's SurveyJS `name`. A `<name>-Comment` key is valid too and reads the free text behind an \"other\" option on a choice question.\n\nCompleted responses only, and blank answers are excluded — SurveyJS records an empty string for a text box that was focused and left. So `total` here can be lower than the question's `answered` count from the detail endpoint, which counts the key being present.\n\nPass `groupIds` to list only the answers of the members of those user groups.\n\nNumeric answers are in scope: a `text` question with a numeric input type stores a number.\n\nA `multipletext` question answers with several sub-fields at once, so it yields ONE ROW PER SUB-FIELD, each prefixed with that sub-field's own name. Its `total` therefore counts sub-answers, where the detail endpoint's `answered` counts respondents.",
+        "description": "What people wrote to one question, newest first, searchable and paginated. This is the surface for free text, which `GET /analytics/surveys/{surveyId}` counts but cannot chart.\n\n`questionKey` is the question's SurveyJS `name`. A `<name>-Comment` key is valid too and reads the free text behind an \"other\" option on a choice question.\n\nCompleted responses only, and blank answers are excluded — SurveyJS records an empty string for a text box that was focused and left. So `total` here can be lower than the question's `answered` count from the detail endpoint, which counts the key being present.\n\nPass `groupIds` to list only the answers of the members of those user groups.\n\nNumeric answers are in scope: a `text` question with a numeric input type stores a number.\n\nA `multipletext` question answers with several sub-fields at once, so it yields ONE ROW PER SUB-FIELD, each prefixed with that sub-field's own name. Its `total` therefore counts sub-answers, where the detail endpoint's `answered` counts respondents.\n\nPass `from` and/or `to` (`YYYY-MM-DD`, inclusive) to list only the answers completed in that period.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -5563,6 +6003,28 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -5577,7 +6039,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -5592,8 +6054,19 @@
       "get": {
         "operationId": "analytics/listSurveyRespondents",
         "summary": "List one survey's respondents",
-        "description": "Who answered a survey, by name: identity, whether the response was completed or abandoned, the page it reached, its attempt, and how long it took. Searchable by nickname or email, sortable, paginated.\n\nOne row per RESPONSE, not per person: a user assigned the same survey twice holds two rows, and `context` names the assignment each belongs to — or is `default` when the survey was opened outside one.\n\n`pageNo` is 1-based; pair it with `pageCount` from `GET /analytics/surveys/{surveyId}` to read it as progress. `total` counts every row matching the current filters, so a client can say what an export covers.\n\nPass `groupIds` to list only the responses of the members of those user groups.\n\nAggregates are not here: they belong to `GET /analytics/surveys/{surveyId}`.",
+        "description": "Who answered a survey, by name: identity, whether the response was completed or abandoned, the page it reached, its attempt, and how long it took. Searchable by nickname or email, sortable, paginated.\n\nOne row per RESPONSE, not per person: a user assigned the same survey twice holds two rows, and `context` names the assignment each belongs to — or is `default` when the survey was opened outside one.\n\n`pageNo` is 1-based; pair it with `pageCount` from `GET /analytics/surveys/{surveyId}` to read it as progress. `total` counts every row matching the current filters, so a client can say what an export covers.\n\nPass `groupIds` to list only the responses of the members of those user groups.\n\nAggregates are not here: they belong to `GET /analytics/surveys/{surveyId}`.\n\nPass `from` and/or `to` (`YYYY-MM-DD`, inclusive) to list only the responses of that period: a response counts on the day it was completed, or on the day it was opened if it never was.",
         "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+            "required": false,
+            "schema": {
+              "description": "First day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or after it. Leave it out for no lower bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
           {
             "name": "groupIds",
             "in": "query",
@@ -5698,6 +6171,28 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+            "required": false,
+            "schema": {
+              "description": "Last day of the period, `YYYY-MM-DD` (inclusive). Counts only what happened on or before it. Leave it out for no upper bound.",
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+            "required": false,
+            "schema": {
+              "description": "IANA time zone the days of `from` and `to` are read in, for example `Europe/Rome`. Leave it out for UTC. The day-by-day charts group by the same days.",
+              "type": "string",
+              "maxLength": 64
+            }
           }
         ],
         "responses": {
@@ -5712,7 +6207,7 @@
             }
           },
           "400": {
-            "description": "A group id is not a user group of the workspace"
+            "description": "A group id is not a user group of the workspace, `from` is after `to`, or `tz` is not a time zone"
           },
           "401": {
             "description": "Unauthorized"
@@ -19725,7 +20220,8 @@
                 "LEARNING_PATH_ASSIGNED",
                 "LEARNING_PATH_WEEKLY_DIGEST",
                 "MEDIA_UPLOAD_BLOCKED",
-                "ORGANIZATION_INVITATION"
+                "ORGANIZATION_INVITATION",
+                "ORGANIZATION_DELETED"
               ]
             }
           },
@@ -46141,7 +46637,8 @@
                       "LEARNING_PATH_ASSIGNED",
                       "LEARNING_PATH_WEEKLY_DIGEST",
                       "MEDIA_UPLOAD_BLOCKED",
-                      "ORGANIZATION_INVITATION"
+                      "ORGANIZATION_INVITATION",
+                      "ORGANIZATION_DELETED"
                     ]
                   },
                   "notificationRuleId": {
@@ -46403,7 +46900,8 @@
                       "LEARNING_PATH_ASSIGNED",
                       "LEARNING_PATH_WEEKLY_DIGEST",
                       "MEDIA_UPLOAD_BLOCKED",
-                      "ORGANIZATION_INVITATION"
+                      "ORGANIZATION_INVITATION",
+                      "ORGANIZATION_DELETED"
                     ]
                   },
                   "translations": {
@@ -84470,6 +84968,19 @@
         "operationId": "workspaceConfiguration/update",
         "summary": "Update workspace configuration",
         "description": "Updates the workspace configuration with full replacement semantics. Creates a new DRAFT version that must be published separately.",
+        "parameters": [
+          {
+            "name": "expectedLatestVersion",
+            "in": "query",
+            "description": "The `latestVersion` the caller read the configuration at (from the get operation). When the configuration has been saved since, the update is refused with 409 and nothing is written. Leaving it out replaces the stored configuration whatever its version.",
+            "required": false,
+            "schema": {
+              "description": "The `latestVersion` the caller read the configuration at (from the get operation). When the configuration has been saved since, the update is refused with 409 and nothing is written. Leaving it out replaces the stored configuration whatever its version.",
+              "type": "integer",
+              "exclusiveMinimum": 0
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -94323,6 +94834,9 @@
           },
           "404": {
             "description": "Workspace configuration not found"
+          },
+          "409": {
+            "description": "The configuration was saved after `expectedLatestVersion`, or by a concurrent update; nothing was written"
           }
         },
         "tags": [
@@ -100159,7 +100673,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "origin": {
@@ -118232,7 +118747,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "origin": {
@@ -140418,7 +140934,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "lang": {
@@ -152708,7 +153225,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "origin": {
@@ -152989,7 +153507,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "origin": {
@@ -160163,6 +160682,13 @@
                     "type": "string"
                   }
                 },
+                "eventExhibitIds": {
+                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time"
@@ -160278,6 +160804,13 @@
                 },
                 "exhibitIds": {
                   "description": "What the character shows the learner with this message.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "eventExhibitIds": {
+                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -173133,7 +173666,6 @@
         ]
       },
       "GetWorkspaceConfigurationResponse": {
-        "description": "Workspace configuration entity for branding, theming, languages, and feature flags.",
         "type": "object",
         "properties": {
           "workspaceConfigurationId": {
@@ -183030,6 +183562,11 @@
             "description": "Creation date in ISO format (UTC Timezone)",
             "type": "string",
             "format": "date-time"
+          },
+          "latestVersion": {
+            "description": "The version of the configuration's latest save. Send it as `expectedLatestVersion` when updating, so a save based on an out-of-date copy is refused with 409 instead of overwriting newer changes.",
+            "type": "integer",
+            "exclusiveMinimum": 0
           }
         },
         "required": [
@@ -185133,7 +185670,7 @@
                     "type": "number"
                   },
                   "started": {
-                    "description": "Distinct assignments with any IN_PROGRESS or COMPLETE log row",
+                    "description": "Distinct assignments with any IN_PROGRESS or COMPLETE log row. With `from` / `to`, those started inside the period (even if finished after it) or with progress written inside it.",
                     "type": "number"
                   },
                   "completed": {
@@ -189652,6 +190189,9 @@
                     "WORKSPACE_CONFIG_CHANGED",
                     "WORKSPACE_TRANSFERRED",
                     "ENTITLEMENT_CHANGED",
+                    "WORKSPACE_HANDOFF_ISSUED",
+                    "WORKSPACE_HANDOFF_REDEEMED",
+                    "WORKSPACE_HANDOFF_REFUSED",
                     "M2M_CLIENT_CREATED",
                     "M2M_CLIENT_SECRET_ROTATED",
                     "M2M_CLIENT_SECRET_RETIRED",
@@ -189662,6 +190202,8 @@
                     "ACCOUNT_INVITATION_CREATED",
                     "ACCOUNT_INVITATION_ACCEPTED",
                     "ACCOUNT_INVITATION_REVOKED",
+                    "ACCOUNT_DELETED",
+                    "ACCOUNT_WORKSPACE_HANDOFF_CHANGED",
                     "INVITATION_CREATED",
                     "INVITATION_ACCEPTED",
                     "INVITATION_REVOKED",
@@ -211153,7 +211695,8 @@
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST",
                     "MEDIA_UPLOAD_BLOCKED",
-                    "ORGANIZATION_INVITATION"
+                    "ORGANIZATION_INVITATION",
+                    "ORGANIZATION_DELETED"
                   ]
                 },
                 "origin": {
@@ -211487,7 +212030,8 @@
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST",
                     "MEDIA_UPLOAD_BLOCKED",
-                    "ORGANIZATION_INVITATION"
+                    "ORGANIZATION_INVITATION",
+                    "ORGANIZATION_DELETED"
                   ]
                 },
                 "origin": {
@@ -211787,7 +212331,8 @@
                     "LEARNING_PATH_ASSIGNED",
                     "LEARNING_PATH_WEEKLY_DIGEST",
                     "MEDIA_UPLOAD_BLOCKED",
-                    "ORGANIZATION_INVITATION"
+                    "ORGANIZATION_INVITATION",
+                    "ORGANIZATION_DELETED"
                   ]
                 },
                 "origin": {
@@ -237063,7 +237608,7 @@
                 "type": "number"
               },
               "active": {
-                "description": "Users who started at least one learning path",
+                "description": "Users who worked on at least one learning path: they started it or completed it (inside the period, when `from` / `to` is set).",
                 "type": "number"
               }
             },
@@ -242578,7 +243123,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "origin": {
@@ -257808,7 +258354,7 @@
                 "type": "number"
               },
               "removedReferrals": {
-                "description": "People who joined through a referral and have since left the workspace; the referrers' counts include them. Always 0 when `groupIds` is set, because a person who left has no group.",
+                "description": "People who joined through a referral and have since left the workspace; the referrers' counts include them. Always 0 when `groupIds` or a date range is set, because a person who left has no group and no join date to count.",
                 "type": "number"
               }
             },
@@ -257819,7 +258365,7 @@
             ]
           },
           "weeklySignups": {
-            "description": "The last 12 weeks, oldest first, with weeks without signups at 0",
+            "description": "The last 12 weeks, oldest first, with weeks without signups at 0. With a date range, the weeks it covers instead.",
             "type": "array",
             "items": {
               "type": "object",
@@ -257870,11 +258416,11 @@
                   "type": "string"
                 },
                 "referredCount": {
-                  "description": "People who joined through this user's referral, ever. With `groupIds`, only the people in those groups who are still in the workspace; referrers with none are left out.",
+                  "description": "People who joined through this user's referral, ever. With `groupIds` or a date range, only the people in those groups, or who joined in that period, who are still in the workspace; referrers with none are left out.",
                   "type": "number"
                 },
                 "removed": {
-                  "description": "Of those, how many have since left the workspace. Always 0 when `groupIds` is set.",
+                  "description": "Of those, how many have since left the workspace. Always 0 when `groupIds` or a date range is set.",
                   "type": "number"
                 }
               },
@@ -271927,6 +272473,9 @@
                     "WORKSPACE_CONFIG_CHANGED",
                     "WORKSPACE_TRANSFERRED",
                     "ENTITLEMENT_CHANGED",
+                    "WORKSPACE_HANDOFF_ISSUED",
+                    "WORKSPACE_HANDOFF_REDEEMED",
+                    "WORKSPACE_HANDOFF_REFUSED",
                     "M2M_CLIENT_CREATED",
                     "M2M_CLIENT_SECRET_ROTATED",
                     "M2M_CLIENT_SECRET_RETIRED",
@@ -271937,6 +272486,8 @@
                     "ACCOUNT_INVITATION_CREATED",
                     "ACCOUNT_INVITATION_ACCEPTED",
                     "ACCOUNT_INVITATION_REVOKED",
+                    "ACCOUNT_DELETED",
+                    "ACCOUNT_WORKSPACE_HANDOFF_CHANGED",
                     "INVITATION_CREATED",
                     "INVITATION_ACCEPTED",
                     "INVITATION_REVOKED",
@@ -279618,6 +280169,13 @@
                     "type": "string"
                   }
                 },
+                "eventExhibitIds": {
+                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time"
@@ -284763,7 +285321,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "origin": {
@@ -298816,7 +299375,8 @@
               "LEARNING_PATH_ASSIGNED",
               "LEARNING_PATH_WEEKLY_DIGEST",
               "MEDIA_UPLOAD_BLOCKED",
-              "ORGANIZATION_INVITATION"
+              "ORGANIZATION_INVITATION",
+              "ORGANIZATION_DELETED"
             ]
           },
           "origin": {
@@ -317125,7 +317685,8 @@
               "Quiz",
               "LearningPath",
               "LearningGroup",
-              "Slide"
+              "Slide",
+              "RolePlay"
             ]
           },
           "sourceId": {
