@@ -401,6 +401,32 @@
                         "maxLength": 1000
                       }
                     }
+                  },
+                  "rewrite": {
+                    "description": "Written levels to suggest a new description for, starting from their text, instead of checking them.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "anchor1",
+                        "anchor3",
+                        "anchor5"
+                      ]
+                    }
+                  },
+                  "instructions": {
+                    "description": "What the author wants from the suggestion, in their own words.",
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "target": {
+                    "description": "What to suggest: levels (the empty level descriptions and those in rewrite, and notes on the other written ones) or description (a one-sentence description of the competency, reworking the one sent if any).",
+                    "type": "string",
+                    "default": "levels",
+                    "enum": [
+                      "levels",
+                      "description"
+                    ]
                   }
                 },
                 "required": [
@@ -418,6 +444,395 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuggestCompetencyAnchorsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "AI"
+        ]
+      }
+    },
+    "/ai/competencies/profile": {
+      "post": {
+        "operationId": "ai/suggestCompetencyProfile",
+        "summary": "Suggest a competency profile's description or competencies",
+        "description": "Suggests a one-sentence description for a competency profile, or the published competencies that fit it plus new ones to create. Nothing is saved.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lang": {
+                    "description": "The language to write the suggestions in.",
+                    "type": "string",
+                    "enum": [
+                      "aa",
+                      "ab",
+                      "af",
+                      "agq",
+                      "ak",
+                      "am",
+                      "an",
+                      "ann",
+                      "apc",
+                      "ar",
+                      "arn",
+                      "as",
+                      "asa",
+                      "ast",
+                      "az",
+                      "ba",
+                      "bal",
+                      "bas",
+                      "be",
+                      "bem",
+                      "bew",
+                      "bez",
+                      "bg",
+                      "bgc",
+                      "bgn",
+                      "bho",
+                      "blo",
+                      "blt",
+                      "bm",
+                      "bn",
+                      "bo",
+                      "br",
+                      "brx",
+                      "bs",
+                      "bss",
+                      "byn",
+                      "ca",
+                      "cad",
+                      "cch",
+                      "ccp",
+                      "ce",
+                      "ceb",
+                      "cgg",
+                      "cho",
+                      "chr",
+                      "cic",
+                      "ckb",
+                      "co",
+                      "cs",
+                      "csw",
+                      "cu",
+                      "cv",
+                      "cy",
+                      "da",
+                      "dav",
+                      "de",
+                      "dje",
+                      "doi",
+                      "dsb",
+                      "dua",
+                      "dv",
+                      "dyo",
+                      "dz",
+                      "ebu",
+                      "ee",
+                      "el",
+                      "en",
+                      "eo",
+                      "es",
+                      "et",
+                      "eu",
+                      "ewo",
+                      "fa",
+                      "ff",
+                      "fi",
+                      "fil",
+                      "fo",
+                      "fr",
+                      "frr",
+                      "fur",
+                      "fy",
+                      "ga",
+                      "gaa",
+                      "gd",
+                      "gez",
+                      "gl",
+                      "gn",
+                      "gsw",
+                      "gu",
+                      "guz",
+                      "gv",
+                      "ha",
+                      "haw",
+                      "he",
+                      "hi",
+                      "hnj",
+                      "hr",
+                      "hsb",
+                      "hu",
+                      "hy",
+                      "ia",
+                      "id",
+                      "ie",
+                      "ig",
+                      "ii",
+                      "io",
+                      "is",
+                      "it",
+                      "iu",
+                      "ja",
+                      "jbo",
+                      "jgo",
+                      "jmc",
+                      "jv",
+                      "ka",
+                      "kaa",
+                      "kab",
+                      "kaj",
+                      "kam",
+                      "kcg",
+                      "kde",
+                      "kea",
+                      "ken",
+                      "kgp",
+                      "khq",
+                      "ki",
+                      "kk",
+                      "kkj",
+                      "kl",
+                      "kln",
+                      "km",
+                      "kn",
+                      "ko",
+                      "kok",
+                      "kpe",
+                      "ks",
+                      "ksb",
+                      "ksf",
+                      "ksh",
+                      "ku",
+                      "kw",
+                      "kxv",
+                      "ky",
+                      "la",
+                      "lag",
+                      "lb",
+                      "lg",
+                      "lij",
+                      "lkt",
+                      "lld",
+                      "lmo",
+                      "ln",
+                      "lo",
+                      "lrc",
+                      "lt",
+                      "ltg",
+                      "lu",
+                      "luo",
+                      "luy",
+                      "lv",
+                      "mai",
+                      "mas",
+                      "mdf",
+                      "mer",
+                      "mfe",
+                      "mg",
+                      "mgh",
+                      "mgo",
+                      "mhn",
+                      "mi",
+                      "mic",
+                      "mk",
+                      "ml",
+                      "mn",
+                      "mni",
+                      "moh",
+                      "mr",
+                      "ms",
+                      "mt",
+                      "mua",
+                      "mus",
+                      "my",
+                      "myv",
+                      "mzn",
+                      "naq",
+                      "nb",
+                      "nd",
+                      "nds",
+                      "ne",
+                      "nl",
+                      "nmg",
+                      "nn",
+                      "nnh",
+                      "no",
+                      "nqo",
+                      "nr",
+                      "nso",
+                      "nus",
+                      "nv",
+                      "ny",
+                      "nyn",
+                      "oc",
+                      "om",
+                      "or",
+                      "os",
+                      "osa",
+                      "pa",
+                      "pap",
+                      "pcm",
+                      "pis",
+                      "pl",
+                      "prg",
+                      "ps",
+                      "pt",
+                      "qu",
+                      "quc",
+                      "raj",
+                      "rhg",
+                      "rif",
+                      "rm",
+                      "rn",
+                      "ro",
+                      "rof",
+                      "root",
+                      "ru",
+                      "rw",
+                      "rwk",
+                      "sa",
+                      "sah",
+                      "saq",
+                      "sat",
+                      "sbp",
+                      "sc",
+                      "scn",
+                      "sd",
+                      "sdh",
+                      "se",
+                      "seh",
+                      "ses",
+                      "sg",
+                      "shi",
+                      "shn",
+                      "si",
+                      "sid",
+                      "sk",
+                      "skr",
+                      "sl",
+                      "sma",
+                      "smj",
+                      "smn",
+                      "sms",
+                      "sn",
+                      "so",
+                      "sq",
+                      "sr",
+                      "ss",
+                      "ssy",
+                      "st",
+                      "su",
+                      "sv",
+                      "sw",
+                      "syr",
+                      "szl",
+                      "ta",
+                      "te",
+                      "teo",
+                      "tg",
+                      "th",
+                      "ti",
+                      "tig",
+                      "tk",
+                      "tn",
+                      "to",
+                      "tok",
+                      "tpi",
+                      "tr",
+                      "trv",
+                      "trw",
+                      "ts",
+                      "tt",
+                      "twq",
+                      "tyv",
+                      "tzm",
+                      "ug",
+                      "uk",
+                      "ur",
+                      "uz",
+                      "vai",
+                      "ve",
+                      "vec",
+                      "vi",
+                      "vmw",
+                      "vo",
+                      "vun",
+                      "wa",
+                      "wae",
+                      "wal",
+                      "wbp",
+                      "wo",
+                      "xh",
+                      "xnr",
+                      "xog",
+                      "yav",
+                      "yi",
+                      "yo",
+                      "yrl",
+                      "yue",
+                      "za",
+                      "zgh",
+                      "zh-CN",
+                      "zh-TW",
+                      "zu"
+                    ]
+                  },
+                  "name": {
+                    "description": "The profile's name.",
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 1
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "competencyIds": {
+                    "description": "The competencies already in the profile: never suggested again.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "The unique ID of the competency",
+                      "example": "FUMzPf00hz_kcj2R2Hlzq"
+                    },
+                    "default": [],
+                    "maxItems": 100
+                  },
+                  "target": {
+                    "description": "What to suggest: description (a one-sentence description of the profile) or competencies (published competencies that fit it, and new ones to create).",
+                    "type": "string",
+                    "enum": [
+                      "description",
+                      "competencies"
+                    ]
+                  }
+                },
+                "required": [
+                  "lang",
+                  "name",
+                  "target"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Suggestions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestCompetencyProfileResponse"
                 }
               }
             }
@@ -1205,7 +1620,9 @@
                       "leaderboardConfiguration",
                       "emailTemplate",
                       "rewardRule",
-                      "streakRule"
+                      "streakRule",
+                      "competency",
+                      "rolePlay"
                     ]
                   },
                   "fields": {
@@ -1453,7 +1870,7 @@
                     ]
                   },
                   "context": {
-                    "description": "Where the text sits: its learning path, learning group and slide or quiz, in the text's language. Read as background, never as instructions; it shapes the edit, it is not edited.",
+                    "description": "Where the text sits: its learning path, learning group and slide or quiz, or its role-play and field, in the text's language. Read as background, never as instructions; it shapes the edit, it is not edited.",
                     "type": "object",
                     "properties": {
                       "path": {
@@ -1507,6 +1924,44 @@
                         },
                         "required": [
                           "kind"
+                        ]
+                      },
+                      "rolePlay": {
+                        "description": "The role-play the text belongs to, and the field it fills: its label and what the field is for. Use it instead of `path`, `chapter` and `item`.",
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "maxLength": 300
+                          },
+                          "field": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "maxLength": 200
+                              },
+                              "hint": {
+                                "type": "string",
+                                "maxLength": 500
+                              }
+                            },
+                            "required": [
+                              "label"
+                            ]
+                          },
+                          "brief": {
+                            "description": "The role-play's other texts, one per entry as `Label: text` (the situation, the learner, the character, the phases): the answer fits them and does not repeat them. At most 20 entries.",
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "maxLength": 4000
+                            },
+                            "maxItems": 20
+                          }
+                        },
+                        "required": [
+                          "field"
                         ]
                       }
                     }
@@ -23705,7 +24160,7 @@
                                         "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                                       },
                                       "kind": {
-                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                         "type": "string",
                                         "enum": [
                                           "MESSAGE",
@@ -23716,9 +24171,50 @@
                                         ]
                                       },
                                       "showWithOpeningLine": {
-                                        "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                        "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                         "type": "boolean",
                                         "default": false
+                                      },
+                                      "atTurn": {
+                                        "description": "Shown with the answer to this learner message, counted from 1.",
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0,
+                                        "maximum": 40
+                                      },
+                                      "atPhaseId": {
+                                        "description": "Shown with the first answer in this phase.",
+                                        "type": "string",
+                                        "example": "second-text",
+                                        "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                      },
+                                      "whenFact": {
+                                        "description": "Shown with the first answer once the fact has this value.",
+                                        "type": "object",
+                                        "properties": {
+                                          "factId": {
+                                            "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                            "type": "string",
+                                            "example": "second-text",
+                                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                          },
+                                          "value": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "number"
+                                              },
+                                              {
+                                                "type": "boolean"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "factId",
+                                          "value"
+                                        ]
                                       },
                                       "image": {
                                         "description": "The picture of an IMAGE exhibit.",
@@ -23745,7 +24241,6 @@
                                             "example": "FUMzPf00hz_kcj2R2Hlzq"
                                           },
                                           "approved": {
-                                            "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                             "type": "boolean",
                                             "default": false
                                           }
@@ -25570,7 +26065,7 @@
                                                   "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                                                 },
                                                 "kind": {
-                                                  "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                                  "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                                   "type": "string",
                                                   "enum": [
                                                     "MESSAGE",
@@ -25581,9 +26076,50 @@
                                                   ]
                                                 },
                                                 "showWithOpeningLine": {
-                                                  "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                                  "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                                   "type": "boolean",
                                                   "default": false
+                                                },
+                                                "atTurn": {
+                                                  "description": "Shown with the answer to this learner message, counted from 1.",
+                                                  "type": "integer",
+                                                  "exclusiveMinimum": 0,
+                                                  "maximum": 40
+                                                },
+                                                "atPhaseId": {
+                                                  "description": "Shown with the first answer in this phase.",
+                                                  "type": "string",
+                                                  "example": "second-text",
+                                                  "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                                },
+                                                "whenFact": {
+                                                  "description": "Shown with the first answer once the fact has this value.",
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "factId": {
+                                                      "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                                      "type": "string",
+                                                      "example": "second-text",
+                                                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                                    },
+                                                    "value": {
+                                                      "anyOf": [
+                                                        {
+                                                          "type": "string"
+                                                        },
+                                                        {
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "type": "boolean"
+                                                        }
+                                                      ]
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "factId",
+                                                    "value"
+                                                  ]
                                                 },
                                                 "image": {
                                                   "description": "The picture of an IMAGE exhibit.",
@@ -25610,7 +26146,6 @@
                                                       "example": "FUMzPf00hz_kcj2R2Hlzq"
                                                     },
                                                     "approved": {
-                                                      "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                                       "type": "boolean",
                                                       "default": false
                                                     }
@@ -32751,7 +33286,7 @@
                                                   "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                                                 },
                                                 "kind": {
-                                                  "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                                  "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                                   "type": "string",
                                                   "enum": [
                                                     "MESSAGE",
@@ -32762,9 +33297,50 @@
                                                   ]
                                                 },
                                                 "showWithOpeningLine": {
-                                                  "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                                  "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                                   "type": "boolean",
                                                   "default": false
+                                                },
+                                                "atTurn": {
+                                                  "description": "Shown with the answer to this learner message, counted from 1.",
+                                                  "type": "integer",
+                                                  "exclusiveMinimum": 0,
+                                                  "maximum": 40
+                                                },
+                                                "atPhaseId": {
+                                                  "description": "Shown with the first answer in this phase.",
+                                                  "type": "string",
+                                                  "example": "second-text",
+                                                  "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                                },
+                                                "whenFact": {
+                                                  "description": "Shown with the first answer once the fact has this value.",
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "factId": {
+                                                      "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                                      "type": "string",
+                                                      "example": "second-text",
+                                                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                                    },
+                                                    "value": {
+                                                      "anyOf": [
+                                                        {
+                                                          "type": "string"
+                                                        },
+                                                        {
+                                                          "type": "number"
+                                                        },
+                                                        {
+                                                          "type": "boolean"
+                                                        }
+                                                      ]
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "factId",
+                                                    "value"
+                                                  ]
                                                 },
                                                 "image": {
                                                   "description": "The picture of an IMAGE exhibit.",
@@ -32791,7 +33367,6 @@
                                                       "example": "FUMzPf00hz_kcj2R2Hlzq"
                                                     },
                                                     "approved": {
-                                                      "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                                       "type": "boolean",
                                                       "default": false
                                                     }
@@ -34616,7 +35191,7 @@
                                                             "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                                                           },
                                                           "kind": {
-                                                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                                             "type": "string",
                                                             "enum": [
                                                               "MESSAGE",
@@ -34627,9 +35202,50 @@
                                                             ]
                                                           },
                                                           "showWithOpeningLine": {
-                                                            "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                                            "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                                             "type": "boolean",
                                                             "default": false
+                                                          },
+                                                          "atTurn": {
+                                                            "description": "Shown with the answer to this learner message, counted from 1.",
+                                                            "type": "integer",
+                                                            "exclusiveMinimum": 0,
+                                                            "maximum": 40
+                                                          },
+                                                          "atPhaseId": {
+                                                            "description": "Shown with the first answer in this phase.",
+                                                            "type": "string",
+                                                            "example": "second-text",
+                                                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                                          },
+                                                          "whenFact": {
+                                                            "description": "Shown with the first answer once the fact has this value.",
+                                                            "type": "object",
+                                                            "properties": {
+                                                              "factId": {
+                                                                "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                                                "type": "string",
+                                                                "example": "second-text",
+                                                                "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                                              },
+                                                              "value": {
+                                                                "anyOf": [
+                                                                  {
+                                                                    "type": "string"
+                                                                  },
+                                                                  {
+                                                                    "type": "number"
+                                                                  },
+                                                                  {
+                                                                    "type": "boolean"
+                                                                  }
+                                                                ]
+                                                              }
+                                                            },
+                                                            "required": [
+                                                              "factId",
+                                                              "value"
+                                                            ]
                                                           },
                                                           "image": {
                                                             "description": "The picture of an IMAGE exhibit.",
@@ -34656,7 +35272,6 @@
                                                                 "example": "FUMzPf00hz_kcj2R2Hlzq"
                                                               },
                                                               "approved": {
-                                                                "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                                                 "type": "boolean",
                                                                 "default": false
                                                               }
@@ -36211,7 +36826,7 @@
                                         "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                                       },
                                       "kind": {
-                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                         "type": "string",
                                         "enum": [
                                           "MESSAGE",
@@ -36222,9 +36837,50 @@
                                         ]
                                       },
                                       "showWithOpeningLine": {
-                                        "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                        "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                         "type": "boolean",
                                         "default": false
+                                      },
+                                      "atTurn": {
+                                        "description": "Shown with the answer to this learner message, counted from 1.",
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0,
+                                        "maximum": 40
+                                      },
+                                      "atPhaseId": {
+                                        "description": "Shown with the first answer in this phase.",
+                                        "type": "string",
+                                        "example": "second-text",
+                                        "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                      },
+                                      "whenFact": {
+                                        "description": "Shown with the first answer once the fact has this value.",
+                                        "type": "object",
+                                        "properties": {
+                                          "factId": {
+                                            "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                            "type": "string",
+                                            "example": "second-text",
+                                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                          },
+                                          "value": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "number"
+                                              },
+                                              {
+                                                "type": "boolean"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "factId",
+                                          "value"
+                                        ]
                                       },
                                       "image": {
                                         "description": "The picture of an IMAGE exhibit.",
@@ -36251,7 +36907,6 @@
                                             "example": "FUMzPf00hz_kcj2R2Hlzq"
                                           },
                                           "approved": {
-                                            "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                             "type": "boolean",
                                             "default": false
                                           }
@@ -56668,6 +57323,10 @@
                               },
                               "reason": {
                                 "type": "string"
+                              },
+                              "quote": {
+                                "description": "The learner's words that were flagged, as they wrote them. Absent when they could not be pinned down: the whole turn stands.",
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -58135,7 +58794,7 @@
       "post": {
         "operationId": "rolePlaySessions/sendTurn",
         "summary": "Send a message in a role-play",
-        "description": "Sends the learner's next message. The character's answer is written shortly after: the session shows `pendingTurn` until it is there, then the session's turns include it. A failed answer clears `pendingTurn` without adding a turn; send the same message again.\n\nThe session ends when the character closes the conversation, when the last message the role-play allows is answered, or when its time or text budget runs out; it is then assessed. A message to a session that has ended returns no turns.",
+        "description": "Sends the learner's next message. The character's answer is written shortly after: the session shows `pendingTurn` until it is there, then the session's turns include it. A failed answer clears `pendingTurn` without adding a turn; send the same message again.\n\nThe session ends when the character closes the conversation, when the last message the role-play allows is answered, or when its time or text budget runs out; it is then assessed. It always ends on the character's answer: a message sent once the time or the text budget has run out is still answered, as the character's last line. A message to a session that has ended returns no turns.",
         "parameters": [
           {
             "name": "rolePlayLogId",
@@ -58571,7 +59230,7 @@
                               "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                             },
                             "kind": {
-                              "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                              "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                               "type": "string",
                               "enum": [
                                 "MESSAGE",
@@ -58582,9 +59241,50 @@
                               ]
                             },
                             "showWithOpeningLine": {
-                              "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                              "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                               "type": "boolean",
                               "default": false
+                            },
+                            "atTurn": {
+                              "description": "Shown with the answer to this learner message, counted from 1.",
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 40
+                            },
+                            "atPhaseId": {
+                              "description": "Shown with the first answer in this phase.",
+                              "type": "string",
+                              "example": "second-text",
+                              "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                            },
+                            "whenFact": {
+                              "description": "Shown with the first answer once the fact has this value.",
+                              "type": "object",
+                              "properties": {
+                                "factId": {
+                                  "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                  "type": "string",
+                                  "example": "second-text",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                },
+                                "value": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "boolean"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "factId",
+                                "value"
+                              ]
                             },
                             "image": {
                               "description": "The picture of an IMAGE exhibit.",
@@ -58611,7 +59311,6 @@
                                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                                 },
                                 "approved": {
-                                  "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                   "type": "boolean",
                                   "default": false
                                 }
@@ -59428,7 +60127,7 @@
                               "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                             },
                             "kind": {
-                              "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                              "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                               "type": "string",
                               "enum": [
                                 "MESSAGE",
@@ -59439,9 +60138,50 @@
                               ]
                             },
                             "showWithOpeningLine": {
-                              "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                              "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                               "type": "boolean",
                               "default": false
+                            },
+                            "atTurn": {
+                              "description": "Shown with the answer to this learner message, counted from 1.",
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 40
+                            },
+                            "atPhaseId": {
+                              "description": "Shown with the first answer in this phase.",
+                              "type": "string",
+                              "example": "second-text",
+                              "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                            },
+                            "whenFact": {
+                              "description": "Shown with the first answer once the fact has this value.",
+                              "type": "object",
+                              "properties": {
+                                "factId": {
+                                  "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                  "type": "string",
+                                  "example": "second-text",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                },
+                                "value": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "boolean"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "factId",
+                                "value"
+                              ]
                             },
                             "image": {
                               "description": "The picture of an IMAGE exhibit.",
@@ -59468,7 +60208,6 @@
                                   "example": "FUMzPf00hz_kcj2R2Hlzq"
                                 },
                                 "approved": {
-                                  "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                   "type": "boolean",
                                   "default": false
                                 }
@@ -61633,7 +62372,7 @@
       "post": {
         "operationId": "rolePlays/makeExhibitImage",
         "summary": "Make the picture of something the character shows",
-        "description": "Asks the AI for the picture of an IMAGE exhibit of the role-play's draft, from the author's description. The picture is made once, now, and lands on the exhibit unapproved: the author approves it before the role-play can be published.",
+        "description": "Asks the AI for the picture of an IMAGE exhibit of the role-play's draft, from the author's description. The picture is made once, now, and lands on the exhibit; the role-play can be published once it is there.",
         "parameters": [
           {
             "name": "exhibitId",
@@ -62309,7 +63048,7 @@
                                 "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                               },
                               "kind": {
-                                "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                 "type": "string",
                                 "enum": [
                                   "MESSAGE",
@@ -62320,9 +63059,50 @@
                                 ]
                               },
                               "showWithOpeningLine": {
-                                "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                 "type": "boolean",
                                 "default": false
+                              },
+                              "atTurn": {
+                                "description": "Shown with the answer to this learner message, counted from 1.",
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 40
+                              },
+                              "atPhaseId": {
+                                "description": "Shown with the first answer in this phase.",
+                                "type": "string",
+                                "example": "second-text",
+                                "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                              },
+                              "whenFact": {
+                                "description": "Shown with the first answer once the fact has this value.",
+                                "type": "object",
+                                "properties": {
+                                  "factId": {
+                                    "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                    "type": "string",
+                                    "example": "second-text",
+                                    "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                  },
+                                  "value": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "boolean"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "factId",
+                                  "value"
+                                ]
                               },
                               "image": {
                                 "description": "The picture of an IMAGE exhibit.",
@@ -62349,7 +63129,6 @@
                                     "example": "FUMzPf00hz_kcj2R2Hlzq"
                                   },
                                   "approved": {
-                                    "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                     "type": "boolean",
                                     "default": false
                                   }
@@ -86459,7 +87238,7 @@
                         ]
                       },
                       "rolePlays": {
-                        "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means enabled; use `surfaces` to enable it in only some of them.",
+                        "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means disabled; use `surfaces` to enable it in only some of them.",
                         "anyOf": [
                           {
                             "type": "boolean"
@@ -102211,7 +102990,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -102222,9 +103001,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -102251,7 +103071,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -107806,7 +108625,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -107817,9 +108636,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -107846,7 +108706,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -120842,7 +121701,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -120853,9 +121712,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -120882,7 +121782,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -138197,12 +139096,39 @@
                       "minimum": 0
                     }
                   }
+                },
+                "specificItems": {
+                  "description": "The items that build it through their own competency setting or their tags'. The rest of `items` follows the default for its kind.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "description": "The kind of item that records competency evidence when completed.\n\n- LearningPath: a learning path.\n- LearningGroup: a learning group.\n- Quiz: a quiz.",
+                        "type": "string",
+                        "enum": [
+                          "LearningPath",
+                          "LearningGroup",
+                          "Quiz"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ]
+                  }
                 }
               },
               "required": [
                 "competencyId",
                 "profiles",
-                "items"
+                "items",
+                "specificItems"
               ]
             }
           },
@@ -159092,7 +160018,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -159103,9 +160029,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -159132,7 +160099,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -160009,7 +160975,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -160020,9 +160986,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -160049,7 +161056,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -160683,7 +161689,7 @@
                   }
                 },
                 "eventExhibitIds": {
-                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
+                  "description": "What arrives in the scene just before this message, brought by an event (with its scene line) or at a moment the author set: shown by no one in the conversation.",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -160759,13 +161765,51 @@
               "description": "The unique ID of the competency",
               "example": "FUMzPf00hz_kcj2R2Hlzq"
             }
+          },
+          "anchors": {
+            "description": "What each level of the judged competencies looks like, in the session's language and as they stood when the session was judged. Empty while the session shows no result.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "competencyId": {
+                  "description": "The unique ID of the competency",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "label": {
+                  "description": "The competency's name in the session's language.",
+                  "type": "string"
+                },
+                "anchor1": {
+                  "description": "What level 1 looks like.",
+                  "type": "string"
+                },
+                "anchor3": {
+                  "description": "What level 3 looks like.",
+                  "type": "string"
+                },
+                "anchor5": {
+                  "description": "What level 5 looks like.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "competencyId",
+                "label",
+                "anchor1",
+                "anchor3",
+                "anchor5"
+              ]
+            }
           }
         },
         "required": [
           "session",
           "turns",
           "events",
-          "provisionalCompetencyIds"
+          "provisionalCompetencyIds",
+          "anchors"
         ]
       },
       "GetRolePlaySessionResponse": {
@@ -160810,7 +161854,7 @@
                   }
                 },
                 "eventExhibitIds": {
-                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
+                  "description": "What arrives in the scene just before this message, brought by an event (with its scene line) or at a moment the author set: shown by no one in the conversation.",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -160848,7 +161892,7 @@
                 "minimum": 1
               },
               "share": {
-                "description": "The score as a share of 5, which the outcome is read from.",
+                "description": "The result as a share of the top, from 0 to 1, which the outcome is read from: what the levels reached are worth, weighted by their relevance. An advanced level counts as 1, an intermediate as 0.75 and a basic as 0.25, and the share is rounded to 0.05. A session keeps the share it was given when it was scored: the earliest ones are their score divided by 5.",
                 "type": "number",
                 "maximum": 1,
                 "minimum": 0
@@ -160992,6 +162036,14 @@
                     },
                     "nextStep": {
                       "description": "What to try next time; absent at the top level.",
+                      "type": "string"
+                    },
+                    "anchorTop": {
+                      "description": "At the lowest level only: what the top level looks like, the step after the next.",
+                      "type": "string"
+                    },
+                    "topStep": {
+                      "description": "At the lowest level only: what would then lead from the next level to the top one.",
                       "type": "string"
                     }
                   },
@@ -175152,7 +176204,7 @@
                 ]
               },
               "rolePlays": {
-                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means enabled; use `surfaces` to enable it in only some of them.",
+                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means disabled; use `surfaces` to enable it in only some of them.",
                 "anyOf": [
                   {
                     "type": "boolean"
@@ -183773,7 +184825,7 @@
             "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
           },
           "type": {
-            "description": "Selects which of the platform's app clients are created for the workspace. Cannot be changed after creation.\n\n- EDU: creates the console and end-user app clients.\n- CUSTOM: creates no preset clients — the create request's clients list decides which ones to create, and must list at least one.\n- CATALOG: creates only the console client. Other workspaces can list this one in their own catalogs to browse and clone its content.",
+            "description": "Selects which of the platform's app clients are created for the workspace. Cannot be changed after creation.\n\n- EDU: creates the console and end-user app clients, and the console's command-line client.\n- CUSTOM: creates no preset clients — the create request's clients list decides which ones to create, and must list at least one. A dashboard web client also brings its command-line client.\n- CATALOG: creates only the console client and its command-line client. Other workspaces can list this one in their own catalogs to browse and clone its content.",
             "type": "string",
             "enum": [
               "EDU",
@@ -190263,7 +191315,8 @@
                   "enum": [
                     "web",
                     "mobile",
-                    "m2m"
+                    "m2m",
+                    "cli"
                   ]
                 },
                 "details": {
@@ -218055,7 +219108,7 @@
                             "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                           },
                           "kind": {
-                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                             "type": "string",
                             "enum": [
                               "MESSAGE",
@@ -218066,9 +219119,50 @@
                             ]
                           },
                           "showWithOpeningLine": {
-                            "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                            "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                             "type": "boolean",
                             "default": false
+                          },
+                          "atTurn": {
+                            "description": "Shown with the answer to this learner message, counted from 1.",
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 40
+                          },
+                          "atPhaseId": {
+                            "description": "Shown with the first answer in this phase.",
+                            "type": "string",
+                            "example": "second-text",
+                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                          },
+                          "whenFact": {
+                            "description": "Shown with the first answer once the fact has this value.",
+                            "type": "object",
+                            "properties": {
+                              "factId": {
+                                "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                "type": "string",
+                                "example": "second-text",
+                                "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "boolean"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "factId",
+                              "value"
+                            ]
                           },
                           "image": {
                             "description": "The picture of an IMAGE exhibit.",
@@ -218095,7 +219189,6 @@
                                 "example": "FUMzPf00hz_kcj2R2Hlzq"
                               },
                               "approved": {
-                                "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                 "type": "boolean",
                                 "default": false
                               }
@@ -219029,7 +220122,7 @@
                             "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                           },
                           "kind": {
-                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                             "type": "string",
                             "enum": [
                               "MESSAGE",
@@ -219040,9 +220133,50 @@
                             ]
                           },
                           "showWithOpeningLine": {
-                            "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                            "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                             "type": "boolean",
                             "default": false
+                          },
+                          "atTurn": {
+                            "description": "Shown with the answer to this learner message, counted from 1.",
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 40
+                          },
+                          "atPhaseId": {
+                            "description": "Shown with the first answer in this phase.",
+                            "type": "string",
+                            "example": "second-text",
+                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                          },
+                          "whenFact": {
+                            "description": "Shown with the first answer once the fact has this value.",
+                            "type": "object",
+                            "properties": {
+                              "factId": {
+                                "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                "type": "string",
+                                "example": "second-text",
+                                "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "boolean"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "factId",
+                              "value"
+                            ]
                           },
                           "image": {
                             "description": "The picture of an IMAGE exhibit.",
@@ -219069,7 +220203,6 @@
                                 "example": "FUMzPf00hz_kcj2R2Hlzq"
                               },
                               "approved": {
-                                "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                 "type": "boolean",
                                 "default": false
                               }
@@ -220100,6 +221233,10 @@
                           "nextStep": {
                             "description": "What to try next time; absent at the top level.",
                             "type": "string"
+                          },
+                          "topStep": {
+                            "description": "At the lowest level only: what would then lead from the next level to the top one.",
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -220138,6 +221275,12 @@
                   "format": "date-time"
                 },
                 "coverage": {
+                  "type": "number",
+                  "maximum": 1,
+                  "minimum": 0
+                },
+                "share": {
+                  "description": "The result as a share of the top, from 0 to 1, which the outcome is read from: what the levels reached are worth, weighted by their relevance. An advanced level counts as 1, an intermediate as 0.75 and a basic as 0.25, and the share is rounded to 0.05. A session keeps the share it was given when it was scored: the earliest ones are their score divided by 5.",
                   "type": "number",
                   "maximum": 1,
                   "minimum": 0
@@ -220437,7 +221580,7 @@
                             "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                           },
                           "kind": {
-                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                             "type": "string",
                             "enum": [
                               "MESSAGE",
@@ -220448,9 +221591,50 @@
                             ]
                           },
                           "showWithOpeningLine": {
-                            "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                            "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                             "type": "boolean",
                             "default": false
+                          },
+                          "atTurn": {
+                            "description": "Shown with the answer to this learner message, counted from 1.",
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 40
+                          },
+                          "atPhaseId": {
+                            "description": "Shown with the first answer in this phase.",
+                            "type": "string",
+                            "example": "second-text",
+                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                          },
+                          "whenFact": {
+                            "description": "Shown with the first answer once the fact has this value.",
+                            "type": "object",
+                            "properties": {
+                              "factId": {
+                                "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                "type": "string",
+                                "example": "second-text",
+                                "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "boolean"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "factId",
+                              "value"
+                            ]
                           },
                           "image": {
                             "description": "The picture of an IMAGE exhibit.",
@@ -220477,7 +221661,6 @@
                                 "example": "FUMzPf00hz_kcj2R2Hlzq"
                               },
                               "approved": {
-                                "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                 "type": "boolean",
                                 "default": false
                               }
@@ -244688,7 +245871,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -244699,9 +245882,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -244728,7 +245952,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -249623,7 +250846,7 @@
                 ]
               },
               "rolePlays": {
-                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means enabled; use `surfaces` to enable it in only some of them.",
+                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means disabled; use `surfaces` to enable it in only some of them.",
                 "anyOf": [
                   {
                     "type": "boolean"
@@ -260638,7 +261861,7 @@
                                         "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                                       },
                                       "kind": {
-                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                         "type": "string",
                                         "enum": [
                                           "MESSAGE",
@@ -260649,9 +261872,50 @@
                                         ]
                                       },
                                       "showWithOpeningLine": {
-                                        "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                        "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                         "type": "boolean",
                                         "default": false
+                                      },
+                                      "atTurn": {
+                                        "description": "Shown with the answer to this learner message, counted from 1.",
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0,
+                                        "maximum": 40
+                                      },
+                                      "atPhaseId": {
+                                        "description": "Shown with the first answer in this phase.",
+                                        "type": "string",
+                                        "example": "second-text",
+                                        "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                      },
+                                      "whenFact": {
+                                        "description": "Shown with the first answer once the fact has this value.",
+                                        "type": "object",
+                                        "properties": {
+                                          "factId": {
+                                            "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                            "type": "string",
+                                            "example": "second-text",
+                                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                          },
+                                          "value": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "number"
+                                              },
+                                              {
+                                                "type": "boolean"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "factId",
+                                          "value"
+                                        ]
                                       },
                                       "image": {
                                         "description": "The picture of an IMAGE exhibit.",
@@ -260678,7 +261942,6 @@
                                             "example": "FUMzPf00hz_kcj2R2Hlzq"
                                           },
                                           "approved": {
-                                            "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                             "type": "boolean",
                                             "default": false
                                           }
@@ -267186,7 +268449,7 @@
                                         "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                                       },
                                       "kind": {
-                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                                        "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                                         "type": "string",
                                         "enum": [
                                           "MESSAGE",
@@ -267197,9 +268460,50 @@
                                         ]
                                       },
                                       "showWithOpeningLine": {
-                                        "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                                        "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                                         "type": "boolean",
                                         "default": false
+                                      },
+                                      "atTurn": {
+                                        "description": "Shown with the answer to this learner message, counted from 1.",
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0,
+                                        "maximum": 40
+                                      },
+                                      "atPhaseId": {
+                                        "description": "Shown with the first answer in this phase.",
+                                        "type": "string",
+                                        "example": "second-text",
+                                        "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                      },
+                                      "whenFact": {
+                                        "description": "Shown with the first answer once the fact has this value.",
+                                        "type": "object",
+                                        "properties": {
+                                          "factId": {
+                                            "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                            "type": "string",
+                                            "example": "second-text",
+                                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                                          },
+                                          "value": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "number"
+                                              },
+                                              {
+                                                "type": "boolean"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "factId",
+                                          "value"
+                                        ]
                                       },
                                       "image": {
                                         "description": "The picture of an IMAGE exhibit.",
@@ -267226,7 +268530,6 @@
                                             "example": "FUMzPf00hz_kcj2R2Hlzq"
                                           },
                                           "approved": {
-                                            "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                             "type": "boolean",
                                             "default": false
                                           }
@@ -269306,7 +270609,7 @@
             "pattern": "^[a-zA-Z0-9_-]{1,40}$"
           },
           "kind": {
-            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
             "type": "string",
             "enum": [
               "MESSAGE",
@@ -269376,7 +270679,7 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "description": "Why a role-play cannot be published yet, or what to look at before publishing it.\n\n- MISSING_TRANSLATION: a language of the role-play has no text.\n- MISSING_TEXT: a field a session needs is empty: the character's name or who they are, the learner's role, the situation, the opening line, or the text of a fact, exhibit, phase, reaction or event.\n- SAME_ROLE: the learner's role reads the same as the character.\n- EMPTY_RUBRIC: no competency is assessed.\n- NO_PRIMARY_COMPETENCY: no assessed competency is primary.\n- PROFILE_NOT_PUBLISHED: a competency profile of the rubric is not published.\n- COMPETENCY_NOT_PUBLISHED: a competency of the rubric is not published.\n- COMPETENCY_MISSING_LANG: a competency has no anchors in one of the role-play's languages.\n- UNRESOLVED_REFERENCE: a fact, exhibit, phase, reaction or event is named but not defined, is defined twice, or has no text in a language.\n- INVALID_PRECONDITION: an event's condition is not a valid expression over the role-play's facts.\n- INVALID_ALTERNATIVE: an event's alternative is itself, leads back to it, or an event with no time of its own is nobody's alternative, so it never happens.\n- INVALID_SCHEDULE: an event has both a phase and a message number, happens after the last phase or past the message limit.\n- IMAGE_NOT_APPROVED: a picture to show has not been made or approved yet.\n- COVERAGE_BELOW_MINIMUM: the competencies that can be assessed in every conversation carry less relevance than the minimum coverage, so some sessions may end inconclusive. A warning: it does not stop publishing.",
+                  "description": "Why a role-play cannot be published yet, or what to look at before publishing it.\n\n- MISSING_TRANSLATION: a language of the role-play has no text.\n- MISSING_TEXT: a field a session needs is empty: the character's name or who they are, the learner's role, the situation, the opening line, or the text of a fact, exhibit, phase, reaction or event.\n- SAME_ROLE: the learner's role reads the same as the character.\n- EMPTY_RUBRIC: no competency is assessed.\n- NO_PRIMARY_COMPETENCY: no assessed competency is primary.\n- PROFILE_NOT_PUBLISHED: a competency profile of the rubric is not published.\n- COMPETENCY_NOT_PUBLISHED: a competency of the rubric is not published.\n- COMPETENCY_MISSING_LANG: a competency has no anchors in one of the role-play's languages.\n- UNRESOLVED_REFERENCE: a fact, exhibit, phase, reaction or event is named but not defined, is defined twice, or has no text in a language.\n- INVALID_PRECONDITION: an event's condition is not a valid expression over the role-play's facts.\n- INVALID_ALTERNATIVE: an event's alternative is itself, leads back to it, or an event with no time of its own is nobody's alternative, so it never happens.\n- INVALID_SCHEDULE: an event has both a phase and a message number, happens after the last phase or past the message limit.\n- IMAGE_NOT_APPROVED: a picture to show has not been made yet.\n- COVERAGE_BELOW_MINIMUM: the competencies that can be assessed in every conversation carry less relevance than the minimum coverage, so some sessions may end inconclusive. A warning: it does not stop publishing.",
                   "type": "string",
                   "enum": [
                     "MISSING_TRANSLATION",
@@ -269428,7 +270731,7 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "description": "Why a role-play cannot be published yet, or what to look at before publishing it.\n\n- MISSING_TRANSLATION: a language of the role-play has no text.\n- MISSING_TEXT: a field a session needs is empty: the character's name or who they are, the learner's role, the situation, the opening line, or the text of a fact, exhibit, phase, reaction or event.\n- SAME_ROLE: the learner's role reads the same as the character.\n- EMPTY_RUBRIC: no competency is assessed.\n- NO_PRIMARY_COMPETENCY: no assessed competency is primary.\n- PROFILE_NOT_PUBLISHED: a competency profile of the rubric is not published.\n- COMPETENCY_NOT_PUBLISHED: a competency of the rubric is not published.\n- COMPETENCY_MISSING_LANG: a competency has no anchors in one of the role-play's languages.\n- UNRESOLVED_REFERENCE: a fact, exhibit, phase, reaction or event is named but not defined, is defined twice, or has no text in a language.\n- INVALID_PRECONDITION: an event's condition is not a valid expression over the role-play's facts.\n- INVALID_ALTERNATIVE: an event's alternative is itself, leads back to it, or an event with no time of its own is nobody's alternative, so it never happens.\n- INVALID_SCHEDULE: an event has both a phase and a message number, happens after the last phase or past the message limit.\n- IMAGE_NOT_APPROVED: a picture to show has not been made or approved yet.\n- COVERAGE_BELOW_MINIMUM: the competencies that can be assessed in every conversation carry less relevance than the minimum coverage, so some sessions may end inconclusive. A warning: it does not stop publishing.",
+                  "description": "Why a role-play cannot be published yet, or what to look at before publishing it.\n\n- MISSING_TRANSLATION: a language of the role-play has no text.\n- MISSING_TEXT: a field a session needs is empty: the character's name or who they are, the learner's role, the situation, the opening line, or the text of a fact, exhibit, phase, reaction or event.\n- SAME_ROLE: the learner's role reads the same as the character.\n- EMPTY_RUBRIC: no competency is assessed.\n- NO_PRIMARY_COMPETENCY: no assessed competency is primary.\n- PROFILE_NOT_PUBLISHED: a competency profile of the rubric is not published.\n- COMPETENCY_NOT_PUBLISHED: a competency of the rubric is not published.\n- COMPETENCY_MISSING_LANG: a competency has no anchors in one of the role-play's languages.\n- UNRESOLVED_REFERENCE: a fact, exhibit, phase, reaction or event is named but not defined, is defined twice, or has no text in a language.\n- INVALID_PRECONDITION: an event's condition is not a valid expression over the role-play's facts.\n- INVALID_ALTERNATIVE: an event's alternative is itself, leads back to it, or an event with no time of its own is nobody's alternative, so it never happens.\n- INVALID_SCHEDULE: an event has both a phase and a message number, happens after the last phase or past the message limit.\n- IMAGE_NOT_APPROVED: a picture to show has not been made yet.\n- COVERAGE_BELOW_MINIMUM: the competencies that can be assessed in every conversation carry less relevance than the minimum coverage, so some sessions may end inconclusive. A warning: it does not stop publishing.",
                   "type": "string",
                   "enum": [
                     "MISSING_TRANSLATION",
@@ -270222,7 +271525,7 @@
                   "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                 },
                 "kind": {
-                  "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                  "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                   "type": "string",
                   "enum": [
                     "MESSAGE",
@@ -270233,9 +271536,50 @@
                   ]
                 },
                 "showWithOpeningLine": {
-                  "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                  "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                   "type": "boolean",
                   "default": false
+                },
+                "atTurn": {
+                  "description": "Shown with the answer to this learner message, counted from 1.",
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 40
+                },
+                "atPhaseId": {
+                  "description": "Shown with the first answer in this phase.",
+                  "type": "string",
+                  "example": "second-text",
+                  "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                },
+                "whenFact": {
+                  "description": "Shown with the first answer once the fact has this value.",
+                  "type": "object",
+                  "properties": {
+                    "factId": {
+                      "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "factId",
+                    "value"
+                  ]
                 },
                 "title": {
                   "description": "The exhibit's name, for the people who manage the role-play.",
@@ -270672,6 +272016,12 @@
             "maximum": 5,
             "minimum": 1
           },
+          "share": {
+            "description": "The result as a share of the top, from 0 to 1, which the outcome is read from: what the levels reached are worth, weighted by their relevance. An advanced level counts as 1, an intermediate as 0.75 and a basic as 0.25, and the share is rounded to 0.05. A session keeps the share it was given when it was scored: the earliest ones are their score divided by 5.",
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0
+          },
           "title": {
             "type": "string"
           },
@@ -270756,6 +272106,26 @@
             "items": {
               "$ref": "#/components/schemas/RolePlayExhibit"
             }
+          },
+          "outcomeThresholds": {
+            "description": "The share of the top score, from 0 to 1, this role-play needs for each outcome.",
+            "type": "object",
+            "properties": {
+              "SUCCESS": {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              "PASS": {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              }
+            },
+            "required": [
+              "SUCCESS",
+              "PASS"
+            ]
           }
         },
         "required": [
@@ -270778,7 +272148,8 @@
           "brief",
           "maxTurns",
           "endsAt",
-          "exhibits"
+          "exhibits",
+          "outcomeThresholds"
         ]
       },
       "RolePlaySessionDetail": {
@@ -271264,7 +272635,7 @@
                           "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                         },
                         "kind": {
-                          "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                          "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                           "type": "string",
                           "enum": [
                             "MESSAGE",
@@ -271275,9 +272646,50 @@
                           ]
                         },
                         "showWithOpeningLine": {
-                          "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                          "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                           "type": "boolean",
                           "default": false
+                        },
+                        "atTurn": {
+                          "description": "Shown with the answer to this learner message, counted from 1.",
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 40
+                        },
+                        "atPhaseId": {
+                          "description": "Shown with the first answer in this phase.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "whenFact": {
+                          "description": "Shown with the first answer once the fact has this value.",
+                          "type": "object",
+                          "properties": {
+                            "factId": {
+                              "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                              "type": "string",
+                              "example": "second-text",
+                              "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                            },
+                            "value": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "boolean"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "factId",
+                            "value"
+                          ]
                         },
                         "title": {
                           "description": "The exhibit's name, for the people who manage the role-play.",
@@ -271729,7 +273141,7 @@
                 "minimum": 1
               },
               "share": {
-                "description": "The score as a share of 5, which the outcome is read from.",
+                "description": "The result as a share of the top, from 0 to 1, which the outcome is read from: what the levels reached are worth, weighted by their relevance. An advanced level counts as 1, an intermediate as 0.75 and a basic as 0.25, and the share is rounded to 0.05. A session keeps the share it was given when it was scored: the earliest ones are their score divided by 5.",
                 "type": "number",
                 "maximum": 1,
                 "minimum": 0
@@ -272038,6 +273450,10 @@
                     },
                     "reason": {
                       "type": "string"
+                    },
+                    "quote": {
+                      "description": "The learner's words that were flagged, as they wrote them. Absent when they could not be pinned down: the whole turn stands.",
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -272083,6 +273499,10 @@
                     },
                     "nextStep": {
                       "description": "What to try next time; absent at the top level.",
+                      "type": "string"
+                    },
+                    "topStep": {
+                      "description": "At the lowest level only: what would then lead from the next level to the top one.",
                       "type": "string"
                     }
                   },
@@ -272547,7 +273967,8 @@
                   "enum": [
                     "web",
                     "mobile",
-                    "m2m"
+                    "m2m",
+                    "cli"
                   ]
                 },
                 "details": {
@@ -276908,7 +278329,7 @@
                             "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                           },
                           "kind": {
-                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                            "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                             "type": "string",
                             "enum": [
                               "MESSAGE",
@@ -276919,9 +278340,50 @@
                             ]
                           },
                           "showWithOpeningLine": {
-                            "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                            "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                             "type": "boolean",
                             "default": false
+                          },
+                          "atTurn": {
+                            "description": "Shown with the answer to this learner message, counted from 1.",
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 40
+                          },
+                          "atPhaseId": {
+                            "description": "Shown with the first answer in this phase.",
+                            "type": "string",
+                            "example": "second-text",
+                            "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                          },
+                          "whenFact": {
+                            "description": "Shown with the first answer once the fact has this value.",
+                            "type": "object",
+                            "properties": {
+                              "factId": {
+                                "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                                "type": "string",
+                                "example": "second-text",
+                                "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "boolean"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "factId",
+                              "value"
+                            ]
                           },
                           "image": {
                             "description": "The picture of an IMAGE exhibit.",
@@ -276948,7 +278410,6 @@
                                 "example": "FUMzPf00hz_kcj2R2Hlzq"
                               },
                               "approved": {
-                                "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                                 "type": "boolean",
                                 "default": false
                               }
@@ -280170,7 +281631,7 @@
                   }
                 },
                 "eventExhibitIds": {
-                  "description": "What arrives in the scene just before this message, with its scene line: shown by no one in the conversation.",
+                  "description": "What arrives in the scene just before this message, brought by an event (with its scene line) or at a moment the author set: shown by no one in the conversation.",
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -280445,7 +281906,7 @@
         "type": "object",
         "properties": {
           "suggestions": {
-            "description": "A suggested description for each level that had none: anchor1 Basic, anchor3 Intermediate, anchor5 Advanced.",
+            "description": "A suggested description for each level that had none or was in rewrite: anchor1 Basic, anchor3 Intermediate, anchor5 Advanced.",
             "type": "object",
             "properties": {
               "anchor1": {
@@ -280473,11 +281934,101 @@
                 "type": "string"
               }
             }
+          },
+          "description": {
+            "description": "A one-sentence description of the competency. Present only when the target is description.",
+            "type": "string"
           }
         },
         "required": [
           "suggestions",
           "notes"
+        ]
+      },
+      "SuggestCompetencyProfileResponse": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "A one-sentence description of the profile. Present only when the target is description.",
+            "type": "string"
+          },
+          "competencies": {
+            "description": "Published competencies that fit the profile.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "competencyId": {
+                  "description": "The unique ID of the competency",
+                  "type": "string",
+                  "example": "FUMzPf00hz_kcj2R2Hlzq"
+                },
+                "relevance": {
+                  "description": "How central a competency is to a group of competencies, such as a profile.\n\n- PRIMARY: one of the main competencies of the group.\n- SECONDARY: part of the group, but not one of its main competencies.\n- MINOR: touched on by the group.",
+                  "type": "string",
+                  "enum": [
+                    "PRIMARY",
+                    "SECONDARY",
+                    "MINOR"
+                  ]
+                }
+              },
+              "required": [
+                "competencyId",
+                "relevance"
+              ]
+            }
+          },
+          "newCompetencies": {
+            "description": "Competencies the profile needs that the workspace doesn't have yet, written in full so they can be created as drafts.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "description": "The new competency's name.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "A one-sentence description of the new competency.",
+                  "type": "string"
+                },
+                "anchor1": {
+                  "description": "What Basic looks like.",
+                  "type": "string"
+                },
+                "anchor3": {
+                  "description": "What Intermediate looks like.",
+                  "type": "string"
+                },
+                "anchor5": {
+                  "description": "What Advanced looks like.",
+                  "type": "string"
+                },
+                "relevance": {
+                  "description": "How central a competency is to a group of competencies, such as a profile.\n\n- PRIMARY: one of the main competencies of the group.\n- SECONDARY: part of the group, but not one of its main competencies.\n- MINOR: touched on by the group.",
+                  "type": "string",
+                  "enum": [
+                    "PRIMARY",
+                    "SECONDARY",
+                    "MINOR"
+                  ]
+                }
+              },
+              "required": [
+                "label",
+                "description",
+                "anchor1",
+                "anchor3",
+                "anchor5",
+                "relevance"
+              ]
+            }
+          }
+        },
+        "required": [
+          "competencies",
+          "newCompetencies"
         ]
       },
       "SuggestItemCompetenciesResponse": {
@@ -286859,7 +288410,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -286870,9 +288421,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -286899,7 +288491,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -301446,7 +303037,7 @@
                       "pattern": "^[a-zA-Z0-9_-]{1,40}$"
                     },
                     "kind": {
-                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written, and approved before it is published.",
+                      "description": "What the character shows, and how it is drawn.\n\n- MESSAGE: a text message, drawn from its sender and text.\n- EMAIL: an email, drawn from its sender, subject and text.\n- WEB_PAGE: a web page, drawn from its address, title and text.\n- DOCUMENT: a paper page such as a letter, a bill or a form, drawn from its title and text.\n- IMAGE: a picture made with AI when the role-play is written.",
                       "type": "string",
                       "enum": [
                         "MESSAGE",
@@ -301457,9 +303048,50 @@
                       ]
                     },
                     "showWithOpeningLine": {
-                      "description": "Shown with the character's first line. Otherwise the character shows it when it fits, or an event that carries it shows it.",
+                      "description": "Shown with the character's first line. Otherwise it is shown at the moment `atTurn`, `atPhaseId` or `whenFact` sets, by an event that carries it, or by the character when it fits.",
                       "type": "boolean",
                       "default": false
+                    },
+                    "atTurn": {
+                      "description": "Shown with the answer to this learner message, counted from 1.",
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 40
+                    },
+                    "atPhaseId": {
+                      "description": "Shown with the first answer in this phase.",
+                      "type": "string",
+                      "example": "second-text",
+                      "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                    },
+                    "whenFact": {
+                      "description": "Shown with the first answer once the fact has this value.",
+                      "type": "object",
+                      "properties": {
+                        "factId": {
+                          "description": "The ID of a fact, exhibit, phase, probe or event of the scene, unique within the role-play.",
+                          "type": "string",
+                          "example": "second-text",
+                          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "factId",
+                        "value"
+                      ]
                     },
                     "image": {
                       "description": "The picture of an IMAGE exhibit.",
@@ -301486,7 +303118,6 @@
                           "example": "FUMzPf00hz_kcj2R2Hlzq"
                         },
                         "approved": {
-                          "description": "Whether the author approved the picture. A role-play with an unapproved picture cannot be published.",
                           "type": "boolean",
                           "default": false
                         }
@@ -308620,7 +310251,7 @@
                 ]
               },
               "rolePlays": {
-                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means enabled; use `surfaces` to enable it in only some of them.",
+                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means disabled; use `surfaces` to enable it in only some of them.",
                 "anyOf": [
                   {
                     "type": "boolean"
@@ -319479,7 +321110,7 @@
                 ]
               },
               "rolePlays": {
-                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means enabled; use `surfaces` to enable it in only some of them.",
+                "description": "Role-plays: creating and editing them in the console, and the role-play steps of learning paths in the end-user app. Absent means disabled; use `surfaces` to enable it in only some of them.",
                 "anyOf": [
                   {
                     "type": "boolean"
